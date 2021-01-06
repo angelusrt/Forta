@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     view : { 
-      flex: 1, 
+      height: "100%",
       justifyContent: 'center', 
       alignItems: 'center',
       backgroundColor: "#F9F9F9"

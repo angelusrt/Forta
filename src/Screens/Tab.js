@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
-import { View, KeyboardAvoidingView, Text, TextInput,TouchableOpacity, Platform, StatusBar} from "react-native"
+import { View, ScrollView, KeyboardAvoidingView, Text, TextInput,TouchableOpacity, Platform, StatusBar} from "react-native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { styles } from "./../Styles.js";
-//import Poppins from "./../../assets/fonts/Poppins-Bold.ttf";
+import Icons from "./../components/Icons";
 
 function Home() {
     return (
-        <View style={styles.view}>
+        <ScrollView contentContainerStyle={styles.view}>
             <Text>Home</Text>
-        </View>
+        </ScrollView>
     );
 }
 
