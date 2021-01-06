@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, StatusBar } from 'react-native';
 
 export const styles = StyleSheet.create({
     container: {
@@ -7,4 +7,10 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    view : { 
+      flex: 1, 
+      justifyContent: 'center', 
+      alignItems: 'center',
+      backgroundColor: "#F9F9F9"
+    }
 });
