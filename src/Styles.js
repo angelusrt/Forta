@@ -14,97 +14,86 @@ export const lightTheme = {
 }
 
 export const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    view: { 
-      backgroundColor: "#F9F9F9"
-    },
-    card: {
-      marginHorizontal: wp("5%"),
-      marginVertical: wp("2.5%"),
-      borderRadius: 30,
-      backgroundColor: lightTheme.white,
+  headerText: {
+    fontFamily: "Poppins",
+    fontSize: wp("4.5%"),
+    color: lightTheme.darkGrey
+  },
+  bodyText: {
+    fontFamily: "Roboto-Medium",
+    fontSize: wp("4%"),
+    color: lightTheme.notSoDarkGrey,
 
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.22,
-      shadowRadius: 2.22,
-      elevation: 3,
-    },
-    cardContentWrapper: {
-      padding: wp("5%")
-    },
-    bottomWrapper: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    rigthButtonsWrapper: {
-      flex: 1,
-      flexDirection: 'row',
-      alignItems: 'flex-end',
-      justifyContent: "flex-end",
-    },
-    title: {
-      fontFamily: "Poppins",
-      fontSize: wp("4.5%"),
-      color: lightTheme.darkGrey
-    },
-    bodyText: {
-      fontFamily: "Roboto-Regular",
-      fontSize: wp("4%"),
-      marginBottom: wp("5%"),
-      lineHeight: 20,
-      color: lightTheme.notSoDarkGrey
-    },
-    nameText: {
-      fontFamily: "Poppins",
-      fontSize: wp("4%"),
-      color: lightTheme.notSoDarkGrey
-    },
-    forumText: {
-      fontFamily: "Roboto-Bold",
-      fontSize: wp("3.5%"),
-      color: lightTheme.notSoLightGrey
-    },
-    rateText: {
-      fontFamily: "Poppins",
-      fontSize: wp("4.5%")
-    },
-    iButton: {
-      flexDirection: "row",
-      alignItems: "center",
+    lineHeight: 20,
+    marginBottom: wp("5%"),
+  },
+  headerText2: {
+    fontFamily: "Poppins",
+    fontSize: wp("4%"),
+    color: lightTheme.notSoDarkGrey
+  },
+  bodyText2: {
+    fontFamily: "Roboto-Bold",
+    fontSize: wp("3.5%"),
+    color: lightTheme.notSoLightGrey
+  },
+  rateText: {
+    fontFamily: "Poppins-SemiBold",
+    fontSize: wp("4.5%")
+  },
 
-      paddingTop: wp("2.5%"),
-      paddingBottom: wp("2.5%"),
-      paddingLeft: wp("2.5%"),
-      paddingRight: wp("5%"),
+  card: {
+    marginHorizontal: wp("5%"),
+    marginVertical: wp("2.5%"),
+    backgroundColor: lightTheme.white,
 
-      borderRadius: 20,
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  bottomWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rightButtonsWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: "flex-end",
+  },
+  
+  iButton: {
+    flexDirection: "row",
+    alignItems: "center",
 
-      borderWidth: wp(".5%"),
-      borderLeftWidth: 0,
-      borderColor: lightTheme.notSoLightGrey,
-      backgroundColor: lightTheme.white,
+    paddingTop: wp("2.5%"),
+    paddingBottom: wp("2.5%"),
+    paddingLeft: wp("2.5%"),
+    paddingRight: wp("5%"),
 
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.22,
-      shadowRadius: 2.22,
-      elevation: 3,
+    borderRadius: 20,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
 
-      position: "absolute",
-      bottom: wp("5%")
-    }
+    borderWidth: wp(".5%"),
+    borderLeftWidth: 0,
+    borderColor: lightTheme.notSoLightGrey,
+    backgroundColor: lightTheme.white,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+
+    position: "absolute",
+    bottom: wp("5%")
+  }
 });

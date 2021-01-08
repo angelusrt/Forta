@@ -1,15 +1,16 @@
 import React, {useState} from 'react';
-import { View, ScrollView, Text, Platform} from "react-native"
+import { View, ScrollView, Text, TouchableOpacity, Platform} from "react-native"
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { lightTheme, styles } from "./../Styles.js";
 import PostCard from "./../components/PostCard.js";
+import ContactCard from "./../components/ContactCard.js";
 import InteligentButton from "../components/InteligentButton.js";
 
 function Home() {
     return (
-        <ScrollView contentContainerStyle={styles.view} >
+        <ScrollView>
             <PostCard 
                 imagePlaceholder={
                     <View style={{
@@ -22,28 +23,28 @@ function Home() {
                 title="He is one with the furnace"
                 bodyText="Isso é um corpo de texto, onde irás desenvolver seu tema"
                 name="CheesePrince"
-                forum="/pewdiepieSubs"
+                forum="PewdiepieSubs"
                 rating="100k"
             />
             <PostCard 
                 title="He is one with the furnace"
                 bodyText="Isso é um corpo de texto, onde irás desenvolver seu tema"
                 name="CheesePrincePrincePrince"
-                forum="/pewdiepieSubs"
+                forum="PewdiepieSubs"
                 rating="100k"
             />
             <PostCard 
                 title="He is one with the furnace"
                 bodyText="Isso é um corpo de texto, onde irás desenvolver seu tema"
                 name="CheesePrince"
-                forum="/pewdiepieSubs"
+                forum="PewdiepieSubs"
                 rating="100k"
             />
             <PostCard 
                 title="He is one with the furnace"
                 bodyText="Isso é um corpo de texto, onde irás desenvolver seu tema"
                 name="CheesePrince"
-                forum="/pewdiepieSubs"
+                forum="PewdiepieSubs"
                 rating="100k"
             />
         </ScrollView>
@@ -52,25 +53,62 @@ function Home() {
 
 function Forums() {
     return (
-        <View style={styles.view}>
-            <Text>Forums</Text>
-        </View>
+        <ScrollView>
+            <ContactCard 
+                imagePlaceholder={
+                    <View style={{
+                        width: wp("10%"),
+                        height: wp("10%"),
+                        backgroundColor: lightTheme.notSoDarkGrey,
+                        borderRadius: 10, 
+                    }}/>
+                }
+                title="PewdiepieSubs"
+                subtitle="8,4K following"
+                mode="Forum"
+            />
+        </ScrollView>
     );
 }
 
 function Chats() {
     return (
-        <View style={styles.view}>
-            <Text>Chats</Text>
-        </View>
+        <ScrollView>
+            <ContactCard 
+                imagePlaceholder={
+                    <View style={{
+                        width: wp("10%"),
+                        height: wp("10%"),
+                        backgroundColor: lightTheme.notSoDarkGrey,
+                        borderRadius: 10, 
+                    }}/>
+                }
+                title="Pewdiepie"
+                subtitle=">Helloo"
+                mode="Chat"
+                lastSaw="Ontem"
+            />
+        </ScrollView>
     );
 }
 
 function Invites() {
     return (
-        <View style={styles.view}>
-            <Text>Invites</Text>
-        </View>
+        <ScrollView>
+            <ContactCard 
+                imagePlaceholder={
+                    <View style={{
+                        width: wp("10%"),
+                        height: wp("10%"),
+                        backgroundColor: lightTheme.notSoDarkGrey,
+                        borderRadius: 10, 
+                    }}/>
+                }
+                title="Pewdiepie"
+                subtitle="Quer conversar com você!"
+                mode="Invite"
+            />
+        </ScrollView>
     );
 }
 
