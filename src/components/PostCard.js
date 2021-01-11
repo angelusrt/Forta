@@ -8,7 +8,7 @@ function PostCard(props) {
     const[likeActive, setLikeActive] = useState(false);
 
     return (
-        <View style={{borderRadius: 30, ...styles.card}}>
+        <View style={{borderRadius: 20, ...styles.card}}>
             {(props.postImage && <Image/>) || props.imagePlaceholder }
             
             <View style={{padding: wp("5%")}}>
@@ -30,11 +30,13 @@ function PostCard(props) {
                         </Text>
                     </View>
                     <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
-                        <Text style={{color: likeActive?lightTheme.green:lightTheme.darkGrey, ...styles.rateText}}>
+                        <Text style={{color: likeActive?lightTheme.green:lightTheme.darkGrey, marginBottom: wp("0.625%"), ...styles.rateText}}>
                             {props.rating}
                         </Text>
                         <TouchableOpacity
-                            onPress={ () => setLikeActive(!likeActive)}
+                            onPress={ () => {
+                                setLikeActive(!likeActive)
+                            }}
                         >
                             <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
                                 stroke: likeActive?lightTheme.green:lightTheme.darkGrey ,

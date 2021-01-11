@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     color: lightTheme.notSoLightGrey
   },
   rateText: {
-    fontFamily: "Poppins-SemiBold",
+    fontFamily: "Roboto-Bold",
     fontSize: wp("4.5%")
   },
 
@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
     paddingLeft: wp("2.5%"),
     paddingRight: wp("5%"),
 
-    borderRadius: 20,
+    borderRadius: 10,
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
 
