@@ -2,9 +2,7 @@ import React, {useState, useEffect} from 'react';
 import _reactNative, { View, ScrollView, Text, TouchableOpacity, Platform} from "react-native"
 
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-import { createMaterialTopTabNavigator, MaterialTopTabBar } from "@react-navigation/material-top-tabs";
-import { useNavigationState, useRoute, useNavigation } from "@react-navigation/native";
-
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var _reactNativeTabView = require("react-native-tab-view");
@@ -236,17 +234,17 @@ function Invites() {
     );
 }
 
-function Tab() {
+function Tab(props) {
     const tab = createMaterialTopTabNavigator();
-    const[currentRoute, setCurrentRoute] = useState("Home");
-
-    const handleRoute = (props) => {
-        setCurrentRoute(props)
+    
+    let handleRoute = prop => {
+        props.handleRoute(prop)
     }
+    
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
             <tab.Navigator  
-                initialRouteName="Home" 
+                initialRouteName={props.currentRoute}
                 tabBar={props => <TabBarTop currentRoute={routeName => handleRoute(routeName)} {...props} />}
                 tabBarOptions={
                     {
@@ -278,12 +276,12 @@ function Tab() {
                     backgroundColor: lightTheme.ligthGrey
                 }}
             >
-                <tab.Screen name="Home" children={() => <Home currentRoute={prop => {setCurrentRoute(prop); console.log(currentRoute)}}/>}/>
-                <tab.Screen name="Forums" children={() => <Forums currentRoute={prop => {setCurrentRoute(prop); console.log(currentRoute)}}/>}/>
+                <tab.Screen name="Home" children={() => <Home/>}/>
+                <tab.Screen name="Forums" children={() => <Forums/>}/>
                 <tab.Screen name="Chats" children={() => <Chats/>}/>
                 <tab.Screen name="Invites" children={() => <Invites/>}/>
             </tab.Navigator>
-            <InteligentButton currentScreen={currentRoute}/>
+            <InteligentButton nextScreen={props.currentScreen} currentScreen={props.currentRoute}/>
         </View>
     );
 }

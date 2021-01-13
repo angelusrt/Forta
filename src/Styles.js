@@ -24,8 +24,7 @@ export const styles = StyleSheet.create({
     fontSize: wp("4%"),
     color: lightTheme.notSoDarkGrey,
 
-    lineHeight: 20,
-    marginBottom: wp("5%"),
+    lineHeight: 20
   },
   headerText2: {
     fontFamily: "Poppins",
@@ -73,7 +72,7 @@ export const styles = StyleSheet.create({
     paddingTop: wp("2.5%"),
     paddingBottom: wp("2.5%"),
     paddingLeft: wp("2.5%"),
-    paddingRight: wp("5%"),
+    paddingRight: wp("2.5%"),
 
     borderRadius: 10,
     borderTopLeftRadius: 0,

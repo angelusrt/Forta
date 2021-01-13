@@ -6,16 +6,17 @@ import { lightTheme, styles } from "./../Styles";
 
 function PostCard(props) {
     const[likeActive, setLikeActive] = useState(false);
+    const[cardFocus, setCardFocus] = useState(false);
 
     return (
         <View style={{borderRadius: 20, ...styles.card}}>
             {(props.postImage && <Image/>) || props.imagePlaceholder }
             
-            <View style={{padding: wp("5%")}}>
+            <View style={{ padding: wp("5%") }}>
                 <Text style={styles.headerText}>
                     {props.title}
                 </Text>
-                <Text style={styles.bodyText}>
+                <Text style={{ marginBottom: wp("5%"), ...styles.bodyText }}>
                     {props.bodyText}
                 </Text>
 
