@@ -11,6 +11,7 @@ import { lightTheme, styles } from "./../Styles.js";
 import PostCard from "./../components/PostCard.js";
 import ContactCard from "./../components/ContactCard.js";
 import InteligentButton from "../components/InteligentButton.js";
+import ObjectByString from "../components/ObjectByString";
 
 
 function TabBarTop(props) {
@@ -127,109 +128,123 @@ function TabBarTop(props) {
 }  
 
 function Home(props){
-    // const routeName = useRoute().name;
-    // () => props.currentRoute(routeName)
-    return (
-        <ScrollView>
+    let posts = []
+    posts = props.db.users.Angelus.myHome.map(
+        (posts, index) => (
             <PostCard 
-                imagePlaceholder={
+                key={index}
+                imagePlaceholder={(ObjectByString(props.db, `${posts}.postImage`) != null)?
                     <View style={{
                         width: "100%",
                         height: wp("90%"),
                         backgroundColor: lightTheme.darkGrey,
                         borderRadius: 20, 
-                    }}/>
-                }
-                title="He is one with the furnace"
-                bodyText="Isso é um corpo de texto, onde irás desenvolver seu tema"
-                name="CheesePrince"
-                forum="PewdiepieSubs"
-                rating="100K"
+                    }}/> : null
+                } 
+                title={ObjectByString(props.db, `${posts}.title`)}
+                bodyText={ObjectByString(props.db, `${posts}.body`)}
+                name={ObjectByString(props.db, ObjectByString(props.db, `${posts}.name`))}
+                forum="Pewdie"
+                rating={ObjectByString(props.db, `${posts}.upvotes`)}
             />
-            <PostCard 
-                title="He is one with the furnace"
-                bodyText="Isso é um corpo de texto, onde irás desenvolver seu tema"
-                name="CheesePrincePrincePrince"
-                forum="PewdiepieSubs"
-                rating="100K"
-            />
-            <PostCard 
-                title="He is one with the furnace"
-                bodyText="Isso é um corpo de texto, onde irás desenvolver seu tema"
-                name="CheesePrince"
-                forum="PewdiepieSubs"
-                rating="100K"
-            />
-            <PostCard 
-                title="He is one with the furnace"
-                bodyText="Isso é um corpo de texto, onde irás desenvolver seu tema"
-                name="CheesePrince"
-                forum="PewdiepieSubs"
-                rating="100K"
-            />
+        )
+    )
+    return (
+        <ScrollView>
+            { posts }
         </ScrollView>
     );
 }
 
 function Forums(props) {
-    // const routeName = useRoute().name;
-    // () => props.currentRoute(routeName)
-    return (
-        <ScrollView>
-            <ContactCard 
-                imagePlaceholder={
+    let contacts = []
+    contacts = props.db.users.Angelus.myForums.map(
+        (contacts, index) => (
+            <ContactCard
+                key={index}
+                imagePlaceholder={(ObjectByString(props.db, `${contacts.profileImage}`) != null)?
                     <View style={{
                         width: wp("10%"),
                         height: wp("10%"),
                         backgroundColor: lightTheme.notSoDarkGrey,
                         borderRadius: 10, 
-                    }}/>
+                    }}/> : null
                 }
-                title="PewdiepieSubs"
-                subtitle="8,4K following"
+                title={ObjectByString(props.db, `${contacts.name}`)}
+                subtitle={`${ObjectByString(props.db, `${contacts.followers}`)} seguidores`}
                 mode="Forum"
+                favorite={contacts.favorite}
             />
+        )
+    )
+    return (
+        <ScrollView>
+            { contacts }
         </ScrollView>
     );
 }
 
-function Chats() {
-    return (
-        <ScrollView>
-            <ContactCard 
-                imagePlaceholder={
+function Chats(props) {
+    let chats = []
+    chats = props.db.users.Angelus.myChats.map(
+        (chats, index) => (
+            <ContactCard
+                key={index}
+                imagePlaceholder={(ObjectByString(props.db, chats.profileImage) != null)?
                     <View style={{
                         width: wp("10%"),
                         height: wp("10%"),
                         backgroundColor: lightTheme.notSoDarkGrey,
                         borderRadius: 10, 
-                    }}/>
+                    }}/> : null
                 }
-                title="Pewdiepie"
-                subtitle=">Helloo"
+                title={ObjectByString(props.db, chats.name)}
+                subtitle={ObjectByString(props.db, chats.bios)}
                 mode="Chat"
-                lastSaw="Ontem"
+                favorite={chats.favorite}
+                lastSaw={ObjectByString(props.db, chats.lastTime)}
             />
+        )
+    )
+    return (
+        <ScrollView>
+            { chats }
         </ScrollView>
     );
 }
 
-function Invites() {
-    return (
-        <ScrollView>
+function Invites(props) {
+    let invites = []
+    invites = props.db.users.Angelus.myInvites.map(
+        (invites, index) => (
             <ContactCard 
-                imagePlaceholder={
+                key={index}
+                imagePlaceholder={ObjectByString(props.db, `${ObjectByString(props.db, `${invites}.sender`)}.profileImage`) != null?
                     <View style={{
                         width: wp("10%"),
                         height: wp("10%"),
                         backgroundColor: lightTheme.notSoDarkGrey,
                         borderRadius: 10, 
-                    }}/>
+                    }}/> : null
                 }
-                title="Pewdiepie"
-                subtitle="Quer conversar com você!"
+                title={ObjectByString(props.db, `${ObjectByString(props.db, `${invites}.sender`)}.name`)}
+                subtitle={
+                    ObjectByString(props.db, `${invites}.sender`).indexOf("persons") !== -1 ?
+                    "Quer conversar com você!": 
+                    ObjectByString(props.db, `${invites}.sender`).indexOf("forums") !== -1 ?
+                    "Quer te convidar como mod!": 
+                    ObjectByString(props.db, `${invites}.sender`).indexOf("group") !== -1 ?
+                    "Quer te convidar para um grupo!": 
+                    "Erro"
+                }
                 mode="Invite"
             />
+        )
+    )
+
+    return (
+        <ScrollView>
+            { invites }
         </ScrollView>
     );
 }
@@ -276,10 +291,10 @@ function Tab(props) {
                     backgroundColor: lightTheme.ligthGrey
                 }}
             >
-                <tab.Screen name="Home" children={() => <Home/>}/>
-                <tab.Screen name="Forums" children={() => <Forums/>}/>
-                <tab.Screen name="Chats" children={() => <Chats/>}/>
-                <tab.Screen name="Invites" children={() => <Invites/>}/>
+                <tab.Screen name="Home" children={() => <Home db={props.db} />}/>
+                <tab.Screen name="Forums" children={() => <Forums db={props.db}/>}/>
+                <tab.Screen name="Chats" children={() => <Chats db={props.db}/>}/>
+                <tab.Screen name="Invites" children={() => <Invites db={props.db}/>}/>
             </tab.Navigator>
             <InteligentButton nextScreen={props.currentScreen} currentScreen={props.currentRoute}/>
         </View>

@@ -1,0 +1,190 @@
+{
+    "users": {
+        "Angelus": {
+            "me": "persons[2]",
+            "myHome": [
+                "forums[0].posts[0]",
+                "forums[0].posts[1]"
+            ],
+            "myForums": [
+                {
+                    "name": "forums[0].name",
+                    "followers": "forums[0].followers",
+                    "profileImage": "forums[0].profileImage",
+                    "favorite": 0
+                }
+            ],
+            "myChats": [
+                {
+                    "name": "persons[0].name",
+                    "bios": "persons[0].bios",
+                    "profileImage": "persons[0].profileImage",
+                    "lastTime": "chats.chatOfAngelusPewdiepie.messages[2].time",
+                    "favorite": 0
+                },
+                {
+                    "name": "chats.groupOfTheBros.name",
+                    "bios": "chats.groupOfTheBros.bios",
+                    "profileImage": "chats.groupOfTheBros.profileImage",
+                    "lastTime": "chats.groupOfTheBros.messages[2].time",
+                    "favorite": 1
+                }
+            ],
+            "myInvites": [
+                "invites.inviteOfAngelusPewdiepie",
+                "invites.inviteOfPewdiepieSubmissionsAngelus"
+            ]
+        }
+    },
+    "forums": [
+        {
+            "name": "PewdiepieSubmissions",
+            "followers": 8400,
+            "profileImage": "images.forums[0].profileImage",
+            "bannerImage": "images.forums[0].bannerImage",
+            "tags": [
+                "Personal",
+                "Fun",
+                "Youtube",
+                "Gaming"
+            ],
+            "forumBios": "The Forum of the 19y/o. And fans of Pewdiepie aka Felix Kjellberg",
+            "posts": [
+                {
+                    "postImage": "images.forums[0].posts[0].postImage",
+                    "title": "He is one with the furnace",
+                    "body" : "He is",
+                    "name": "persons[1].name",
+                    "upvotes": 17583,
+                    "comentaries": [
+                        {
+                            "title": "He is one with the furnace",
+                            "body" : "He is",
+                            "personName": "persons[1].personName",
+                            "upvotes": 17.583,
+                            "comentaries": [
+
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "He is one with the furnace",
+                    "body" : "He is",
+                    "name": "persons[0].name",
+                    "upvotes": 1583,
+                    "comentaries": [
+                    ]
+                }
+            ]
+        }
+    ],
+    "persons": [
+        {
+            "name": "Pewdiepie",
+            "bios": "I make videos.",
+            "profileImage": "images.persons[0].profileImage",
+            "bannerImage": "images.persons[0].bannerImage"
+        },
+        {
+            "name": "CheesePrince",
+            "bios": "Hiii"
+        },
+        {
+            "name": "Angelus",
+            "bios": "[0-0]"
+        }
+    ],
+    "chats": {
+        "chatOfAngelusPewdiepie": {
+            "messages": [
+                {
+                    "sender": "persons[0]",
+                    "time": "Ontem",
+                    "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
+                },
+                {
+                    "sender": "persons[2]",
+                    "time": "Ontem",
+                    "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore "
+                },
+                {
+                    "sender": "data.persons[0]",
+                    "time": "Ontem",
+                    "message": "Lorem ipsum dolor sit amet"
+                }
+            ]
+        },
+        "groupOfTheBros": {
+            "name": "The Bros",
+            "bios": "Grupo dos bross",
+            "profileImage": "images.groups[0].profileImage",
+            "bannerImage": "images.groups[0].bannerImage",
+            "members": [
+                "persons[0]",
+                "persons[1]",
+                "persons[2]"
+            ],
+            "adminstrators": [
+                "persons[2]"
+            ],
+            "messages": [
+                {
+                    "sender": "persons[0]",
+                    "time": "Ontem",
+                    "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
+                },
+                {
+                    "sender": "persons[2]",
+                    "time": "Ontem",
+                    "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore "
+                },
+                {
+                    "sender": "data.persons[3]",
+                    "time": "Ontem",
+                    "message": "Lorem ipsum dolor sit amet"
+                }
+            ]
+        }
+    },
+    "invites": {
+        "inviteOfAngelusPewdiepie": {
+            "sender": "persons[0]",
+            "receiver": "persons[2]"
+        },
+        "inviteOfPewdiepieSubmissionsAngelus": {
+            "sender": "forums[0]",
+            "receiver": "persons[2]"
+        }
+    },
+    "images": {
+        "forums": [
+            {
+                "profileImage": "imagem",
+                "bannerImage": "imagem",
+                "posts": [
+                    {
+                        "postImage": "imagem"
+                    }
+                ]
+            }
+        ],
+        "persons": [
+            {
+                "profileImage": "imagem",
+                "bannerImage": "imagem"
+            }
+        ],
+        "groups": [
+            {
+                "profileImage": "imagem",
+                "bannerImage": "imagem"
+            }
+        ],
+        "medias": {
+            "Angelus-Pewdiepie": [
+
+            ]
+        }
+    }
+}

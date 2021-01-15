@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import { StatusBar, View } from 'react-native'
 import { NavigationContainer } from "@react-navigation/native"
 
 import Tab from './Screens/Tab'
-import Settings from "./Screens/Settings";
-import { StatusBar, View, SafeAreaView } from 'react-native';
+import Settings from "./Screens/Settings"
+import db from "./components/database.json";
 
 function Routes() {
     const [ currentScreen, setCurrentScreen ] = useState("HomeTab")
@@ -19,13 +20,12 @@ function Routes() {
     }
 
     let scrn;
-
     switch (currentScreen) {
         case "HomeTab":
-            scrn = <Tab currentRoute={currentRoute} handleRoute={route => handleRoute(route)} currentScreen={props => handleScreen(props)}/> 
+            scrn = <Tab db={db} currentRoute={currentRoute} handleRoute={route => handleRoute(route)} currentScreen={props => handleScreen(props)}/> 
             break;
         case "Settings":
-            scrn = <Settings currentScreen={props => handleScreen(props)}/>
+            scrn = <Settings db={db} currentScreen={props => handleScreen(props)}/>
             break;
         default:
             scrn = <Tab currentRoute={currentRoute} handleRoute={route => handleRoute(route)} currentScreen={props => handleScreen(props)}/>

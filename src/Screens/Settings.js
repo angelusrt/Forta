@@ -6,6 +6,7 @@ import Icons from "./../components/Icons"
 
 import { lightTheme, styles } from "./../Styles.js"
 import InteligentButton from "../components/InteligentButton.js"
+import ObjectByString from "../components/ObjectByString";
 
 function Settings(props) {
     const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
@@ -19,30 +20,55 @@ function Settings(props) {
     const toggleNSFWSwitch = () => setIsNSFWEnabled(!isNSFWEnabled);
 
     const metric = wp("5%")
+
+    let profileImage = 
+        ObjectByString(props.db, `${props.db.users.Angelus.me}.profileImage`) != null ?
+        <View style={{
+            width: metric * 4,
+            height: metric * 4,
+            backgroundColor: lightTheme.yellow,
+            borderRadius: 10,
+            borderColor: lightTheme.kindOfLightGrey,
+            borderWidth: wp("0.625%")
+        }}/> : 
+        <View style={{
+            width: metric * 4,
+            height: metric * 4,
+            backgroundColor: lightTheme.red,
+            borderRadius: 10,
+            borderColor: lightTheme.kindOfLightGrey,
+            borderWidth: wp("0.625%")
+        }}/>
+
+    let bannerImage = 
+    ObjectByString(props.db, `${props.db.users.Angelus.me}.bannerImage`) != null ?
+    <View style={{
+        width: "100%",
+        height: wp("35%"),
+        backgroundColor: lightTheme.red,
+        borderRadius: 10, 
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0
+    }}/>:
+    <View style={{
+        width: "100%",
+        height: wp("35%"),
+        backgroundColor: lightTheme.yellow,
+        borderRadius: 10, 
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0
+    }}/>
+
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
             <ScrollView contentContainerStyle={{width: "100%"}}>
-                <View style={{
-                    width: "100%",
-                    height: wp("35%"),
-                    backgroundColor: lightTheme.yellow,
-                    borderRadius: 10, 
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0
-                }}/>
+                { bannerImage }
                 <View>
                     <View style={{
                         marginHorizontal: wp("5%"),
                         top: wp("-15%")
                     }}>
-                        <View style={{
-                            width: metric * 4,
-                            height: metric * 4,
-                            backgroundColor: lightTheme.red,
-                            borderRadius: 10,
-                            borderColor: lightTheme.kindOfLightGrey,
-                            borderWidth: wp("0.625%")
-                        }}/>
+                        { profileImage }
                         <View 
                             style={{
                                 flex: 1, 
@@ -54,8 +80,8 @@ function Settings(props) {
                             }}
                         >
                             <View>
-                                <Text style={ {...styles.headerText} }>Pewdiepie</Text>
-                                <Text style={ styles.bodyText }>I make videos.</Text>
+                                <Text style={ {...styles.headerText} }>{ObjectByString(props.db, `${props.db.users.Angelus.me}.name`)}</Text>
+                                <Text style={ styles.bodyText }>{ObjectByString(props.db, `${props.db.users.Angelus.me}.bios`)}</Text>
                             </View>
                             <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
                                 stroke: lightTheme.darkGrey ,

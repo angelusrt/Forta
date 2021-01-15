@@ -4,8 +4,8 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-nati
 import Icons from "./../components/Icons";
 import { lightTheme, styles } from "./../Styles";
 
-function ForumButtons() {
-    const[favoriteActive, setFavoriteActive] = useState(false);
+function ForumButtons(props) {
+    const[favoriteActive, setFavoriteActive] = useState(props.favorite === 0 ? false: true);
 
     return(
         <React.Fragment>
@@ -33,7 +33,7 @@ function ForumButtons() {
 }
 
 function ChatButtons(props) {
-    const[favoriteActive, setFavoriteActive] = useState(false);
+    const[favoriteActive, setFavoriteActive] = useState(props.favorite === 0 ? false: true);
 
     return(
         <React.Fragment>
@@ -87,6 +87,7 @@ function InviteButtons(props) {
 }
 
 function ContactCard(props) {
+    
     return (
         <View style={{borderRadius: 20, padding: wp("5%"), ...styles.card, ...styles.bottomWrapper}}>
             { props.imagePlaceholder}
@@ -101,8 +102,8 @@ function ContactCard(props) {
             </View>
             <View style={styles.rightButtonsWrapper}>
                 {
-                    (props.mode === "Forum")?<ForumButtons/>:
-                    (props.mode === "Chat")?<ChatButtons lastSaw={props.lastSaw}/>:
+                    (props.mode === "Forum")?<ForumButtons favorite={props.favorite}/>:
+                    (props.mode === "Chat")?<ChatButtons favorite={props.favorite} lastSaw={props.lastSaw}/>:
                     <InviteButtons/>
                 }
             </View>
