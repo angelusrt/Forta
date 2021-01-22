@@ -36,6 +36,11 @@ export const styles = StyleSheet.create({
     fontSize: wp("3.5%"),
     color: lightTheme.notSoLightGrey
   },
+  headerText3: {
+    fontFamily: "Poppins",
+    fontSize: wp("5.5%"),
+    color: lightTheme.darkGrey
+  },
   rateText: {
     fontFamily: "Roboto-Bold",
     fontSize: wp("4.5%")

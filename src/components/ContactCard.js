@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Image, Text, TouchableOpacity, Platform} from "react-native"
+import { View, Image, Text, TouchableOpacity, TouchableWithoutFeedback, Platform} from "react-native"
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import Icons from "./../components/Icons";
 import { lightTheme, styles } from "./../Styles";
@@ -89,25 +89,36 @@ function InviteButtons(props) {
 function ContactCard(props) {
     
     return (
-        <View style={{borderRadius: 20, padding: wp("5%"), ...styles.card, ...styles.bottomWrapper}}>
-            { props.imagePlaceholder}
-            {/* <Image/> */}
-            <View style={{flex: 2, marginRight: wp("5%"), marginLeft: wp("2.5%")}}>
-                <Text style={styles.headerText2} numberOfLines={1}> 
-                    {props.title}
-                </Text>
-                <Text style={styles.bodyText2} numberOfLines={1}>
-                    {props.subtitle}
-                </Text>
-            </View>
-            <View style={styles.rightButtonsWrapper}>
-                {
-                    (props.mode === "Forum")?<ForumButtons favorite={props.favorite}/>:
-                    (props.mode === "Chat")?<ChatButtons favorite={props.favorite} lastSaw={props.lastSaw}/>:
-                    <InviteButtons/>
+        <TouchableWithoutFeedback
+            onPress={
+                () => {
+                    props.handleScreenList(props.mode)
+                    props.mode === "Forum"? props.handleForum(props.forum):
+                    props.mode === "Chat"? props.handleForum(props.forum):
+                    null 
                 }
+            }
+        >
+            <View style={{borderRadius: 20, padding: wp("5%"), ...styles.card, ...styles.bottomWrapper}}>
+                { props.imagePlaceholder}
+                {/* <Image/> */}
+                <View style={{flex: 2, marginRight: wp("5%"), marginLeft: wp("2.5%")}}>
+                    <Text style={styles.headerText2} numberOfLines={1}> 
+                        {props.title}
+                    </Text>
+                    <Text style={styles.bodyText2} numberOfLines={1}>
+                        {props.subtitle}
+                    </Text>
+                </View>
+                <View style={styles.rightButtonsWrapper}>
+                    {
+                        (props.mode === "Forum")?<ForumButtons favorite={props.favorite}/>:
+                        (props.mode === "Chat")?<ChatButtons favorite={props.favorite} lastSaw={props.lastSaw}/>:
+                        <InviteButtons/>
+                    }
+                </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     );
 }
 

@@ -32,7 +32,7 @@ function TabBarTop(props) {
         ...rest
     } = props;
     useEffect(
-        () => {props.currentRoute(state.routeNames[state.index])}   
+        () => props.handleRoute(state.routeNames[state.index])   
     )
     return React.createElement(_reactNativeTabView.TabBar, _extends({}, rest, {
         navigationState: state,
@@ -147,8 +147,8 @@ function Home(props){
                 forum="Pewdie"
                 rating={ObjectByString(props.db, `${posts}.upvotes`)}
                 post={posts}
-                handlePost={props.handlePost}
-                nextScreen={props.nextScreen}
+                handlePostList={props.handlePostList}
+                handleScreenList={props.handleScreenList}
             />
         )
     )
@@ -160,12 +160,12 @@ function Home(props){
 }
 
 function Forums(props) {
-    let contacts = []
-    contacts = props.db.users.Angelus.myForums.map(
-        (contacts, index) => (
+    let forum = []
+    forum = props.db.users.Angelus.myForums.map(
+        (forum, index) => (
             <ContactCard
                 key={index}
-                imagePlaceholder={(ObjectByString(props.db, `${contacts.profileImage}`) != null)?
+                imagePlaceholder={(ObjectByString(props.db, `${forum.forum}.profileImage`) != null)?
                     <View style={{
                         width: wp("10%"),
                         height: wp("10%"),
@@ -173,16 +173,19 @@ function Forums(props) {
                         borderRadius: 10, 
                     }}/> : null
                 }
-                title={ObjectByString(props.db, `${contacts.name}`)}
-                subtitle={`${ObjectByString(props.db, `${contacts.followers}`)} seguidores`}
+                title={ObjectByString(props.db, `${forum.forum}.name`)}
+                subtitle={`${ObjectByString(props.db, `${forum.forum}.followers`)} seguidores`}
                 mode="Forum"
-                favorite={contacts.favorite}
+                favorite={forum.favorite}
+                forum={forum.forum}
+                handleForum={props.handleForum}
+                handleScreenList={props.handleScreenList}
             />
         )
     )
     return (
         <ScrollView>
-            { contacts }
+            { forum }
         </ScrollView>
     );
 }
@@ -262,8 +265,8 @@ function Tab(props) {
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
             <tab.Navigator  
-                initialRouteName={props.currentRoute}
-                tabBar={props => <TabBarTop currentRoute={routeName => handleRoute(routeName)} {...props} />}
+                initialRouteName={props.route}
+                tabBar={props => <TabBarTop handleRoute={route => handleRoute(route)} {...props} />}
                 tabBarOptions={
                     {
                     renderIndicator: () => null,
@@ -294,12 +297,12 @@ function Tab(props) {
                     backgroundColor: lightTheme.ligthGrey
                 }}
             >
-                <tab.Screen name="Home" children={() => <Home db={props.db} handlePost={props.handlePost} nextScreen={props.currentScreen}/>}/>
-                <tab.Screen name="Forums" children={() => <Forums db={props.db} nextScreen={props.currentScreen}/>}/>
-                <tab.Screen name="Chats" children={() => <Chats db={props.db} nextScreen={props.currentScreen}/>}/>
+                <tab.Screen name="Home" children={() => <Home db={props.db} handlePostList={props.handlePostList} handleScreenList={props.handleScreenList}/>}/>
+                <tab.Screen name="Forums" children={() => <Forums db={props.db} handleForum={props.handleForum} handleScreenList={props.handleScreenList}/>}/>
+                <tab.Screen name="Chats" children={() => <Chats db={props.db} handleScreenList={props.handleScreenList}/>}/>
                 <tab.Screen name="Invites" children={() => <Invites db={props.db} />}/>
             </tab.Navigator>
-            <InteligentButton nextScreen={props.currentScreen} currentScreen={props.currentRoute}/>
+            <InteligentButton handleScreenList={props.handleScreenList} screen={props.route}/>
         </View>
     );
 }

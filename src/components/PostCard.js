@@ -11,8 +11,8 @@ function PostCard(props) {
         <TouchableWithoutFeedback
             onPress={
                 () => {
-                    props.nextScreen("PostHome")
-                    props.handlePost(props.post)
+                    props.handleScreenList("Post")
+                    props.handlePostList(props.post)
                 }
             }
         >

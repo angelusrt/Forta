@@ -8,9 +8,7 @@
             ],
             "myForums": [
                 {
-                    "name": "forums[0].name",
-                    "followers": "forums[0].followers",
-                    "profileImage": "forums[0].profileImage",
+                    "forum": "forums[0]",
                     "favorite": 0
                 }
             ],
@@ -48,7 +46,7 @@
                 "Youtube",
                 "Gaming"
             ],
-            "forumBios": "The Forum of the 19y/o. And fans of Pewdiepie aka Felix Kjellberg",
+            "bios": "The Forum of the 19y/o. And fans of Pewdiepie aka Felix Kjellberg",
             "posts": [
                 {
                     "postImage": "images.forums[0].posts[0].postImage",

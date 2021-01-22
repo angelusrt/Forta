@@ -12,6 +12,17 @@ import ObjectByString from "../components/ObjectByString";
 
 function Post(props) {
     const[likeActive, setLikeActive] = useState(false)
+    let postImage = 
+        ObjectByString(props.db, `${props.post}.postImage`) != null?
+        <View style={{
+            width: "100%",
+            height: wp("100%"),
+            backgroundColor: lightTheme.darkGrey,
+            borderRadius: 20, 
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0,
+        }}/> : 
+        null
 
     let posts = []
     posts = ObjectByString(props.db, `${props.post}.comentaries`).map(
@@ -24,8 +35,8 @@ function Post(props) {
                 forum="Pewdie"
                 rating={posts.upvotes}
                 post={`${props.post}.comentaries[${index}]`}
-                handlePost={props.handlePost}
-                nextScreen={props.currentScreen}
+                handlePostList={props.handlePostList}
+                handleScreenList={props.handleScreenList}
             />
         )
     )
@@ -33,16 +44,7 @@ function Post(props) {
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
             <ScrollView contentContainerStyle={{width: "100%"}}>
-                {(ObjectByString(props.db, `${props.post}.postImage`) != null)?
-                    <View style={{
-                        width: "100%",
-                        height: wp("100%"),
-                        backgroundColor: lightTheme.darkGrey,
-                        borderRadius: 20, 
-                        borderTopRightRadius: 0,
-                        borderTopLeftRadius: 0,
-                    }}/> : null
-                }
+                { postImage }
                 <View>
                     <View style={{
                         marginHorizontal: wp("10%"),
@@ -95,7 +97,13 @@ function Post(props) {
                     {posts}
                 </View>
             </ScrollView>
-            <InteligentButton postLength={props.postLength} handleDecrementPost={props.handleDecrementPost} nextScreen={props.currentScreen} currentScreen="Post"/>
+            <InteligentButton 
+                postLength={props.postLength} 
+                handleDecrementPost={props.handleDecrementPost} 
+
+                handleDecrementScreen={props.handleDecrementScreen} 
+                screen="Post"
+            />
         </View>
     );
 }

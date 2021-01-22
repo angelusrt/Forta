@@ -41,23 +41,23 @@ function Settings(props) {
         }}/>
 
     let bannerImage = 
-    ObjectByString(props.db, `${props.db.users.Angelus.me}.bannerImage`) != null ?
-    <View style={{
-        width: "100%",
-        height: wp("35%"),
-        backgroundColor: lightTheme.red,
-        borderRadius: 10, 
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0
-    }}/>:
-    <View style={{
-        width: "100%",
-        height: wp("35%"),
-        backgroundColor: lightTheme.yellow,
-        borderRadius: 10, 
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0
-    }}/>
+        ObjectByString(props.db, `${props.db.users.Angelus.me}.bannerImage`) != null ?
+        <View style={{
+            width: "100%",
+            height: wp("35%"),
+            backgroundColor: lightTheme.red,
+            borderRadius: 10, 
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0
+        }}/>:
+        <View style={{
+            width: "100%",
+            height: wp("35%"),
+            backgroundColor: lightTheme.yellow,
+            borderRadius: 10, 
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0
+        }}/>
 
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
@@ -263,7 +263,7 @@ function Settings(props) {
                     </View>
                 </View>
             </ScrollView>
-            <InteligentButton nextScreen={props.currentScreen} currentScreen="Settings"/>
+            <InteligentButton handleDecrementScreen={props.handleDecrementScreen} screen="Settings"/>
         </View>
     );
 }
