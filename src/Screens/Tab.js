@@ -146,6 +146,9 @@ function Home(props){
                 name={ObjectByString(props.db, ObjectByString(props.db, `${posts}.name`))}
                 forum="Pewdie"
                 rating={ObjectByString(props.db, `${posts}.upvotes`)}
+                post={posts}
+                handlePost={props.handlePost}
+                nextScreen={props.nextScreen}
             />
         )
     )
@@ -291,10 +294,10 @@ function Tab(props) {
                     backgroundColor: lightTheme.ligthGrey
                 }}
             >
-                <tab.Screen name="Home" children={() => <Home db={props.db} />}/>
-                <tab.Screen name="Forums" children={() => <Forums db={props.db}/>}/>
-                <tab.Screen name="Chats" children={() => <Chats db={props.db}/>}/>
-                <tab.Screen name="Invites" children={() => <Invites db={props.db}/>}/>
+                <tab.Screen name="Home" children={() => <Home db={props.db} handlePost={props.handlePost} nextScreen={props.currentScreen}/>}/>
+                <tab.Screen name="Forums" children={() => <Forums db={props.db} nextScreen={props.currentScreen}/>}/>
+                <tab.Screen name="Chats" children={() => <Chats db={props.db} nextScreen={props.currentScreen}/>}/>
+                <tab.Screen name="Invites" children={() => <Invites db={props.db} />}/>
             </tab.Navigator>
             <InteligentButton nextScreen={props.currentScreen} currentScreen={props.currentRoute}/>
         </View>

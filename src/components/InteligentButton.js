@@ -70,6 +70,38 @@ function InteligentButton(props) {
                     </TouchableOpacity>
                 </React.Fragment>
             break;
+        case "Post":
+            buttonIcons =
+                <React.Fragment>
+                    <TouchableOpacity
+                        onPress={() => 
+                            {
+                                if(props.postLength <= 1){
+                                    props.handleDecrementPost()
+                                    props.nextScreen("HomeTab")
+                                } else{
+                                    props.handleDecrementPost()
+                                }
+                            }
+                        }
+                    >    
+                        <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
+                            stroke: lightTheme.darkGrey ,
+                            strokeLinejoin: "round",
+                            strokeWidth:"15.9px",
+                            marginRight: wp("1.25%")
+                        }}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icons name="Add" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
+                            stroke: lightTheme.darkGrey,
+                            strokeWidth:"33.1px",
+                            strokeLinejoin: "round",
+                            strokeMiterlimit:"1.5"
+                        }}/>
+                    </TouchableOpacity>
+                </React.Fragment>
+            break;
         case "Settings":
         default:
             buttonIcons =

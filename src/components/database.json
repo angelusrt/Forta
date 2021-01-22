@@ -60,8 +60,8 @@
                         {
                             "title": "He is one with the furnace",
                             "body" : "He is",
-                            "personName": "persons[1].personName",
-                            "upvotes": 17.583,
+                            "name": "persons[1].name",
+                            "upvotes": 17583,
                             "comentaries": [
 
                             ]
