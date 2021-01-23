@@ -41,6 +41,16 @@ export const styles = StyleSheet.create({
     fontSize: wp("5.5%"),
     color: lightTheme.darkGrey
   },
+  headerCardText: {
+    fontFamily: "Poppins",
+    fontSize: wp("4.5%")
+  },
+  cardText: {
+    fontFamily: "Roboto-Medium",
+    fontSize: wp("4%"),
+
+    lineHeight: 20
+  },
   rateText: {
     fontFamily: "Roboto-Bold",
     fontSize: wp("4.5%")
@@ -49,6 +59,18 @@ export const styles = StyleSheet.create({
   card: {
     marginHorizontal: wp("5%"),
     marginVertical: wp("2.5%"),
+    backgroundColor: lightTheme.white,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  card2: {
     backgroundColor: lightTheme.white,
 
     shadowColor: "#000",

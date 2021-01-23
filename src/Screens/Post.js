@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import _reactNative, { View, ScrollView, Text, TouchableOpacity, Platform} from "react-native"
 
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Icons from "./../components/Icons";
 
 import { lightTheme, styles } from "./../Styles.js";

@@ -6,6 +6,7 @@ import Tab from './Screens/Tab'
 import Settings from "./Screens/Settings"
 import Post from "./Screens/Post"
 import Forum from "./Screens/Forum";
+import Chat from "./Screens/Chat";
 
 import db from "./components/database.json";
 
@@ -14,6 +15,7 @@ function Routes() {
     const[screenList, setScreenList] = useState(["Tab"])
     const[postList, setPostList] = useState([])
     const[forum,setForum] = useState("")
+    const[chat,setChat] = useState("")
     const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
     const handleRoute = props => {
@@ -48,6 +50,10 @@ function Routes() {
         setForum(props)
     }
 
+    const handleChat = props => {
+        setChat(props)
+    }
+
     let scrn;
     switch (screenList[screenList.length - 1]) {
         case "Tab": 
@@ -58,6 +64,8 @@ function Routes() {
                     handlePostList={post => handlePostList(post)} 
 
                     handleForum={forum => handleForum(forum)}
+                    
+                    handleChat={chat => handleChat(chat)}
 
                     route={route} 
                     handleRoute={route => handleRoute(route)} 
@@ -99,6 +107,17 @@ function Routes() {
                     handlePostList={post => handlePostList(post)}
 
                     handleScreenList={props => handleScreenList(props)}
+                    handleDecrementScreen={() => handleDecrementScreen()} 
+                />
+            break;
+        case "Chat":
+            scrn = 
+                <Chat 
+                    db={db} 
+                    
+                    chat={chat} 
+                    handleChat={forum => handleForum(forum)}
+
                     handleDecrementScreen={() => handleDecrementScreen()} 
                 />
             break;

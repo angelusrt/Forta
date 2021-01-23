@@ -191,24 +191,51 @@ function Forums(props) {
 }
 
 function Chats(props) {
+    // ObjectByString(props.db, `${props.chat}.info`)
+    // .filter(prop => prop.name != "Angelus")
+    // .map(prop => prop.profileImage)
     let chats = []
     chats = props.db.users.Angelus.myChats.map(
         (chats, index) => (
             <ContactCard
                 key={index}
-                imagePlaceholder={(ObjectByString(props.db, chats.profileImage) != null)?
+                imagePlaceholder={
+                    ObjectByString(props.db, `${chats.chat}.info`)
+                    .filter(prop => prop.name != "Angelus")
+                    .map(prop => prop.profileImage) != null ?
                     <View style={{
                         width: wp("10%"),
                         height: wp("10%"),
                         backgroundColor: lightTheme.notSoDarkGrey,
                         borderRadius: 10, 
-                    }}/> : null
+                    }}/> : 
+                    <View style={{
+                        width: wp("10%"),
+                        height: wp("10%"),
+                        backgroundColor: lightTheme.red,
+                        borderRadius: 10, 
+                    }}/>
                 }
-                title={ObjectByString(props.db, chats.name)}
-                subtitle={ObjectByString(props.db, chats.bios)}
+                title={
+                    ObjectByString(props.db, `${chats.chat}.info`)
+                    .filter(prop => prop.name != "Angelus")
+                    .map(prop => prop.name)
+                }
+                subtitle={
+                    ObjectByString(props.db, `${chats.chat}.info`)
+                    .filter(prop => prop.name != "Angelus")
+                    .map(prop => prop.bios)
+                }
                 mode="Chat"
                 favorite={chats.favorite}
-                lastSaw={ObjectByString(props.db, chats.lastTime)}
+                lastSaw={
+                    ObjectByString(props.db, `${chats.chat}.messages`)
+                    [ObjectByString(props.db, `${chats.chat}.messages`).length - 1]
+                    .time
+                }
+                chat={chats.chat}
+                handleChat={props.handleChat}
+                handleScreenList={props.handleScreenList}
             />
         )
     )
@@ -299,7 +326,7 @@ function Tab(props) {
             >
                 <tab.Screen name="Home" children={() => <Home db={props.db} handlePostList={props.handlePostList} handleScreenList={props.handleScreenList}/>}/>
                 <tab.Screen name="Forums" children={() => <Forums db={props.db} handleForum={props.handleForum} handleScreenList={props.handleScreenList}/>}/>
-                <tab.Screen name="Chats" children={() => <Chats db={props.db} handleScreenList={props.handleScreenList}/>}/>
+                <tab.Screen name="Chats" children={() => <Chats db={props.db} handleChat={props.handleChat} handleScreenList={props.handleScreenList}/>}/>
                 <tab.Screen name="Invites" children={() => <Invites db={props.db} />}/>
             </tab.Navigator>
             <InteligentButton handleScreenList={props.handleScreenList} screen={props.route}/>

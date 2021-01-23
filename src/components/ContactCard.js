@@ -94,7 +94,7 @@ function ContactCard(props) {
                 () => {
                     props.handleScreenList(props.mode)
                     props.mode === "Forum"? props.handleForum(props.forum):
-                    props.mode === "Chat"? props.handleForum(props.forum):
+                    props.mode === "Chat"? props.handleChat(props.chat):
                     null 
                 }
             }

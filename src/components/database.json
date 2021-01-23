@@ -14,17 +14,11 @@
             ],
             "myChats": [
                 {
-                    "name": "persons[0].name",
-                    "bios": "persons[0].bios",
-                    "profileImage": "persons[0].profileImage",
-                    "lastTime": "chats.chatOfAngelusPewdiepie.messages[2].time",
+                    "chat": "chats.chatOfAngelusPewdiepie",
                     "favorite": 0
                 },
                 {
-                    "name": "chats.groupOfTheBros.name",
-                    "bios": "chats.groupOfTheBros.bios",
-                    "profileImage": "chats.groupOfTheBros.profileImage",
-                    "lastTime": "chats.groupOfTheBros.messages[2].time",
+                    "chat": "chats.groupOfTheBros",
                     "favorite": 1
                 }
             ],
@@ -95,6 +89,22 @@
     ],
     "chats": {
         "chatOfAngelusPewdiepie": {
+            "info": [
+                {
+                    "name": "Pewdiepie",
+                    "bios": "I make videos.",
+                    "profileImage": "images.persons[0].profileImage",
+                    "bannerImage": "images.persons[0].bannerImage"
+                },
+                {
+                    "name": "Angelus",
+                    "bios": "[0-0]"
+                }
+            ],
+            "members": [
+                "persons[0]",
+                "persons[2]"
+            ],
             "messages": [
                 {
                     "sender": "persons[0]",
@@ -107,17 +117,21 @@
                     "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore "
                 },
                 {
-                    "sender": "data.persons[0]",
+                    "sender": "persons[0]",
                     "time": "Ontem",
                     "message": "Lorem ipsum dolor sit amet"
                 }
             ]
         },
         "groupOfTheBros": {
-            "name": "The Bros",
-            "bios": "Grupo dos bross",
-            "profileImage": "images.groups[0].profileImage",
-            "bannerImage": "images.groups[0].bannerImage",
+            "info": [
+                {
+                    "name": "The Bros",
+                    "bios": "Grupo dos bross",
+                    "profileImage": "images.groups[0].profileImage",
+                    "bannerImage": "images.groups[0].bannerImage"
+                }
+            ],
             "members": [
                 "persons[0]",
                 "persons[1]",
@@ -138,7 +152,7 @@
                     "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore "
                 },
                 {
-                    "sender": "data.persons[3]",
+                    "sender": "persons[1]",
                     "time": "Ontem",
                     "message": "Lorem ipsum dolor sit amet"
                 }
