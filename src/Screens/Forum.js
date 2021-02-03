@@ -11,9 +11,10 @@ import ObjectByString from "../components/ObjectByString";
 
 function Forum(props) {
     const[follow, setFollow] = useState(true)
+    const[optionsActive, setOptionsActive] = useState(false)
 
     const metric = wp("5%")
-
+    
     let profileImage = 
         ObjectByString(props.db, `${props.forum}.profileImage`) != null ?
         <View style={{
@@ -78,10 +79,77 @@ function Forum(props) {
             />
         )
     )
-    
+
+    let options = (
+        <View
+            style={{
+                position: 'absolute',
+                top: wp("10%"),
+                right: 0,
+                ...styles.options
+            }}
+        >
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Share" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"33.1px",
+                    strokeLinejoin:"round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Compartilhar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"15.9px",
+                    strokeLinejoin: "round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Denunciar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"15.9px",
+                    strokeLinejoin: "round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Excluir</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Bios" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"33.1px",
+                    strokeLinejoin: "round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Regras</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Comentaries" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"33.1px",
+                    strokeLinejoin: "round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Mods</Text>
+            </TouchableOpacity>
+        </View>
+    )
+
     return (
-        <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
-            <ScrollView contentContainerStyle={{width: "100%"}}>
+        <View style={{flex: 1, backgroundColor: lightTheme.kindOfLightGrey}}>
+            <ScrollView contentContainerStyle={{paddingBottom: 200}}>
             { bannerImage }
                 <View style={{
                     marginHorizontal: metric,
@@ -129,7 +197,9 @@ function Forum(props) {
                                         strokeMiterlimit:"1.5"
                                     }}/>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ marginLeft: wp("2.5%")}}>
+                                <TouchableOpacity style={{ marginLeft: wp("2.5%")}}
+                                    onPress={() => setOptionsActive(!optionsActive)}
+                                >
                                     <Icons name="Options" width={wp("3.3%")} height={wp("10%")} viewBox="208 0 208 625" fill="none" style={{
                                         stroke: lightTheme.red,
                                         strokeWidth:"33.1px",
@@ -138,6 +208,9 @@ function Forum(props) {
                                     }}/>
                                 </TouchableOpacity>
                             </View>
+                            {
+                                optionsActive && options
+                            } 
                         </View>
                     </View>
                 </View>

@@ -153,7 +153,7 @@ function Home(props){
         )
     )
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{paddingBottom: 200}}>
             { posts }
         </ScrollView>
     );
@@ -183,8 +183,9 @@ function Forums(props) {
             />
         )
     )
+    
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{paddingBottom: 200}}>
             { forum }
         </ScrollView>
     );

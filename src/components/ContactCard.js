@@ -19,7 +19,9 @@ function ForumButtons(props) {
                     strokeMiterlimit:"1.5"
                 }}/>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => props.setOptions()}
+            >
                 <Icons name="Options" width={wp("3.3%")} height={wp("10%")} viewBox="208 0 208 625" fill="none" style={{
                     stroke: lightTheme.red,
                     strokeWidth:"33.1px",
@@ -87,7 +89,64 @@ function InviteButtons(props) {
 }
 
 function ContactCard(props) {
-    
+    const[optionsActive, setOptionsActive] = useState(false)
+
+    let options = (
+        <View
+            style={{
+                position: 'absolute',
+                top: wp("10%"),
+                right: 0,
+                ...styles.options
+            }}
+        >
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Share" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"33.1px",
+                    strokeLinejoin:"round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Compartilhar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Star" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"33.1px",
+                    strokeLinejoin:"round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Salvar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"15.9px",
+                    strokeLinejoin: "round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Denunciar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"15.9px",
+                    strokeLinejoin: "round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Excluir</Text>
+            </TouchableOpacity>
+        </View>
+    )
+
     return (
         <TouchableWithoutFeedback
             onPress={
@@ -97,9 +156,9 @@ function ContactCard(props) {
                     props.mode === "Chat"? props.handleChat(props.chat):
                     null 
                 }
-            }
+            }   
         >
-            <View style={{borderRadius: 20, padding: wp("5%"), ...styles.card, ...styles.bottomWrapper}}>
+            <View style={{borderRadius: 20, overflow: 'visible', padding: wp("5%"), ...styles.card, ...styles.bottomWrapper}}>
                 { props.imagePlaceholder}
                 {/* <Image/> */}
                 <View style={{flex: 2, marginRight: wp("5%"), marginLeft: wp("2.5%")}}>
@@ -112,10 +171,13 @@ function ContactCard(props) {
                 </View>
                 <View style={styles.rightButtonsWrapper}>
                     {
-                        (props.mode === "Forum")?<ForumButtons favorite={props.favorite}/>:
+                        (props.mode === "Forum")?<ForumButtons setOptions={() => setOptionsActive(!optionsActive)} favorite={props.favorite}/>:
                         (props.mode === "Chat")?<ChatButtons favorite={props.favorite} lastSaw={props.lastSaw}/>:
                         <InviteButtons/>
                     }
+                    {
+                        optionsActive && options
+                    } 
                 </View>
             </View>
         </TouchableWithoutFeedback>

@@ -6,6 +6,63 @@ import { lightTheme, styles } from "./../Styles";
 
 function PostCard(props) {
     const[likeActive, setLikeActive] = useState(false)
+    const[optionsActive, setOptionsActive] = useState(false)
+
+    let options = (
+        <View
+            style={{
+                position: 'absolute',
+                bottom: wp("10%"),
+                right: 0,
+                ...styles.options
+            }}
+        >
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Share" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"33.1px",
+                    strokeLinejoin:"round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Compartilhar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Star" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"33.1px",
+                    strokeLinejoin:"round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Salvar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"15.9px",
+                    strokeLinejoin: "round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Denunciar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={ styles.bottomWrapper }
+            >
+                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
+                    stroke:lightTheme.darkGrey,
+                    strokeWidth:"15.9px",
+                    strokeLinejoin: "round",
+                    strokeMiterlimit:"1.5"
+                }}/>
+                <Text style={ styles.headerText }>Excluir</Text>
+            </TouchableOpacity>
+        </View>
+    )
 
     return (
         <TouchableWithoutFeedback
@@ -53,7 +110,9 @@ function PostCard(props) {
                                     transform: [{ rotate: "90deg" }]
                                 }}/>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ marginLeft: wp("2.5%")}}>
+                            <TouchableOpacity style={{ marginLeft: wp("2.5%")}}
+                                onPress={() => setOptionsActive(!optionsActive)}
+                            >
                                 <Icons name="Options" width={wp("3.3%")} height={wp("10%")} viewBox="208 0 208 625" fill="none" style={{
                                     stroke: lightTheme.red,
                                     strokeWidth:"33.1px",
@@ -62,6 +121,9 @@ function PostCard(props) {
                                 }}/>
                             </TouchableOpacity>
                         </View>
+                        {
+                            optionsActive && options
+                        } 
                     </View>
                 </View>
             </View>
