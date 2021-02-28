@@ -1,19 +1,21 @@
 import React from 'react';
 import Routes from './src/Routes'
 import AppLoading from 'expo-app-loading';
-import { useFonts } from "@use-expo/font";
+import { useFonts } from "expo-font";
+import { Poppins_700Bold, Poppins_600SemiBold } from "@expo-google-fonts/poppins";
+import { Roboto_700Bold, Roboto_500Medium, Roboto_400Regular } from "@expo-google-fonts/roboto";
 
 export default () => {
     let [fontsLoaded] = useFonts({
-        'Poppins': require('./assets/fonts/Poppins-Bold.ttf'),
-        'Poppins-SemiBold': require('./assets/fonts/Poppins-SemiBold.ttf'),
-        'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
-        'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
-        'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf')
-    });
+        Poppins_700Bold,
+        Poppins_600SemiBold, 
+        Roboto_700Bold,
+        Roboto_500Medium,
+        Roboto_400Regular
+    })
     if (!fontsLoaded) {
-        return <AppLoading />;
+        return <AppLoading />
     } else {
-        return (<Routes />)
+        return <Routes />
     }
 }

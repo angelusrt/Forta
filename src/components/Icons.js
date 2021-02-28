@@ -83,6 +83,13 @@ export default Icon;
     strokeMiterlimit:"1.5"
 }}/>
 
+<Icons name="Forta" viewBox="0 0 2292 834" fill="none" style={{
+    stroke:"#000",
+    strokeWidth:"33.1px",
+    strokeLinejoin: "round",
+    strokeMiterlimit:"2"
+}}/>
+
 <Icons name="Google" viewBox="0 0 300 300" fill="none" style={{
     stroke:"#000",
     strokeWidth:"15.9px",

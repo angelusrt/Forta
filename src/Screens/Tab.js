@@ -135,8 +135,8 @@ function Home(props){
                 key={index}
                 imagePlaceholder={(ObjectByString(props.db, `${posts}.postImage`) != null)?
                     <View style={{
-                        width: "100%",
-                        height: wp("90%"),
+                        width: wp("99%"),
+                        height: wp("99%"),
                         backgroundColor: lightTheme.darkGrey,
                         borderRadius: 20, 
                     }}/> : null
@@ -310,8 +310,8 @@ function Tab(props) {
                         elevation: 0,
                     },
                     labelStyle: {
-                        fontFamily: 'Poppins',
-                        fontSize: wp("4.5%"),
+                        fontFamily: 'Poppins_700Bold',
+                        fontSize: wp("5%"),
                         textTransform: 'none',
 
                         margin: 0,
