@@ -27,17 +27,13 @@ function Settings(props) {
             width: metric * 4,
             height: metric * 4,
             backgroundColor: lightTheme.yellow,
-            borderRadius: 10,
-            borderColor: lightTheme.kindOfLightGrey,
-            borderWidth: wp("0.625%")
+            borderRadius: 10
         }}/> : 
         <View style={{
             width: metric * 4,
             height: metric * 4,
             backgroundColor: lightTheme.red,
-            borderRadius: 10,
-            borderColor: lightTheme.kindOfLightGrey,
-            borderWidth: wp("0.625%")
+            borderRadius: 10
         }}/>
 
     let bannerImage = 
@@ -66,29 +62,54 @@ function Settings(props) {
                 <View>
                     <View style={{
                         marginHorizontal: wp("5%"),
-                        top: wp("-15%")
+                        top: wp("-10%")
                     }}>
-                        { profileImage }
-                        <View 
-                            style={{
-                                flex: 1, 
-                                justifyContent: 'space-between', 
-                                paddingHorizontal: metric,
-                                paddingVertical: metric/4,
-                                marginBottom: metric,
-                                ...styles.bottomWrapper
-                            }}
-                        >
-                            <View>
-                                <Text style={ {...styles.headerText} }>{ObjectByString(props.db, `${props.db.users.Angelus.me}.name`)}</Text>
-                                <Text style={ styles.bodyText }>{ObjectByString(props.db, `${props.db.users.Angelus.me}.bios`)}</Text>
+                        <View style={{
+                            flex: 1, 
+                            //justifyContent: 'space-between', 
+                            paddingHorizontal: metric,
+                            paddingVertical: metric,
+                            marginBottom: metric,
+                            borderRadius: metric,
+                            backgroundColor: lightTheme.ligthGrey,
+                            ...styles.bottomWrapper
+                        }}>
+                            { profileImage }
+
+                            <View style={{
+                                marginLeft: metric 
+                            }}>
+                                <Text style={{
+                                    fontFamily: 'Poppins_700Bold',
+                                    color: lightTheme.darkGrey,
+                                    fontSize: wp("7%"),
+                                    marginBottom: -wp("2.5%")    
+                                }}>
+                                    {ObjectByString(props.db, `${props.db.users.Angelus.me}.name`)}
+                                </Text>
+                                <Text style={ styles.authSubheader }>
+                                    {ObjectByString(props.db, `${props.db.users.Angelus.me}.bios`)}
+                                </Text>
                             </View>
-                            <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                                stroke: lightTheme.darkGrey ,
-                                strokeLinejoin: "round",
-                                strokeWidth:"15.9px",
-                                transform: [{ rotate: "180deg" }]
-                            }}/>
+
+                            <TouchableOpacity style={{
+                                position: 'absolute',
+                                right: metric
+                            }}>
+                                <Icons 
+                                    name="Arrow" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300" 
+                                    fill="none" 
+                                    style={{
+                                        stroke: lightTheme.darkGrey,
+                                        strokeLinejoin: "round",
+                                        strokeWidth:"15.9px",
+                                        transform: [{ rotate: "180deg" }]
+                                    }}
+                                />
+                            </TouchableOpacity>
                         </View>
                         
                         <View 
@@ -101,12 +122,19 @@ function Settings(props) {
                             }}
                         >
                             <Text style={ styles.headerText }>Mudar Email</Text>
-                            <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                                stroke: lightTheme.darkGrey ,
-                                strokeLinejoin: "round",
-                                strokeWidth:"15.9px",
-                                transform: [{ rotate: "180deg" }]
-                            }}/>
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{
+                                    stroke: lightTheme.darkGrey ,
+                                    strokeLinejoin: "round",
+                                    strokeWidth:"15.9px",
+                                    transform: [{ rotate: "180deg" }]
+                                }}
+                            />
                         </View>
 
                         <View 
@@ -119,12 +147,19 @@ function Settings(props) {
                             }}
                         >
                             <Text style={ styles.headerText }>Mudar Senha</Text>
-                            <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                                stroke: lightTheme.darkGrey ,
-                                strokeLinejoin: "round",
-                                strokeWidth:"15.9px",
-                                transform: [{ rotate: "180deg" }]
-                            }}/>
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none"
+                                style={{
+                                    stroke: lightTheme.darkGrey ,
+                                    strokeLinejoin: "round",
+                                    strokeWidth:"15.9px",
+                                    transform: [{ rotate: "180deg" }]
+                                }}
+                            />
                         </View>
 
                         <View 
@@ -138,12 +173,19 @@ function Settings(props) {
                             }}
                         >
                             <Text style={ styles.headerText }>Deletar Conta</Text>
-                            <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                                stroke: lightTheme.darkGrey ,
-                                strokeLinejoin: "round",
-                                strokeWidth:"15.9px",
-                                transform: [{ rotate: "180deg" }]
-                            }}/>
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none"
+                                style={{
+                                    stroke: lightTheme.darkGrey ,
+                                    strokeLinejoin: "round",
+                                    strokeWidth:"15.9px",
+                                    transform: [{ rotate: "180deg" }]
+                                }}
+                            />
                         </View>
 
                         <View 
@@ -233,12 +275,19 @@ function Settings(props) {
                             }}
                         >
                             <Text style={ styles.headerText }>Ver favoritos</Text>
-                            <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                                stroke: lightTheme.darkGrey ,
-                                strokeLinejoin: "round",
-                                strokeWidth:"15.9px",
-                                transform: [{ rotate: "180deg" }]
-                            }}/>
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{
+                                    stroke: lightTheme.darkGrey ,
+                                    strokeLinejoin: "round",
+                                    strokeWidth:"15.9px",
+                                    transform: [{ rotate: "180deg" }]
+                                }}
+                            />
                         </View>
 
                         <View 
@@ -252,18 +301,28 @@ function Settings(props) {
                             }}
                         >
                             <Text style={ styles.headerText }>Sobre e termos</Text>
-                            <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                                stroke: lightTheme.darkGrey ,
-                                strokeLinejoin: "round",
-                                strokeWidth:"15.9px",
-                                transform: [{ rotate: "180deg" }]
-                            }}/>
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{
+                                    stroke: lightTheme.darkGrey ,
+                                    strokeLinejoin: "round",
+                                    strokeWidth:"15.9px",
+                                    transform: [{ rotate: "180deg" }]
+                                }}
+                            />
                         </View>
                                 
                     </View>
                 </View>
             </ScrollView>
-            <InteligentButton handleDecrementScreen={props.handleDecrementScreen} screen="Settings"/>
+            <InteligentButton 
+                handleDecrementScreen={props.handleDecrementScreen} 
+                screen="Settings"
+            />
         </View>
     );
 }

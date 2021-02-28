@@ -2,6 +2,7 @@ import React, { useState , useEffect} from 'react'
 import { StatusBar, View } from 'react-native'
 import { NavigationContainer } from "@react-navigation/native"
 
+import Auth from "./Screens/Auth";
 import Tab from './Screens/Tab'
 import Settings from "./Screens/Settings"
 import Post from "./Screens/Post"
@@ -12,12 +13,17 @@ import db from "./components/database.json";
 
 function Routes() {
     const[route, setRoute] = useState("Home")
-    const[screenList, setScreenList] = useState(["Tab"])
+    const[screenList, setScreenList] = useState(["Auth"])
     const[postList, setPostList] = useState([])
     const[forum,setForum] = useState("")
     const[chat,setChat] = useState("")
+    const[token,setToken] = useState("")
     const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
+    const handleToken = () => {
+        setScreenList(["Tab"])
+    }
+    
     const handleRoute = props => {
         setRoute(props)
     }
@@ -56,6 +62,17 @@ function Routes() {
 
     let scrn;
     switch (screenList[screenList.length - 1]) {
+        case "Auth": 
+            scrn = 
+                <Auth 
+                    db={db} 
+
+                    token={token}
+                    setToken={token => setToken(token)}
+
+                    handleToken={() => handleToken()}
+                /> 
+            break;
         case "Tab": 
             scrn = 
                 <Tab 
