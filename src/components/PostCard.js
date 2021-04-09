@@ -73,10 +73,22 @@ function PostCard(props) {
                 }
             }
         >
-            <View style={{borderRadius: 20, ...styles.card}}>
+            <View style={{
+                borderRadius: 20,
+                //backgroundColor: lightTheme.white
+            }}>
                 {(props.postImage && <Image/>) || props.imagePlaceholder }
                 
-                <View style={{ padding: wp("5%") }}>
+                <View style={{
+                    padding: wp("5%"), 
+                    marginHorizontal: wp("2.5%"),
+                    borderRadius: 20, 
+                    borderColor: lightTheme.ligthGrey,
+                    //borderTopWidth: wp("0.5%"),
+                    borderBottomWidth: wp("0.5%"),
+                    backgroundColor: lightTheme.white,
+                    marginBottom: wp("1.25%")
+                }}>
                     <Text style={styles.headerText}>
                         {props.title}
                     </Text>

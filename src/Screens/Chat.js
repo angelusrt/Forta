@@ -43,14 +43,15 @@ function Chat(props) {
                     borderRadius: 20, 
                     padding: metric,
                     paddingBottom: metric/3*2,
-                    marginVertical: metric/2,
-                    marginLeft: chat.sender !== "persons[2]" ?
-                    metric : 
-                    metric * 3,  
-                    marginRight: chat.sender !== "persons[2]" ?
-                    metric * 3 : 
-                    metric,
-                    ...styles.card2
+                    marginBottom: metric/4,
+                    //marginVertical: metric/4,
+                    //borderWidth: 
+                    borderBottomLeftRadius: chat.sender !== "persons[2]" ? 0 : 20,
+                    borderBottomRightRadius: chat.sender !== "persons[2]" ? 20 : 0, 
+                    marginLeft: chat.sender !== "persons[2]" ? metric/2 : metric * 3,  
+                    marginRight: chat.sender !== "persons[2]" ? metric * 3 : metric/2,
+                    ...styles.card,
+                    //...styles.card2
                 }}
             >
                 {
@@ -86,18 +87,22 @@ function Chat(props) {
     
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
-            <View style={{margin: metric, ...styles.bottomWrapper}}>
+            <View style={{
+                margin: metric, 
+                marginHorizontal: metric + (metric/2), 
+                ...styles.bottomWrapper
+            }}>
                 <View style={{flex: 1.5, marginRight: metric, ...styles.bottomWrapper}}>
                     {profileImage}
                     <View style={{marginLeft: metric/2}}>
-                        <Text style={{bottom: "-7.5%", ...styles.headerText}}>
+                        <Text numberOfLines={1} style={{bottom: "-7.5%", ...styles.headerText}}>
                             {
                                 ObjectByString(props.db, `${props.chat}.info`)
                                 .filter(prop => prop.name != "Angelus")
                                 .map(prop => prop.name)
                             }
                         </Text>
-                        <Text style={{ top: "-10%", ...styles.bodyText }}>
+                        <Text numberOfLines={1} style={{ top: "-10%", ...styles.bodyText }}>
                             {
                                 ObjectByString(props.db, `${props.chat}.info`)
                                 .filter(prop => prop.name != "Angelus")
@@ -117,18 +122,17 @@ function Chat(props) {
                     </TouchableOpacity>
                 </View>
             </View>
+
             <ScrollView contentContainerStyle={{width: "100%"}}>
                 <View 
                     style={{
-                        backgroundColor: lightTheme.ligthGrey, 
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        paddingTop: metric/2
+                        backgroundColor: lightTheme.ligthGrey
                     }}
                 >
                     {chat}
                 </View>
             </ScrollView>
+
             <InteligentButton 
                 handleDecrementScreen={props.handleDecrementScreen} 
                 screen="Chat"

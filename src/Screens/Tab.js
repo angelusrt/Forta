@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import _reactNative, { View, ScrollView, Text, TouchableOpacity, Platform} from "react-native"
 
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
@@ -128,67 +128,176 @@ function TabBarTop(props) {
 }  
 
 function Home(props){
-    let posts = []
-    posts = props.db.users.Angelus.myHome.map(
-        (posts, index) => (
-            <PostCard 
-                key={index}
-                imagePlaceholder={(ObjectByString(props.db, `${posts}.postImage`) != null)?
-                    <View style={{
-                        width: wp("99%"),
-                        height: wp("99%"),
-                        backgroundColor: lightTheme.darkGrey,
-                        borderRadius: 20, 
-                    }}/> : null
-                } 
-                title={ObjectByString(props.db, `${posts}.title`)}
-                bodyText={ObjectByString(props.db, `${posts}.body`)}
-                name={ObjectByString(props.db, ObjectByString(props.db, `${posts}.name`))}
-                forum="Pewdie"
-                rating={ObjectByString(props.db, `${posts}.upvotes`)}
-                post={posts}
-                handlePostList={props.handlePostList}
-                handleScreenList={props.handleScreenList}
-            />
-        )
-    )
+    const[forums, setForums] = useState([])
+    const[posts, setPosts] = useState([])
+    const[resolved, setResolved] = useState(false)
+
+    const httpEnvelope = {
+        method: "GET",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': props.token
+        }
+    }
+
+    const onTryToGetMyForums = async () => {
+        return await fetch("http://192.168.0.106:3000/api/user/myForums", httpEnvelope )
+            .then( res => res.json())
+            .then( data => {
+                setForums(data)
+                console.log(data)
+            })
+            .catch(err => err)
+    }
+    
+    const onTryToGetForum = async (forum) => { 
+        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, httpEnvelope )
+                    .then( res => res.json() )
+                    .then( data => data )
+                    .catch( err => console.log(err) )
+    }
+    
+    useEffect(() => {
+        onTryToGetMyForums()
+    }, [])
+
+    useEffect(() => {
+        const loadData = async () => {
+            
+            Promise.all(forums.map(async (forum, idF) => {
+                let forumInfo = await onTryToGetForum(forum)
+                
+                console.log(forumInfo)
+                console.log(forumInfo.groupName)
+                
+                return forumInfo.posts.map( (post, idP) => (
+                    <PostCard 
+                        key={idF + "_" + idP}
+                        imagePlaceholder={
+                            <View style={{
+                                width: wp("95%"),
+                                height: wp("95%"),
+                                marginHorizontal: wp("2.5%"),
+                                //marginTop: wp("5%"),
+                                //marginLeft: wp("5%"),
+                                marginTop: wp("-20%"),
+                                top: wp("20%"),
+                                borderColor: lightTheme.ligthGrey,
+                                borderTopWidth: wp("0.5%"),
+                                backgroundColor: lightTheme.notSoDarkGrey,
+                                borderRadius: 20, 
+                            }}/>
+                        } 
+                        title={post.title}
+                        bodyText={post.bodyText}
+                        name={post.author}
+                        forum={forumInfo.groupName}
+                        rating={post.upvotes}
+                        post={post._id}
+                        handlePostList={props.handlePostList}
+                        handleScreenList={props.handleScreenList}
+                    />
+                ))
+                
+            })).then(data => {
+                setResolved(true)
+                setPosts(data)
+            })
+        }
+        loadData()
+    },[forums])
+    
     return (
         <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-            { posts }
+            { resolved ? posts : <Text style={{textAlign: "center"}}>Loading...</Text> }
         </ScrollView>
     );
 }
 
 function Forums(props) {
-    let forum = []
-    forum = props.db.users.Angelus.myForums.map(
-        (forum, index) => (
-            <ContactCard
-                key={index}
-                imagePlaceholder={(ObjectByString(props.db, `${forum.forum}.profileImage`) != null)?
-                    <View style={{
-                        width: wp("10%"),
-                        height: wp("10%"),
-                        backgroundColor: lightTheme.notSoDarkGrey,
-                        borderRadius: 10, 
-                    }}/> : null
-                }
-                title={ObjectByString(props.db, `${forum.forum}.name`)}
-                subtitle={`${ObjectByString(props.db, `${forum.forum}.followers`)} seguidores`}
-                mode="Forum"
-                favorite={forum.favorite}
-                forum={forum.forum}
-                handleForum={props.handleForum}
-                handleScreenList={props.handleScreenList}
-            />
-        )
-    )
+    const[forums, setForums] = useState([])
+    const[forum, setForum] = useState()
+    const[resolved, setResolved] = useState(false)
+
+    const httpEnvelope = {
+        method: "GET",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': props.token
+        }
+    }
+
+    const onTryToGetMyForums = async () => {
+        return await fetch("http://192.168.0.106:3000/api/user/myForums", httpEnvelope )
+            .then( res => res.json())
+            .then( data => {
+                setForums(data)
+                console.log(data)
+            })
+            .catch(err => err)
+    }
+    
+    const onTryToGetForum = async (forum) => { 
+        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, httpEnvelope )
+                    .then( res => res.json() )
+                    .then( data => data )
+                    .catch( err => console.log(err) )
+    }
+    
+    useEffect(() => {
+        onTryToGetMyForums()
+    }, [])
+
+    useEffect(() => {
+        const loadData = async () => {
+            
+            Promise.all(forums.map(async (forum, index) => {
+                let forumInfo = await onTryToGetForum(forum)
+                
+                console.log(forumInfo)
+                console.log(forumInfo.groupName)
+            
+                return (
+                    <ContactCard
+                        key={index}
+                        imagePlaceholder={
+                            <View style={{
+                                width: wp("10%"),
+                                height: wp("10%"),
+                                backgroundColor: lightTheme.notSoDarkGrey,
+                                borderRadius: 10, 
+                            }}/>
+                        }
+                        title={forumInfo.groupName}
+                        subtitle={`${forumInfo.followers.length} seguidores`}
+                        mode="Forum"
+                        favorite={false}
+                        forum={forumInfo._id}
+                        handleForum={props.handleForum}
+                        handleScreenList={props.handleScreenList}
+                    />
+                )
+            })).then(data => {
+                setResolved(true)
+                setForum(data)
+            })
+        }
+        loadData()
+    },[forums])
     
     return (
         <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-            { forum }
+            { 
+                resolved ? forum : <Text style={{textAlign: "center"}}>Loading...</Text>
+            }
         </ScrollView>
-    );
+    )
 }
 
 function Chats(props) {
@@ -325,10 +434,10 @@ function Tab(props) {
                     backgroundColor: lightTheme.ligthGrey
                 }}
             >
-                <tab.Screen name="Home" children={() => <Home db={props.db} handlePostList={props.handlePostList} handleScreenList={props.handleScreenList}/>}/>
-                <tab.Screen name="Forums" children={() => <Forums db={props.db} handleForum={props.handleForum} handleScreenList={props.handleScreenList}/>}/>
-                <tab.Screen name="Chats" children={() => <Chats db={props.db} handleChat={props.handleChat} handleScreenList={props.handleScreenList}/>}/>
-                <tab.Screen name="Invites" children={() => <Invites db={props.db} />}/>
+                <tab.Screen name="Home" children={() => <Home db={props.db} token={props.token} handlePostList={props.handlePostList} handleScreenList={props.handleScreenList}/>}/>
+                <tab.Screen name="Forums" children={() => <Forums token={props.token} db={props.db} handleForum={props.handleForum} handleScreenList={props.handleScreenList}/>}/>
+                <tab.Screen name="Chats" children={() => <Chats token={props.token} db={props.db} handleChat={props.handleChat} handleScreenList={props.handleScreenList}/>}/>
+                <tab.Screen name="Invites" children={() => <Invites db={props.db} token={props.token}/>}/>
             </tab.Navigator>
             <InteligentButton handleScreenList={props.handleScreenList} screen={props.route}/>
         </View>

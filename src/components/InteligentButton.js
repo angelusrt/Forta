@@ -145,15 +145,15 @@ function InteligentButton(props) {
                     </TouchableOpacity>
                    <TextInput
                         style={{
-                            backgroundColor: lightTheme.kindOfLightGrey,
-                            color: lightTheme.darkGrey,
-                            fontFamily: "Roboto-Medium",
+                            fontFamily: "Roboto_500Medium",
                             paddingHorizontal: wp("2.5%"),
                             width: wp("55%"),
                             marginRight: wp("1.25%"),
                             borderRadius: 10,
                             borderWidth: wp("0.5%"),
-                            borderColor: lightTheme.notSoLightGrey
+                            borderColor: lightTheme.kindOfLightGrey,
+                            color: lightTheme.darkGrey, 
+                            backgroundColor: lightTheme.ligthGrey
                         }}
 
                    />

@@ -3,12 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, Platform, Button} from "react-
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import { createStackNavigator } from "@react-navigation/stack"
 
-import InteligentButton from "../components/InteligentButton";
+//import InteligentButton from "../components/InteligentButton";
 import Icons from "../components/Icons";
 
 import { lightTheme, styles } from "./../Styles.js";
 
-function Login({navigation}) {
+function Login(props) {
     const[email, setEmail] = useState("")
     const[password, setPassword] = useState("")
 
@@ -25,23 +25,16 @@ function Login({navigation}) {
             })
         }
         const token = await fetch("http://192.168.0.106:3000/api/user/login", httpEnvelope )
-                            .then( res => JSON.stringify(res))
-                            .catch(err => err)
+                            .then( res => JSON.parse(JSON.stringify(res)).headers.map["auth-token"])
+                            .catch(err => console.log(err))
 
+        await props.setToken(token)
+        await props.handleToken()
         console.log(token)
-        props.setToken(token)
-        props.handleToken()
     }
     
     return(
         <View style={ styles.authContainer }>
-            {/* <View style={ styles.authTopCard }>
-                <Icons name="Forta" width={wp("30%")} height={wp("30%")} viewBox="0 0 2292 834" fill={ lightTheme.notSoLightGrey } style={{
-                    strokeWidth:"33.1px",
-                    strokeLinejoin: "round",
-                    strokeMiterlimit:"2"
-                }}/>
-            </View> */}
             <View style={ styles.authCard }>
 
                 <Text style={ styles.authHeader }>Entre</Text>
@@ -62,18 +55,18 @@ function Login({navigation}) {
                 />
 
                 <TouchableOpacity
-                    onPress={ () => navigation.navigate("ChangePassword")}
+                    onPress={ () => props.navigation.navigate("ChangePassword")}
                 >
                     <Text style={ styles.authSubtitle }>Não se lembra da senha? Mude!</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={ () => navigation.navigate("Register")}
+                    onPress={ () => props.navigation.navigate("Register")}
                 >
                     <Text style={ styles.authSubtitle }>Não tem uma conta? Crie!</Text>
                 </TouchableOpacity>
 
-                <View style={{marginTop: wp("5%"), ...styles.bottomWrapper }}>
+                <View style={{ marginTop: wp("5%"), ...styles.bottomWrapper }}>
                     <TouchableOpacity
                         onPress={ () => onTryToLog() } 
                         style={{
@@ -339,33 +332,48 @@ function User(props) {
             })
         }
         const token = await fetch("http://192.168.0.106:3000/api/user/register", httpEnvelope )
-                            .then( res => JSON.stringify(res))
+                            .then( res => JSON.parse(res))
                             .catch(err => err)
         
         console.log(token)
         props.setToken(token)
         props.handleToken()
     }
-
+    // {
+    //     "type":"default","status":200,"ok":true,"headers":{
+    //         "map":{
+    //             "content-length":"149","connection":"keep-alive","x-powered-by":"Express","content-type":"text/html; charset=utf-8",
+    //              "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDI3ZGY4MDM1NzVjMzBkMDhkZWFkYzciLCJpYXQiOjE2MTYzNzA4ODZ9.p1hT1wYQVfY_QHkapjC2Kpn0DvSMtdeOUci_vXS63UQ","etag":"W/\"95-W2akAsncUlUMIChUVvDfjweEMUY\"","date":"Sun, 21 Mar 2021 23:54:46 GMT","cache-control":"public, max-age=0"
+    //         }
+    //     },"url":"http://192.168.0.106:3000/api/user/login","bodyUsed":false,"_bodyInit":{
+    //         "_data":{
+    //             "size":149,"offset":0,"blobId":"205892a7-4b56-48e7-adb9-e163255971cb","__collector":{}
+    //         }
+    //     },"_bodyBlob":{
+    //         "_data":{
+    //             "size":149,"offset":0,"blobId":"205892a7-4b56-48e7-adb9-e163255971cb","__collector":{}
+    //         }
+    //     }
+    // }
     return(
         <View style={ styles.authContainer }>
             <View style={ styles.authCard }>
 
                 <View style={{
                     position: 'absolute',
-                    right: -wp("10%"),
+                    right: -wp("7.5%"),
                     top: -wp("20%"),
 
                     width: wp("100%"),
                     height: wp("35%"),
                     marginBottom: wp("5%"),
-                    borderRadius: wp("2.5%"),
+                    borderRadius: 5,
                     
                     backgroundColor: lightTheme.notSoLightGrey
                 }}/>
 
                 <View style={{
-                    width: wp("90%"),
+                    width: wp("95%"),
                     padding: wp("5%"),
                     marginLeft: -wp("5%"),
                     marginTop: wp("5%"), 
@@ -486,15 +494,27 @@ function Auth(props) {
 
     return (
         <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={ Login } options={{ header: () => null }}/>
+            <Stack.Screen 
+                name="Login" 
+                options={{ header: () => null }}
+            >
+                {prop => (
+                    <Login
+                        {...prop}
+                        
+                        setToken={ token => props.setToken(token) }
+                        handleToken={ () => props.handleToken() }
+                    />
+                )}
+            </Stack.Screen>
             <Stack.Screen name="ChangePassword" component={ ChangePassword } options={{ header: () => null }}/>
             <Stack.Screen 
                 name="Register" 
                 options={{ header: () => null }}
             >
-                {props => (
+                {prop => (
                     <Register
-                        {...props}
+                        {...prop}
                         
                         email={email} 
                         setEmail={email => setEmail(email)}
@@ -514,9 +534,9 @@ function Auth(props) {
                 name="User" 
                 options={{ header: () => null }}
             >
-                {props => (
+                {prop => (
                     <User
-                        {...props} 
+                        {...prop} 
                         
                         email={email} 
                         setEmail={email => setEmail(email)}

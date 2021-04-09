@@ -158,7 +158,15 @@ function ContactCard(props) {
                 }
             }   
         >
-            <View style={{borderRadius: 20, overflow: 'visible', padding: wp("5%"), ...styles.card, ...styles.bottomWrapper}}>
+            <View style={{
+                borderRadius: 20, 
+                overflow: 'visible', 
+                padding: wp("5%"), 
+                marginHorizontal: wp("2.5%"),
+                marginBottom: wp("1.25%"),
+                ...styles.card, 
+                ...styles.bottomWrapper
+            }}>
                 { props.imagePlaceholder}
                 {/* <Image/> */}
                 <View style={{flex: 2, marginRight: wp("5%"), marginLeft: wp("2.5%")}}>

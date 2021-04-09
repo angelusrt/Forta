@@ -66,7 +66,6 @@ function Routes() {
             scrn = 
                 <Auth 
                     db={db} 
-
                     token={token}
                     setToken={token => setToken(token)}
 
@@ -77,6 +76,7 @@ function Routes() {
             scrn = 
                 <Tab 
                     db={db} 
+                    token={token}
 
                     handlePostList={post => handlePostList(post)} 
 
@@ -94,6 +94,7 @@ function Routes() {
             scrn = 
                 <Settings 
                     db={db} 
+                    token={token}
 
                     handleScreenList={props => handleScreenList(props)}
                     handleDecrementScreen={() => handleDecrementScreen()}
@@ -104,6 +105,7 @@ function Routes() {
                 <Post 
                     db={db} 
 
+                    forum={forum} 
                     post={postList[postList.length - 1]} 
                     postLength={postList.length} 
                     handleDecrementPost={() => handleDecrementPost()} 

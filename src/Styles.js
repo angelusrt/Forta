@@ -105,7 +105,7 @@ export const styles = StyleSheet.create({
 
   authContainer: {
     flex: 1,
-    paddingHorizontal: wp("10%"),
+    paddingHorizontal: wp("7.5%"),
     alignItems: 'center',
     backgroundColor: lightTheme.ligthGrey
   },
@@ -123,7 +123,9 @@ export const styles = StyleSheet.create({
     //marginHorizontal: wp("5%"),
     //marginVertical: wp("2.5%"),
     borderColor: lightTheme.ligthGrey,
-    borderWidth: wp("0.5%"),
+    //borderWidth: wp("0.5%"),
+    borderTopWidth: wp("0.5%"),
+    borderBottomWidth: wp("0.5%"),
     backgroundColor: lightTheme.white,
 
     // shadowColor: "#000",

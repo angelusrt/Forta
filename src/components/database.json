@@ -4,6 +4,8 @@
             "me": "persons[2]",
             "myHome": [
                 "forums[0].posts[0]",
+                "forums[0].posts[0]",
+                "forums[0].posts[0]",
                 "forums[0].posts[1]"
             ],
             "myForums": [

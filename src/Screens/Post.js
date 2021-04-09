@@ -10,40 +10,63 @@ import InteligentButton from "../components/InteligentButton.js";
 import ObjectByString from "../components/ObjectByString";
 
 function Post(props) {
+    const[post, setPost] = useState()
+    const[comentaries, setComentaries] = useState([])
+    const[resolved, setResolved] = useState(false)
     const[likeActive, setLikeActive] = useState(false)
+    const[optionsActive, setOptionsActive] = useState(false)
 
     const metric = wp("5%")
 
     let postImage = 
-        ObjectByString(props.db, `${props.post}.postImage`) != null?
         <View style={{
             width: "100%",
             height: wp("100%"),
-            backgroundColor: lightTheme.darkGrey,
-            borderRadius: 20, 
+            backgroundColor: lightTheme.notSoDarkGrey,
+            borderRadius: 5, 
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0,
-        }}/> : 
-        null
+        }}/>
 
-    let posts = []
-    posts = ObjectByString(props.db, `${props.post}.comentaries`).map(
-        (posts, index) => (
-            <PostCard 
-                key={index}
-                title={posts.title}
-                bodyText={posts.body}
-                name={ObjectByString(props.db, posts.name)}
-                forum="Pewdie"
-                rating={posts.upvotes}
-                post={`${props.post}.comentaries[${index}]`}
-                handlePostList={props.handlePostList}
-                handleScreenList={props.handleScreenList}
-            />
-        )
-    )
+    const httpEnvelope = {
+        method: "GET",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000'
+        }
+    }
+    console.log(props.forum + " " + props.post)
+    const onTryToGetPost = async () => { 
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, httpEnvelope )
+                    .then( res => res.json() )
+                    .then( data => {            
+                        setPost(data)
+                        console.log(data)
+                        setComentaries(data.comentaries.map(
+                            (coments, index) => (
+                                <PostCard 
+                                    key={index}
+                                    title={null}
+                                    bodyText={coments.bodyText}
+                                    name={coments.author}
+                                    forum={coments.forum}
+                                    rating={coments.upvotes}
+                                    post={coments._id}
+                                    handlePostList={props.handlePostList}
+                                    handleScreenList={props.handleScreenList}
+                                />
+                            )
+                        ))
+                        setResolved(true)
+                    })
+                    .catch( err => console.log(err) )
+    }
 
-    const[optionsActive, setOptionsActive] = useState(false)
+    useEffect(() => {
+        onTryToGetPost()
+    },[])
 
     let options = (
         <View
@@ -103,74 +126,87 @@ function Post(props) {
 
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
-            <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-                { postImage }
-                <View>
+            {   resolved ? 
+                <ScrollView contentContainerStyle={{paddingBottom: 200}}>
+                    { postImage }
                     <View style={{
-                        marginHorizontal: wp("10%"),
-                        marginVertical: wp("5%")
+                        padding: wp("5%"), 
+                        marginHorizontal: wp("2.5%"),
+                        borderRadius: 20, 
+                        borderColor: lightTheme.ligthGrey,
+                        //borderTopWidth: wp("0.5%"),
+                        top: postImage === null? 0 : wp("-10%"),
+                        borderBottomWidth: wp("0.5%"),
+                        backgroundColor: lightTheme.ligthGrey,
+                        marginBottom: postImage === null? wp("5%") : wp("-5%")
                     }}>
-                        <Text style={styles.headerText}>
-                            {ObjectByString(props.db, `${props.post}.title`)}
-                        </Text>
-                        <Text style={{ marginBottom: wp("5%"), ...styles.bodyText }}>
-                            {ObjectByString(props.db, `${props.post}.body`)}
-                        </Text>
+                        <View style={{
+                            // marginHorizontal: wp("10%"),
+                            // marginVertical: wp("5%")
+                        }}>
+                            <Text style={styles.headerText}>
+                                {post.title}
+                            </Text>
+                            <Text style={{ marginBottom: wp("5%"), ...styles.bodyText }}>
+                                {post.bodyText}
+                            </Text>
 
-                        <View style={styles.bottomWrapper}>
-                            { props.photoPlaceholder }
-                            <View style={{flex: 1.5, marginRight: wp("5%")}}>
-                                <Text style={styles.headerText2} numberOfLines={1}> 
-                                    {ObjectByString(props.db, ObjectByString(props.db, `${props.post}.name`))}
-                                </Text>
-                                <Text style={styles.bodyText2} numberOfLines={1}>
-                                    Pewdie
-                                </Text>
+                            <View style={styles.bottomWrapper}>
+                                { props.photoPlaceholder }
+                                <View style={{flex: 1.5, marginRight: wp("5%")}}>
+                                    <Text style={styles.headerText2} numberOfLines={1}> 
+                                        {post.author}
+                                    </Text>
+                                    <Text style={styles.bodyText2} numberOfLines={1}>
+                                        Pewdie
+                                    </Text>
+                                </View>
+                                <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
+                                    <Text style={{color: likeActive?lightTheme.green:lightTheme.darkGrey, marginBottom: wp("0.625%"), ...styles.rateText}}>
+                                        {post.upvotes + (likeActive && 1)}
+                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={ () => {
+                                            setLikeActive(!likeActive)
+                                        }}
+                                    >
+                                        <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
+                                            stroke: likeActive?lightTheme.green:lightTheme.darkGrey ,
+                                            strokeLinejoin: "round",
+                                            strokeWidth:"15.9px",
+                                            transform: [{ rotate: "90deg" }]
+                                        }}/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ marginLeft: wp("2.5%")}}
+                                        onPress={() => setOptionsActive(!optionsActive)}
+                                    >
+                                        <Icons name="Options" width={wp("3.3%")} height={wp("10%")} viewBox="208 0 208 625" fill="none" style={{
+                                            stroke: lightTheme.red,
+                                            strokeWidth:"33.1px",
+                                            strokeLinejoin: "round",
+                                            strokeMiterlimit:"1.5"
+                                        }}/>
+                                    </TouchableOpacity>
+                                </View>
+                                {
+                                    optionsActive && options
+                                }
                             </View>
-                            <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
-                                <Text style={{color: likeActive?lightTheme.green:lightTheme.darkGrey, marginBottom: wp("0.625%"), ...styles.rateText}}>
-                                    {ObjectByString(props.db, `${props.post}.upvotes`) + (likeActive && 1)}
-                                </Text>
-                                <TouchableOpacity
-                                    onPress={ () => {
-                                        setLikeActive(!likeActive)
-                                    }}
-                                >
-                                    <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                                        stroke: likeActive?lightTheme.green:lightTheme.darkGrey ,
-                                        strokeLinejoin: "round",
-                                        strokeWidth:"15.9px",
-                                        transform: [{ rotate: "90deg" }]
-                                    }}/>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ marginLeft: wp("2.5%")}}
-                                    onPress={() => setOptionsActive(!optionsActive)}
-                                >
-                                    <Icons name="Options" width={wp("3.3%")} height={wp("10%")} viewBox="208 0 208 625" fill="none" style={{
-                                        stroke: lightTheme.red,
-                                        strokeWidth:"33.1px",
-                                        strokeLinejoin: "round",
-                                        strokeMiterlimit:"1.5"
-                                    }}/>
-                                </TouchableOpacity>
-                            </View>
-                            {
-                                optionsActive && options
-                            }
                         </View>
                     </View>
-                </View>
-                <View
-                    style={{
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        paddingTop: metric/2,
-                        top: wp("0")
-                    }}
-                >
-                    {posts}
-                </View>
-            </ScrollView>
+                    <View
+                        style={{
+                            borderTopLeftRadius: 20,
+                            borderTopRightRadius: 20,
+                            paddingTop: metric/2,
+                            top: wp("0")
+                        }}
+                    >
+                        {comentaries}
+                    </View>
+                </ScrollView> :
+                <Text style={{textAlign: "center"}}>Loading...</Text>
+            }
             <InteligentButton 
                 postLength={props.postLength} 
                 handleDecrementPost={props.handleDecrementPost} 
