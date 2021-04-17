@@ -15,9 +15,10 @@ function Routes() {
     const[route, setRoute] = useState("Home")
     const[screenList, setScreenList] = useState(["Auth"])
     const[postList, setPostList] = useState([])
-    const[forum,setForum] = useState("")
-    const[chat,setChat] = useState("")
-    const[token,setToken] = useState("")
+    const[forum, setForum] = useState("")
+    const[chat, setChat] = useState("")
+    const[token, setToken] = useState("")
+    const[myInfos, setMyInfos] = useState("")
     const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
     const handleToken = () => {
@@ -67,16 +68,21 @@ function Routes() {
                 <Auth 
                     db={db} 
                     token={token}
-                    setToken={token => setToken(token)}
+                    setToken={ token => setToken(token) }
+                    
+                    myInfos={myInfos}
+                    setMyInfos={ myInfos => setMyInfos(myInfos) }
 
-                    handleToken={() => handleToken()}
+                    handleToken={ () => handleToken() }
                 /> 
             break;
         case "Tab": 
             scrn = 
                 <Tab 
                     db={db} 
+
                     token={token}
+                    myInfos={myInfos}
 
                     handlePostList={post => handlePostList(post)} 
 
@@ -133,6 +139,8 @@ function Routes() {
             scrn = 
                 <Chat 
                     db={db} 
+                    token={token}
+                    myInfos={myInfos}
                     
                     chat={chat} 
                     handleChat={forum => handleForum(forum)}

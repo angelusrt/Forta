@@ -193,9 +193,9 @@ export const styles = StyleSheet.create({
     paddingLeft: wp("2.5%"),
     paddingRight: wp("2.5%"),
 
+    marginLeft: wp("2.5%"),
+
     borderRadius: 10,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
 
     borderWidth: wp(".5%"),
     borderLeftWidth: 0,

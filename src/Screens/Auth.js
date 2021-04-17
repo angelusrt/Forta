@@ -13,7 +13,7 @@ function Login(props) {
     const[password, setPassword] = useState("")
 
     const onTryToLog = async () => {
-        const httpEnvelope = {
+        const httpEnvelopePost = {
             method: "POST",
             headers: {
                 Accept: 'application/json',
@@ -24,13 +24,36 @@ function Login(props) {
                 password
             })
         }
-        const token = await fetch("http://192.168.0.106:3000/api/user/login", httpEnvelope )
-                            .then( res => JSON.parse(JSON.stringify(res)).headers.map["auth-token"])
-                            .catch(err => console.log(err))
+        
+        let httpEnvelopeGet = {}
 
-        await props.setToken(token)
-        await props.handleToken()
-        console.log(token)
+        await fetch("http://192.168.0.106:3000/api/user/login", httpEnvelopePost )
+        .then( res => JSON.parse(JSON.stringify(res)).headers.map["auth-token"] )
+        .then( data => {
+            props.setToken(data)
+            console.log(data)
+
+            httpEnvelopeGet = {
+                method: "GET",
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'auth-token': data
+                }
+            }
+        })
+        .catch( err => console.log(err) )
+
+
+        await fetch("http://192.168.0.106:3000/api/user/infos", httpEnvelopeGet )
+        .then( res => res.json() )
+        .then( data => {
+            props.setMyInfos(data)
+            console.log(data)
+        })
+        .catch( err => console.log(err) )
+
+        props.handleToken()
     }
     
     return(
@@ -502,7 +525,12 @@ function Auth(props) {
                     <Login
                         {...prop}
                         
+                        token={ props.token }
                         setToken={ token => props.setToken(token) }
+                        
+                        myInfos={ props.myInfos }
+                        setMyInfos={ myInfos => props.setMyInfos(myInfos) }
+                        
                         handleToken={ () => props.handleToken() }
                     />
                 )}

@@ -38,14 +38,14 @@ function Settings(props) {
         }
         
         //console.log(JSON.stringify(props.token))
-        const infos = await fetch("http://192.168.0.106:3000/api/user/infos", httpEnvelope )
-                            .then( res => res.json())
-                            .then( data => {
-                                setBios(data.bios)
-                                setUsername(data.username)
-                                setEmail(data.email)
-                            })
-                            .catch(err => err)
+        await fetch("http://192.168.0.106:3000/api/user/infos", httpEnvelope )
+        .then( res => res.json())
+        .then( data => {
+            setBios(data.bios)
+            setUsername(data.username)
+            setEmail(data.email)
+        })
+        .catch(err => err)
         
     }
     onTryToGetInfos()

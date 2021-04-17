@@ -301,57 +301,90 @@ function Forums(props) {
 }
 
 function Chats(props) {
-    // ObjectByString(props.db, `${props.chat}.info`)
-    // .filter(prop => prop.name != "Angelus")
-    // .map(prop => prop.profileImage)
-    let chats = []
-    chats = props.db.users.Angelus.myChats.map(
-        (chats, index) => (
-            <ContactCard
-                key={index}
-                imagePlaceholder={
-                    ObjectByString(props.db, `${chats.chat}.info`)
-                    .filter(prop => prop.name != "Angelus")
-                    .map(prop => prop.profileImage) != null ?
-                    <View style={{
-                        width: wp("10%"),
-                        height: wp("10%"),
-                        backgroundColor: lightTheme.notSoDarkGrey,
-                        borderRadius: 10, 
-                    }}/> : 
-                    <View style={{
-                        width: wp("10%"),
-                        height: wp("10%"),
-                        backgroundColor: lightTheme.red,
-                        borderRadius: 10, 
-                    }}/>
-                }
-                title={
-                    ObjectByString(props.db, `${chats.chat}.info`)
-                    .filter(prop => prop.name != "Angelus")
-                    .map(prop => prop.name)
-                }
-                subtitle={
-                    ObjectByString(props.db, `${chats.chat}.info`)
-                    .filter(prop => prop.name != "Angelus")
-                    .map(prop => prop.bios)
-                }
-                mode="Chat"
-                favorite={chats.favorite}
-                lastSaw={
-                    ObjectByString(props.db, `${chats.chat}.messages`)
-                    [ObjectByString(props.db, `${chats.chat}.messages`).length - 1]
-                    .time
-                }
-                chat={chats.chat}
-                handleChat={props.handleChat}
-                handleScreenList={props.handleScreenList}
-            />
-        )
-    )
+    const[chats, setChats] = useState([])
+    const[chat, setChat] = useState()
+    const[resolved, setResolved] = useState(false)
+
+    const httpEnvelope = {
+        method: "GET",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': props.token
+        }
+    }
+
+    const onTryToGetMyChats = async () => {
+        return await fetch( "http://192.168.0.106:3000/api/user/myChat", httpEnvelope )
+        .then( res => res.json() )
+        .then( data => {
+            setChats(data)
+            //console.log("1 " + data)
+        })
+        .catch(err => err)
+    }
+    
+    const onTryToGetChat = async (chat) => { 
+        return await fetch( `http://192.168.0.106:3000/api/chats/${chat}`, httpEnvelope )
+        .then( res => res.json() )
+        .then( data => {
+        
+            console.log(data)
+            return data
+        })
+        .catch( err => console.log(err) )
+    }
+    
+    useEffect(() => {
+        onTryToGetMyChats()
+    }, [])
+
+    //console.log("2 " + chats)
+
+    useEffect(() => {
+        const loadData = async () => {
+            
+            Promise.all(chats.map(async (chat, index) => {
+                let chatInfo = await onTryToGetChat(chat)
+                
+                console.log("1 " + chatInfo)
+                //console.log(chatInfo.groupName)
+            
+                return (
+                    <ContactCard
+                        key={index}
+                        imagePlaceholder={
+                            <View style={{
+                                width: wp("10%"),
+                                height: wp("10%"),
+                                backgroundColor: lightTheme.notSoDarkGrey,
+                                borderRadius: 10, 
+                            }}/>
+                        }
+                        title={chatInfo.members.filter(mem => mem.member !== props.myInfos.id)[0].member}
+                        subtitle={chatInfo.messages[chatInfo.messages.length - 1].message}
+                        mode="Chat"
+                        favorite={false}
+                        // lastSaw={chatInfo.messages[chatInfo.messages.length - 1].date}
+                        lastSaw="Just now"
+                        chat={chatInfo._id}
+                        handleChat={props.handleChat}
+                        handleScreenList={props.handleScreenList}
+                    />
+                )
+            })).then(data => {
+                setResolved(true)
+                setChat(data)
+            })
+        }
+        loadData()
+    },[chats])
+    
     return (
         <ScrollView>
-            { chats }
+            { resolved ? chat : <Text style={{textAlign: "center"}}>Loading...</Text> }
         </ScrollView>
     );
 }
@@ -434,10 +467,37 @@ function Tab(props) {
                     backgroundColor: lightTheme.ligthGrey
                 }}
             >
-                <tab.Screen name="Home" children={() => <Home db={props.db} token={props.token} handlePostList={props.handlePostList} handleScreenList={props.handleScreenList}/>}/>
-                <tab.Screen name="Forums" children={() => <Forums token={props.token} db={props.db} handleForum={props.handleForum} handleScreenList={props.handleScreenList}/>}/>
-                <tab.Screen name="Chats" children={() => <Chats token={props.token} db={props.db} handleChat={props.handleChat} handleScreenList={props.handleScreenList}/>}/>
-                <tab.Screen name="Invites" children={() => <Invites db={props.db} token={props.token}/>}/>
+                <tab.Screen name="Home" children={() => 
+                    <Home 
+                        db={props.db} 
+                        token={props.token} 
+                        handlePostList={props.handlePostList} 
+                        handleScreenList={props.handleScreenList}
+                    />
+                }/>
+                <tab.Screen name="Forums" children={() => 
+                    <Forums 
+                        token={props.token} 
+                        db={props.db} 
+                        handleForum={props.handleForum} 
+                        handleScreenList={props.handleScreenList}
+                    />
+                }/>
+                <tab.Screen name="Chats" children={() => 
+                    <Chats 
+                        token={props.token} 
+                        db={props.db} 
+                        myInfos={props.myInfos}
+                        handleChat={props.handleChat} 
+                        handleScreenList={props.handleScreenList}
+                    />
+                }/>
+                <tab.Screen name="Invites" children={() => 
+                    <Invites 
+                        db={props.db} 
+                        token={props.token}
+                    />
+                }/>
             </tab.Navigator>
             <InteligentButton handleScreenList={props.handleScreenList} screen={props.route}/>
         </View>

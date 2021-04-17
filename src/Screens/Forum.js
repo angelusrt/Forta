@@ -80,11 +80,11 @@ function Forum(props) {
                                 handleScreenList={props.handleScreenList}
                             />
                         )))
-                        console.log(data)
                         setResolved(true)
                     })
                     .catch( err => console.log(err) )
     }
+    
     useEffect(() => {
         onTryToGetForum()
     },[])
