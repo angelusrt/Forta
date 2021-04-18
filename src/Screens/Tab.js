@@ -148,7 +148,7 @@ function Home(props){
             .then( res => res.json())
             .then( data => {
                 setForums(data)
-                console.log(data)
+                //console.log(data)
             })
             .catch(err => err)
     }
@@ -170,8 +170,8 @@ function Home(props){
             Promise.all(forums.map(async (forum, idF) => {
                 let forumInfo = await onTryToGetForum(forum)
                 
-                console.log(forumInfo)
-                console.log(forumInfo.groupName)
+                //console.log(forumInfo)
+                //console.log(forumInfo.groupName)
                 
                 return forumInfo.posts.map( (post, idP) => (
                     <PostCard 
@@ -238,7 +238,7 @@ function Forums(props) {
             .then( res => res.json())
             .then( data => {
                 setForums(data)
-                console.log(data)
+                //console.log(data)
             })
             .catch(err => err)
     }
@@ -260,8 +260,8 @@ function Forums(props) {
             Promise.all(forums.map(async (forum, index) => {
                 let forumInfo = await onTryToGetForum(forum)
                 
-                console.log(forumInfo)
-                console.log(forumInfo.groupName)
+                //console.log(forumInfo)
+                //console.log(forumInfo.groupName)
             
                 return (
                     <ContactCard
@@ -331,7 +331,7 @@ function Chats(props) {
         .then( res => res.json() )
         .then( data => {
         
-            console.log(data)
+            //console.log(data)
             return data
         })
         .catch( err => console.log(err) )
@@ -349,7 +349,7 @@ function Chats(props) {
             Promise.all(chats.map(async (chat, index) => {
                 let chatInfo = await onTryToGetChat(chat)
                 
-                console.log("1 " + chatInfo)
+                //console.log("1 " + chatInfo)
                 //console.log(chatInfo.groupName)
             
                 return (
@@ -364,7 +364,7 @@ function Chats(props) {
                             }}/>
                         }
                         title={chatInfo.members.filter(mem => mem.member !== props.myInfos.id)[0].member}
-                        subtitle={chatInfo.messages[chatInfo.messages.length - 1].message}
+                        subtitle={chatInfo.messages.length !== 0 ? chatInfo.messages[chatInfo.messages.length - 1].message : "<nada ainda!>"}
                         mode="Chat"
                         favorite={false}
                         // lastSaw={chatInfo.messages[chatInfo.messages.length - 1].date}
@@ -390,37 +390,90 @@ function Chats(props) {
 }
 
 function Invites(props) {
-    let invites = []
-    invites = props.db.users.Angelus.myInvites.map(
-        (invites, index) => (
-            <ContactCard 
-                key={index}
-                imagePlaceholder={ObjectByString(props.db, `${ObjectByString(props.db, `${invites}.sender`)}.profileImage`) != null?
-                    <View style={{
-                        width: wp("10%"),
-                        height: wp("10%"),
-                        backgroundColor: lightTheme.notSoDarkGrey,
-                        borderRadius: 10, 
-                    }}/> : null
-                }
-                title={ObjectByString(props.db, `${ObjectByString(props.db, `${invites}.sender`)}.name`)}
-                subtitle={
-                    ObjectByString(props.db, `${invites}.sender`).indexOf("persons") !== -1 ?
-                    "Quer conversar com você!": 
-                    ObjectByString(props.db, `${invites}.sender`).indexOf("forums") !== -1 ?
-                    "Quer te convidar como mod!": 
-                    ObjectByString(props.db, `${invites}.sender`).indexOf("group") !== -1 ?
-                    "Quer te convidar para um grupo!": 
-                    "Erro"
-                }
-                mode="Invite"
-            />
-        )
-    )
+    const[invites, setInvites] = useState([])
+    const[invite, setInvite] = useState()
+    const[resolved, setResolved] = useState(false)
+
+    const httpEnvelope = {
+        method: "GET",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': props.token
+        }
+    }
+
+    const onTryToGetMyInvites = async () => {
+        return await fetch( "http://192.168.0.106:3000/api/user/myInvites", httpEnvelope )
+        .then( res => res.json() )
+        .then( data => {
+            setInvites(data)
+            console.log("1 " + data)
+        })
+        .catch(err => err)
+    }
+    
+    const onTryToGetInvite = async (invite) => { 
+        return await fetch( `http://192.168.0.106:3000/api/invites/${invite}`, httpEnvelope )
+        .then( res => res.json() )
+        .then( data => {
+        
+            console.log(data)
+            return data
+        })
+        .catch( err => console.log(err) )
+    }
+    
+    useEffect(() => {
+        onTryToGetMyInvites()
+    }, [])
+
+    //console.log("2 " + invites)
+
+    useEffect(() => {
+        const loadData = async () => {
+            
+            Promise.all(invites.map(async (invite, index) => {
+                let inviteInfo = await onTryToGetInvite(invite)
+                
+                console.log("1 " + inviteInfo)
+                //console.log(inviteInfo.groupName)
+            
+                return (
+                    <ContactCard
+                        key={index}
+                        imagePlaceholder={
+                            <View style={{
+                                width: wp("10%"),
+                                height: wp("10%"),
+                                backgroundColor: lightTheme.notSoDarkGrey,
+                                borderRadius: 10, 
+                            }}/>
+                        }
+                        title={inviteInfo.sender === props.myInfos.id ? inviteInfo.receiver : inviteInfo.sender}
+                        subtitle={
+                            inviteInfo.description === 'mod' ? "Quer te convidar como mod!" :
+                            inviteInfo.description === 'chat' ? "Quer conversar com você!" :
+                            inviteInfo.description === 'group' ? "Quer te convidar para um grupo!" :
+                            "Erro"
+                        }
+                        mode="Invite"
+                        invite={inviteInfo._id}
+                    />
+                )
+            })).then(data => {
+                setResolved(true)
+                setInvite(data)
+            })
+        }
+        loadData()
+    },[invites])
 
     return (
         <ScrollView>
-            { invites }
+            { resolved ? invite : <Text style={{textAlign: "center"}}>Loading...</Text> }
         </ScrollView>
     );
 }
@@ -496,6 +549,7 @@ function Tab(props) {
                     <Invites 
                         db={props.db} 
                         token={props.token}
+                        myInfos={props.myInfos}
                     />
                 }/>
             </tab.Navigator>

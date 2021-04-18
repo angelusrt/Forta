@@ -56,7 +56,7 @@ function Forum(props) {
                         setForum(data)                
                         setPosts(data.posts.map( (posts, index) => (
                             <PostCard 
-                                key={index}
+                                key={`2_${index}`}
                                 imagePlaceholder={
                                     <View style={{
                                         width: wp("95%"),

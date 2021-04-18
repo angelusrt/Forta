@@ -151,10 +151,22 @@ function Routes() {
         default:
             scrn = 
                 <Tab 
+                    db={db} 
+
+                    token={token}
+                    myInfos={myInfos}
+
+                    handlePostList={post => handlePostList(post)} 
+
+                    handleForum={forum => handleForum(forum)}
+                    
+                    handleChat={chat => handleChat(chat)}
+
                     route={route} 
                     handleRoute={route => handleRoute(route)} 
+
                     handleScreenList={props => handleScreenList(props)}
-                />
+                /> 
             break;
     }
 
