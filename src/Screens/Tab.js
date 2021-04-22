@@ -144,20 +144,19 @@ function Home(props){
     }
 
     const onTryToGetMyForums = async () => {
-        return await fetch("http://192.168.0.106:3000/api/user/myForums", httpEnvelope )
-            .then( res => res.json())
-            .then( data => {
-                setForums(data)
-                //console.log(data)
-            })
-            .catch(err => err)
+        return await fetch("http://192.168.0.106:3000/api/user/myForums", httpEnvelope)
+        .then(res => res.json())
+        .then(data => {
+            setForums(data)
+        })
+        .catch(err => err)
     }
     
-    const onTryToGetForum = async (forum) => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, httpEnvelope )
-                    .then( res => res.json() )
-                    .then( data => data )
-                    .catch( err => console.log(err) )
+    const onTryToGetForum = async forum => { 
+        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, httpEnvelope)
+        .then(res => res.json())
+        .then(data => data)
+        .catch(err => console.log(err))
     }
     
     useEffect(() => {
@@ -176,21 +175,21 @@ function Home(props){
                 return forumInfo.posts.map( (post, idP) => (
                     <PostCard 
                         key={idF + "_" + idP}
-                        imagePlaceholder={
-                            <View style={{
-                                width: wp("95%"),
-                                height: wp("95%"),
-                                marginHorizontal: wp("2.5%"),
-                                //marginTop: wp("5%"),
-                                //marginLeft: wp("5%"),
-                                marginTop: wp("-20%"),
-                                top: wp("20%"),
-                                borderColor: lightTheme.ligthGrey,
-                                borderTopWidth: wp("0.5%"),
-                                backgroundColor: lightTheme.notSoDarkGrey,
-                                borderRadius: 20, 
-                            }}/>
-                        } 
+                        // imagePlaceholder={
+                        //     <View style={{
+                        //         width: wp("95%"),
+                        //         height: wp("95%"),
+                        //         marginHorizontal: wp("2.5%"),
+                        //         //marginTop: wp("5%"),
+                        //         //marginLeft: wp("5%"),
+                        //         marginTop: wp("-20%"),
+                        //         top: wp("20%"),
+                        //         borderColor: lightTheme.ligthGrey,
+                        //         borderTopWidth: wp("0.5%"),
+                        //         backgroundColor: lightTheme.notSoDarkGrey,
+                        //         borderRadius: 20
+                        //     }}/>
+                        // } 
                         title={post.title}
                         bodyText={post.bodyText}
                         name={post.author}
@@ -410,7 +409,7 @@ function Invites(props) {
         .then( res => res.json() )
         .then( data => {
             setInvites(data)
-            console.log("1 " + data)
+            //console.log("1 " + data)
         })
         .catch(err => err)
     }
@@ -419,8 +418,7 @@ function Invites(props) {
         return await fetch( `http://192.168.0.106:3000/api/invites/${invite}`, httpEnvelope )
         .then( res => res.json() )
         .then( data => {
-        
-            console.log(data)
+            //console.log(data)
             return data
         })
         .catch( err => console.log(err) )
@@ -438,7 +436,7 @@ function Invites(props) {
             Promise.all(invites.map(async (invite, index) => {
                 let inviteInfo = await onTryToGetInvite(invite)
                 
-                console.log("1 " + inviteInfo)
+                //console.log("1 " + inviteInfo)
                 //console.log(inviteInfo.groupName)
             
                 return (
@@ -479,6 +477,7 @@ function Invites(props) {
 }
 
 function Tab(props) {
+    const[screen, setScreen] = useState(null)
     const tab = createMaterialTopTabNavigator();
     
     let handleRoute = prop => {
@@ -489,6 +488,7 @@ function Tab(props) {
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
             <tab.Navigator  
                 initialRouteName={props.route}
+                lazy={true}
                 tabBar={props => <TabBarTop handleRoute={route => handleRoute(route)} {...props} />}
                 tabBarOptions={
                     {
@@ -553,7 +553,14 @@ function Tab(props) {
                     />
                 }/>
             </tab.Navigator>
-            <InteligentButton handleScreenList={props.handleScreenList} screen={props.route}/>
+            <InteligentButton 
+                token={props.token}
+                myInfos={props.myInfos}
+                screen={screen === "ForumAdd"? screen : props.route}
+                handleForum={forum => props.handleForum(forum)}
+                setScreen={screen => setScreen(screen)}
+                handleScreenList={props.handleScreenList} 
+            />
         </View>
     );
 }

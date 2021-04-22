@@ -8,10 +8,12 @@ import { lightTheme, styles } from "./../Styles.js";
 import PostCard from "./../components/PostCard";
 import InteligentButton from "../components/InteligentButton.js";
 import ObjectByString from "../components/ObjectByString";
+import { set } from 'react-native-reanimated';
 
 function Chat(props) {
     const[chat, setChat] = useState({})
     const[messages, setMessages] = useState([])
+    const[message, setMessage] = useState("")
     const[resolved, setResolved] = useState(false)
     const metric = wp("5%")
 
@@ -39,7 +41,7 @@ function Chat(props) {
         .then(res => res.json())
         .then(data => {
             setChat(data)
-            console.log(data)
+            // console.log(data)
             setMessages( data.messages.map((chat, index) => (
                 <View 
                     key={index}
@@ -78,8 +80,35 @@ function Chat(props) {
 
     useEffect(() => {
         getChat()
-    },[])
+    },[getChat])
     
+    const onTryToPost = async () => {
+        const httpEnvelopePost = {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'auth-token': props.token
+            },
+            body: JSON.stringify({message})
+        }
+
+        await fetch(`http://192.168.0.106:3000/api/chats/${props.chat}/messages`, httpEnvelopePost )
+        .then( res => res.json())
+        .then( () => {
+            getChat()
+        })
+        .catch(err => err)
+    }   
+
+    const verify = () => {
+        if (message.length > 0){
+            onTryToPost()
+        } else{
+            setMessage("")
+        }
+    }
+
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
             { resolved ?
@@ -126,6 +155,9 @@ function Chat(props) {
             }
 
             <InteligentButton 
+                token={props.token}
+                setMessage={message => setMessage(message)}
+                verify={() => verify()}
                 handleDecrementScreen={props.handleDecrementScreen} 
                 screen="Chat"
             />

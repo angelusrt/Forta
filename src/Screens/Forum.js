@@ -15,6 +15,7 @@ function Forum(props) {
     const[resolved, setResolved] = useState(false)
     const[follow, setFollow] = useState(true)
     const[optionsActive, setOptionsActive] = useState(false)
+    const[screen, setScreen] = useState("Forum")
 
     const metric = wp("5%")
     
@@ -51,38 +52,38 @@ function Forum(props) {
 
     const onTryToGetForum = async () => { 
         return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, httpEnvelope )
-                    .then( res => res.json() )
-                    .then( data => {
-                        setForum(data)                
-                        setPosts(data.posts.map( (posts, index) => (
-                            <PostCard 
-                                key={`2_${index}`}
-                                imagePlaceholder={
-                                    <View style={{
-                                        width: wp("95%"),
-                                        height: wp("95%"),
-                                        marginLeft: wp("2.5%"),
-                                        marginTop: wp("-20%"),
-                                        top: wp("20%"),
-                                        borderColor: lightTheme.ligthGrey,
-                                        borderTopWidth: wp("0.5%"),
-                                        backgroundColor: lightTheme.notSoDarkGrey,
-                                        borderRadius: 20, 
-                                    }}/>
-                                }
-                                title={posts.title}
-                                bodyText={posts.bodyText}
-                                name={posts.author}
-                                forum={data.groupName}
-                                rating={posts.upvotes}
-                                post={posts._id}
-                                handlePostList={props.handlePostList}
-                                handleScreenList={props.handleScreenList}
-                            />
-                        )))
-                        setResolved(true)
-                    })
-                    .catch( err => console.log(err) )
+        .then( res => res.json() )
+        .then( data => {
+            setForum(data)                
+            setPosts(data.posts.map( (posts, index) => (
+                <PostCard 
+                    key={`2_${index}`}
+                    imagePlaceholder={
+                        <View style={{
+                            width: wp("95%"),
+                            height: wp("95%"),
+                            marginLeft: wp("2.5%"),
+                            marginTop: wp("-20%"),
+                            top: wp("20%"),
+                            borderColor: lightTheme.ligthGrey,
+                            borderTopWidth: wp("0.5%"),
+                            backgroundColor: lightTheme.notSoDarkGrey,
+                            borderRadius: 20, 
+                        }}/>
+                    }
+                    title={posts.title}
+                    bodyText={posts.bodyText}
+                    name={posts.author}
+                    forum={data.groupName}
+                    rating={posts.upvotes}
+                    post={posts._id}
+                    handlePostList={props.handlePostList}
+                    handleScreenList={props.handleScreenList}
+                />
+            )))
+            setResolved(true)
+        })
+        .catch( err => console.log(err) )
     }
     
     useEffect(() => {
@@ -90,17 +91,13 @@ function Forum(props) {
     },[])
 
     let options = (
-        <View
-            style={{
-                position: 'absolute',
-                top: wp("10%"),
-                right: 0,
-                ...styles.options
-            }}
-        >
-            <TouchableOpacity
-                style={ styles.bottomWrapper }
-            >
+        <View style={{
+            position: 'absolute',
+            top: wp("10%"),
+            right: 0,
+            ...styles.options
+        }}>
+            <TouchableOpacity style={ styles.bottomWrapper }>
                 <Icons name="Share" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
                     stroke:lightTheme.darkGrey,
                     strokeWidth:"33.1px",
@@ -281,11 +278,16 @@ function Forum(props) {
                 <Text style={{textAlign: "center"}}>Loading...</Text>
             }
             <InteligentButton 
+                token={props.token}
+                myInfos={props.myInfos}
+                screen={screen}
+                setScreen={screen => setScreen(screen)}
+                forum={props.forum}
                 postLength={props.postLength} 
-                handleDecrementPost={props.handleDecrementPost} 
-                
-                handleDecrementScreen={props.handleDecrementScreen} 
-                screen="Forum"
+                handlePostList={props.handlePostList}
+                handleScreenList={props.handleScreenList}
+                handleDecrementPost={props.handleDecrementPost}
+                handleDecrementScreen={props.handleDecrementScreen}
             />
         </View>
     );

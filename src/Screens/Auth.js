@@ -31,7 +31,7 @@ function Login(props) {
         .then( res => JSON.parse(JSON.stringify(res)).headers.map["auth-token"] )
         .then( data => {
             props.setToken(data)
-            console.log(data)
+            //console.log(data)
 
             httpEnvelopeGet = {
                 method: "GET",
@@ -49,7 +49,7 @@ function Login(props) {
         .then( res => res.json() )
         .then( data => {
             props.setMyInfos(data)
-            console.log(data)
+            //console.log(data)
         })
         .catch( err => console.log(err) )
 
@@ -326,6 +326,49 @@ function Register(props) {
 
 function User(props) {
 
+    const onTryToLog = async () => {
+        const httpEnvelopePost = {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: props.username,
+                email: props.email,
+                password: props.password,
+                bios: props.bios
+            })
+        }
+        let httpEnvelopeGet = {}
+
+        await fetch("http://192.168.0.106:3000/api/user/register", httpEnvelopePost )
+        .then( res => res.json())
+        .then( data => {
+            props.setToken(data)
+
+            httpEnvelopeGet = {
+                method: "GET",
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'auth-token': data
+                }
+            }
+        })
+        .catch(err => err)
+
+        await fetch("http://192.168.0.106:3000/api/user/infos", httpEnvelopeGet )
+        .then( res => res.json() )
+        .then( data => {
+            props.setMyInfos(data)
+            console.log(data)
+        })
+        .catch( err => console.log(err) )
+
+        props.handleToken()
+    }   
+
     const verify = () => {
         if (
             (props.username.length <= 16) &&
@@ -340,44 +383,6 @@ function User(props) {
         }
     }
 
-    const onTryToLog = async () => {
-        const httpEnvelope = {
-            method: "POST",
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username,
-                email,
-                password,
-                bios
-            })
-        }
-        const token = await fetch("http://192.168.0.106:3000/api/user/register", httpEnvelope )
-                            .then( res => JSON.parse(res))
-                            .catch(err => err)
-        
-        console.log(token)
-        props.setToken(token)
-        props.handleToken()
-    }
-    // {
-    //     "type":"default","status":200,"ok":true,"headers":{
-    //         "map":{
-    //             "content-length":"149","connection":"keep-alive","x-powered-by":"Express","content-type":"text/html; charset=utf-8",
-    //              "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDI3ZGY4MDM1NzVjMzBkMDhkZWFkYzciLCJpYXQiOjE2MTYzNzA4ODZ9.p1hT1wYQVfY_QHkapjC2Kpn0DvSMtdeOUci_vXS63UQ","etag":"W/\"95-W2akAsncUlUMIChUVvDfjweEMUY\"","date":"Sun, 21 Mar 2021 23:54:46 GMT","cache-control":"public, max-age=0"
-    //         }
-    //     },"url":"http://192.168.0.106:3000/api/user/login","bodyUsed":false,"_bodyInit":{
-    //         "_data":{
-    //             "size":149,"offset":0,"blobId":"205892a7-4b56-48e7-adb9-e163255971cb","__collector":{}
-    //         }
-    //     },"_bodyBlob":{
-    //         "_data":{
-    //             "size":149,"offset":0,"blobId":"205892a7-4b56-48e7-adb9-e163255971cb","__collector":{}
-    //         }
-    //     }
-    // }
     return(
         <View style={ styles.authContainer }>
             <View style={ styles.authCard }>
@@ -460,7 +465,7 @@ function User(props) {
 
                 <View style={{marginTop: wp("5%"), ...styles.bottomWrapper }}>
                     <TouchableOpacity
-                        onPress={ () => verify } 
+                        onPress={ () => verify() } 
                         style={{
                             marginRight: wp("2.5%"),
                             backgroundColor: lightTheme.green, 
@@ -514,6 +519,7 @@ function Auth(props) {
     const[password2, setPassword2] = useState("")
     const[username, setUsername] = useState(`<Username>`)
     const[bios, setBios] = useState(`<Bios>`)
+
 
     return (
         <Stack.Navigator initialRouteName="Login">
@@ -577,8 +583,14 @@ function Auth(props) {
                         
                         bios={bios} 
                         setBios={bios => setBios(bios)}
+
                         
-                        setToken={token => props.setToken(token)}
+                        token={ props.token }
+                        setToken={ token => props.setToken(token) }
+
+                        myInfos={ props.myInfos }
+                        setMyInfos={ myInfos => props.setMyInfos(myInfos) }
+
                         handleToken={() => props.handleToken()}
                     />
                 )} 

@@ -15,18 +15,19 @@ function Post(props) {
     const[resolved, setResolved] = useState(false)
     const[likeActive, setLikeActive] = useState(false)
     const[optionsActive, setOptionsActive] = useState(false)
+    const[screen, setScreen] = useState("Post")
 
     const metric = wp("5%")
 
-    let postImage = 
-        <View style={{
-            width: "100%",
-            height: wp("100%"),
-            backgroundColor: lightTheme.notSoDarkGrey,
-            borderRadius: 5, 
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0,
-        }}/>
+    // let postImage = 
+    //     <View style={{
+    //         width: "100%",
+    //         height: wp("100%"),
+    //         backgroundColor: lightTheme.notSoDarkGrey,
+    //         borderRadius: 5, 
+    //         borderTopRightRadius: 0,
+    //         borderTopLeftRadius: 0,
+    //     }}/>
 
     const httpEnvelope = {
         method: "GET",
@@ -37,31 +38,28 @@ function Post(props) {
             host: 'localhost:3000'
         }
     }
-    console.log(props.forum + " " + props.post)
+    
     const onTryToGetPost = async () => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, httpEnvelope )
-                    .then( res => res.json() )
-                    .then( data => {            
-                        setPost(data)
-                        console.log(data)
-                        setComentaries(data.comentaries.map(
-                            (coments, index) => (
-                                <PostCard 
-                                    key={index}
-                                    title={null}
-                                    bodyText={coments.bodyText}
-                                    name={coments.author}
-                                    forum={coments.forum}
-                                    rating={coments.upvotes}
-                                    post={coments._id}
-                                    handlePostList={props.handlePostList}
-                                    handleScreenList={props.handleScreenList}
-                                />
-                            )
-                        ))
-                        setResolved(true)
-                    })
-                    .catch( err => console.log(err) )
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, httpEnvelope)
+        .then(res => res.json())
+        .then(data =>{            
+            setPost(data)
+            setComentaries(data.comentaries !== null ? data.comentaries.map((coments, index) => 
+                <PostCard 
+                    key={index}
+                    title={null}
+                    bodyText={coments.bodyText}
+                    name={coments.author}
+                    forum={coments.forum}
+                    rating={coments.upvotes}
+                    post={coments._id}
+                    handlePostList={props.handlePostList}
+                    handleScreenList={props.handleScreenList}
+                />
+            ): null)
+            setResolved(true)
+        })
+        .catch(err => console.log(err))
     }
 
     useEffect(() => {
@@ -69,17 +67,13 @@ function Post(props) {
     },[])
 
     let options = (
-        <View
-            style={{
-                position: 'absolute',
-                top: wp("10%"),
-                right: 0,
-                ...styles.options
-            }}
-        >
-            <TouchableOpacity
-                style={ styles.bottomWrapper }
-            >
+        <View style={{
+            position: 'absolute',
+            top: wp("10%"),
+            right: 0,
+            ...styles.options
+        }}>
+            <TouchableOpacity style={styles.bottomWrapper}>
                 <Icons name="Share" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
                     stroke:lightTheme.darkGrey,
                     strokeWidth:"33.1px",
@@ -128,17 +122,19 @@ function Post(props) {
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
             {   resolved ? 
                 <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-                    { postImage }
+                    {/* { postImage } */}
                     <View style={{
                         padding: wp("5%"), 
                         marginHorizontal: wp("2.5%"),
                         borderRadius: 20, 
                         borderColor: lightTheme.ligthGrey,
                         //borderTopWidth: wp("0.5%"),
-                        top: postImage === null? 0 : wp("-10%"),
+                        // top: postImage === null? 0 : wp("-10%"),
+                        top: 0,
                         borderBottomWidth: wp("0.5%"),
                         backgroundColor: lightTheme.ligthGrey,
-                        marginBottom: postImage === null? wp("5%") : wp("-5%")
+                        // marginBottom: postImage === null? wp("5%") : wp("-5%")
+                        marginBottom: wp("5%")
                     }}>
                         <View style={{
                             // marginHorizontal: wp("10%"),
@@ -188,9 +184,7 @@ function Post(props) {
                                         }}/>
                                     </TouchableOpacity>
                                 </View>
-                                {
-                                    optionsActive && options
-                                }
+                                {optionsActive && options}
                             </View>
                         </View>
                     </View>
@@ -208,11 +202,17 @@ function Post(props) {
                 <Text style={{textAlign: "center"}}>Loading...</Text>
             }
             <InteligentButton 
-                postLength={props.postLength} 
+                token={props.token}
+                myInfos={props.myInfos}
+                screen={screen}
+                setScreen={screen => setScreen(screen)}
+                forum={props.forum}
+                post={props.post}
+                postLength={props.postLength}
+                handlePostList={props.handlePostList}
+                handleScreenList={props.handleScreenList}
                 handleDecrementPost={props.handleDecrementPost} 
-
                 handleDecrementScreen={props.handleDecrementScreen} 
-                screen="Post"
             />
         </View>
     );

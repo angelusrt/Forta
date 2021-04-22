@@ -64,25 +64,35 @@ function InviteButtons(props) {
     return(
         <React.Fragment>
             <Text style={styles.bodyText2}>{props.lastSaw}</Text>
-            <TouchableOpacity 
-                onPress={ () => setAccept(!accept)} 
-            >
-                <Icons name="Accept" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                    stroke: accept?lightTheme.green:lightTheme.darkGrey,
-                    strokeWidth: "15.9px",
-                    strokeLinejoin: "round",
-                    strokeMiterlimit:"1.5"
-                }}/>
+            <TouchableOpacity onPress={() => setAccept(!accept)}>
+                <Icons 
+                    name="Accept" 
+                    width={wp("10%")} 
+                    height={wp("10%")} 
+                    viewBox="0 0 300 300" 
+                    fill="none" 
+                    style={{
+                        stroke: accept?lightTheme.green:lightTheme.darkGrey,
+                        strokeWidth: "15.9px",
+                        strokeLinejoin: "round",
+                        strokeMiterlimit:"1.5"
+                    }
+                }/>
             </TouchableOpacity>
-            <TouchableOpacity 
-                onPress={ () => setDeny(!deny)} 
-            >
-                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                    stroke: deny?lightTheme.red:lightTheme.darkGrey,
-                    strokeWidth:"15.9px",
-                    strokeLinejoin: "round",
-                    strokeMiterlimit:"1.5"
-                }}/>
+            <TouchableOpacity onPress={() => setDeny(!deny)}>
+                <Icons 
+                    name="Remove" 
+                    width={wp("10%")} 
+                    height={wp("10%")} 
+                    viewBox="0 0 300 300" 
+                    fill="none" 
+                    style={{
+                        stroke: deny?lightTheme.red:lightTheme.darkGrey,
+                        strokeWidth:"15.9px",
+                        strokeLinejoin: "round",
+                        strokeMiterlimit:"1.5"
+                    }
+                }/>
             </TouchableOpacity>
         </React.Fragment>
     )
@@ -148,16 +158,12 @@ function ContactCard(props) {
     )
 
     return (
-        <TouchableWithoutFeedback
-            onPress={
-                () => {
-                    props.handleScreenList(props.mode)
-                    props.mode === "Forum"? props.handleForum(props.forum):
-                    props.mode === "Chat"? props.handleChat(props.chat):
-                    null 
-                }
-            }   
-        >
+        <TouchableWithoutFeedback onPress={ () => {
+            props.handleScreenList(props.mode)
+            props.mode === "Forum" ? props.handleForum(props.forum) :
+            props.mode === "Chat" ? props.handleChat(props.chat) :
+            null 
+        }}>
             <View style={{
                 borderRadius: 20, 
                 overflow: 'visible', 
@@ -167,25 +173,27 @@ function ContactCard(props) {
                 ...styles.card, 
                 ...styles.bottomWrapper
             }}>
-                { props.imagePlaceholder}
-                {/* <Image/> */}
+                {/* {props.imagePlaceholder} */}
                 <View style={{flex: 2, marginRight: wp("5%"), marginLeft: wp("2.5%")}}>
-                    <Text style={styles.headerText2} numberOfLines={1}> 
-                        {props.title}
-                    </Text>
-                    <Text style={styles.bodyText2} numberOfLines={1}>
-                        {props.subtitle}
-                    </Text>
+                    <Text style={styles.headerText2} numberOfLines={1}>{props.title}</Text>
+
+                    <Text style={styles.bodyText2} numberOfLines={1}>{props.subtitle}</Text>
                 </View>
                 <View style={styles.rightButtonsWrapper}>
-                    {
-                        (props.mode === "Forum")?<ForumButtons setOptions={() => setOptionsActive(!optionsActive)} favorite={props.favorite}/>:
-                        (props.mode === "Chat")?<ChatButtons favorite={props.favorite} lastSaw={props.lastSaw}/>:
+                    {   
+                        props.mode === "Forum" ?
+                        <ForumButtons 
+                            setOptions={() => setOptionsActive(!optionsActive)} 
+                            favorite={props.favorite}
+                        /> :
+                        props.mode === "Chat" ? 
+                        <ChatButtons 
+                            favorite={props.favorite} 
+                            lastSaw={props.lastSaw}
+                        /> :
                         <InviteButtons/>
                     }
-                    {
-                        optionsActive && options
-                    } 
+                    {optionsActive && options} 
                 </View>
             </View>
         </TouchableWithoutFeedback>

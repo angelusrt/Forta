@@ -15,6 +15,8 @@ export const lightTheme = {
 }
 
 export const styles = StyleSheet.create({
+  
+  //Texts
   authHeader: {
     fontFamily: 'Poppins_700Bold',
     color: lightTheme.black,
@@ -87,6 +89,7 @@ export const styles = StyleSheet.create({
     fontSize: wp("4.5%")
   },
 
+  //Inputs
   authInput: {
     paddingVertical: wp("2%"),
     paddingHorizontal: wp("4%"),
@@ -102,7 +105,23 @@ export const styles = StyleSheet.create({
     borderColor: lightTheme.notSoLightGrey,
     color: lightTheme.darkGrey
   },
+  input2: {
+    paddingVertical: wp("1%"),
+    paddingHorizontal: wp("2%"),
+    marginTop: wp("1%"),
+    marginBottom: wp("2.5%"),
+    borderRadius: wp("2.5%"),
+    borderWidth: wp("0.25%"),
+    
+    fontFamily: "Roboto_400Regular",
+    fontSize: wp("4.5%"),
 
+    backgroundColor: lightTheme.kindOfLightGrey,
+    borderColor: lightTheme.notSoLightGrey,
+    color: lightTheme.darkGrey
+  },
+
+  //Cards and containers
   authContainer: {
     flex: 1,
     paddingHorizontal: wp("7.5%"),
@@ -179,6 +198,7 @@ export const styles = StyleSheet.create({
     elevation: 3,
   },
   
+  //Buttons
   authButton: {
     width: wp("15%"),
     padding: wp("2.5%"),
@@ -214,5 +234,36 @@ export const styles = StyleSheet.create({
 
     position: "absolute",
     bottom: wp("5%")
-  }
+  },
 });
+
+export const iconStyles = {
+  //Icons
+  icon1: {
+    stroke: lightTheme.darkGrey,
+    strokeLinejoin: "round",
+    strokeWidth:"15.9px",
+    marginRight: wp("1.25%")
+  },
+  icon2: {
+    stroke: lightTheme.darkGrey,
+    strokeWidth:"33.1px",
+    strokeLinejoin: "round",
+    strokeMiterlimit:"1.5"
+  },
+  icon3: {
+    stroke: lightTheme.red,
+    strokeWidth:"33.1px",
+    strokeLinejoin: "round",
+    strokeMiterlimit:"1.5",
+    marginLeft: wp("2.5%"),
+    marginRight: wp("2.5%")
+  },
+  icon4: {
+    stroke: lightTheme.green,
+    strokeLinejoin: "round",
+    strokeWidth:"15.9px",
+    marginRight: wp("1.25%"),
+    transform: [{ rotate: "180deg" }]
+  }
+}

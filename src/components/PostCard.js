@@ -65,19 +65,12 @@ function PostCard(props) {
     )
 
     return (
-        <TouchableWithoutFeedback
-            onPress={
-                () => {
-                    props.handleScreenList("Post")
-                    props.handlePostList(props.post)
-                }
-            }
-        >
-            <View style={{
-                borderRadius: 20,
-                //backgroundColor: lightTheme.white
-            }}>
-                {(props.postImage && <Image/>) || props.imagePlaceholder }
+        <TouchableWithoutFeedback onPress={() => {
+            props.handleScreenList("Post")
+            props.handlePostList(props.post)
+        }}>
+            <View style={{borderRadius: 20}}>
+                {/* {(props.postImage && <Image/>) || props.imagePlaceholder } */}
                 
                 <View style={{
                     padding: wp("5%"), 
@@ -89,9 +82,7 @@ function PostCard(props) {
                     backgroundColor: lightTheme.white,
                     marginBottom: wp("1.25%")
                 }}>
-                    <Text style={styles.headerText}>
-                        {props.title}
-                    </Text>
+                    <Text style={styles.headerText}>{props.title}</Text>
                     <Text style={{ marginBottom: wp("5%"), ...styles.bodyText }}>
                         {props.bodyText}
                     </Text>
@@ -99,22 +90,16 @@ function PostCard(props) {
                     <View style={styles.bottomWrapper}>
                         { props.photoPlaceholder }
                         <View style={{flex: 1.5, marginRight: wp("5%")}}>
-                            <Text style={styles.headerText2} numberOfLines={1}> 
-                                {props.name}
-                            </Text>
-                            <Text style={styles.bodyText2} numberOfLines={1}>
-                                {props.forum}
-                            </Text>
+                            <Text style={styles.headerText2} numberOfLines={1}>{props.name}</Text>
+                            <Text style={styles.bodyText2} numberOfLines={1}>{props.forum}</Text>
                         </View>
                         <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
                             <Text style={{color: likeActive?lightTheme.green:lightTheme.darkGrey, marginBottom: wp("0.625%"), ...styles.rateText}}>
                                 {props.rating + (likeActive && 1)}
                             </Text>
-                            <TouchableOpacity
-                                onPress={ () => {
-                                    setLikeActive(!likeActive)
-                                }}
-                            >
+                            <TouchableOpacity onPress={() => {
+                                setLikeActive(!likeActive)
+                            }}>
                                 <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
                                     stroke: likeActive?lightTheme.green:lightTheme.darkGrey ,
                                     strokeLinejoin: "round",
@@ -122,7 +107,8 @@ function PostCard(props) {
                                     transform: [{ rotate: "90deg" }]
                                 }}/>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ marginLeft: wp("2.5%")}}
+                            <TouchableOpacity 
+                                style={{ marginLeft: wp("2.5%")}}
                                 onPress={() => setOptionsActive(!optionsActive)}
                             >
                                 <Icons name="Options" width={wp("3.3%")} height={wp("10%")} viewBox="208 0 208 625" fill="none" style={{
@@ -133,9 +119,7 @@ function PostCard(props) {
                                 }}/>
                             </TouchableOpacity>
                         </View>
-                        {
-                            optionsActive && options
-                        } 
+                        {optionsActive && options} 
                     </View>
                 </View>
             </View>

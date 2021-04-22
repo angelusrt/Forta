@@ -43,6 +43,7 @@ function Routes() {
     
     const handlePostList = props => {
         setPostList(result => [...result, props])
+        console.log(postList)
     }
 
     const handleDecrementPost = () => {
@@ -80,19 +81,14 @@ function Routes() {
             scrn = 
                 <Tab 
                     db={db} 
-
                     token={token}
                     myInfos={myInfos}
-
                     handlePostList={post => handlePostList(post)} 
-
                     handleForum={forum => handleForum(forum)}
-                    
                     handleChat={chat => handleChat(chat)}
-
                     route={route} 
+                    setRoute={route => setRoute(route)}
                     handleRoute={route => handleRoute(route)} 
-
                     handleScreenList={props => handleScreenList(props)}
                 /> 
             break;
@@ -109,14 +105,14 @@ function Routes() {
         case "Post":
             scrn = 
                 <Post 
-                    db={db} 
-
+                    db={db}
+                    token={token}
+                    myInfos={myInfos}
                     forum={forum} 
                     post={postList[postList.length - 1]} 
                     postLength={postList.length} 
                     handleDecrementPost={() => handleDecrementPost()} 
                     handlePostList={post => handlePostList(post)} 
-
                     handleScreenList={props => handleScreenList(props)}
                     handleDecrementScreen={() => handleDecrementScreen()}
                 />
@@ -125,12 +121,13 @@ function Routes() {
             scrn = 
                 <Forum 
                     db={db} 
-                    
+                    token={token}
+                    myInfos={myInfos}
                     forum={forum} 
                     handleForum={forum => handleForum(forum)}
-
+                    route={route} 
+                    handleRoute={route => handleRoute(route)} 
                     handlePostList={post => handlePostList(post)}
-
                     handleScreenList={props => handleScreenList(props)}
                     handleDecrementScreen={() => handleDecrementScreen()} 
                 />
