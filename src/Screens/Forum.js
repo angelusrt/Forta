@@ -1,13 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import _reactNative, { View, ScrollView, Text, TouchableOpacity, Platform} from "react-native"
+import React, {useState, useEffect} from 'react'
+import _reactNative, {View, ScrollView, Text, TouchableOpacity} from "react-native"
+import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
-import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-import Icons from "./../components/Icons";
-
-import { lightTheme, styles } from "./../Styles.js";
-import PostCard from "./../components/PostCard";
-import InteligentButton from "../components/InteligentButton.js";
-import ObjectByString from "../components/ObjectByString";
+import Icons from "./../components/Icons"
+import PostCard from "./../components/PostCard"
+import InteligentButton from "../components/InteligentButton.js"
+import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Forum(props) {
     const[forum, setForum] = useState()
@@ -51,26 +49,13 @@ function Forum(props) {
     }
 
     const onTryToGetForum = async () => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, httpEnvelope )
-        .then( res => res.json() )
-        .then( data => {
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, httpEnvelope)
+        .then(res => res.json())
+        .then(data => {
             setForum(data)                
-            setPosts(data.posts.map( (posts, index) => (
+            setPosts(data.posts.map((posts, index) =>
                 <PostCard 
                     key={`2_${index}`}
-                    imagePlaceholder={
-                        <View style={{
-                            width: wp("95%"),
-                            height: wp("95%"),
-                            marginLeft: wp("2.5%"),
-                            marginTop: wp("-20%"),
-                            top: wp("20%"),
-                            borderColor: lightTheme.ligthGrey,
-                            borderTopWidth: wp("0.5%"),
-                            backgroundColor: lightTheme.notSoDarkGrey,
-                            borderRadius: 20, 
-                        }}/>
-                    }
                     title={posts.title}
                     bodyText={posts.bodyText}
                     name={posts.author}
@@ -80,89 +65,84 @@ function Forum(props) {
                     handlePostList={props.handlePostList}
                     handleScreenList={props.handleScreenList}
                 />
-            )))
+            ))
             setResolved(true)
         })
-        .catch( err => console.log(err) )
+        .catch( err => console.log(err))
     }
     
-    useEffect(() => {
-        onTryToGetForum()
-    },[])
+    useEffect(() => {onTryToGetForum()},[])
 
-    let options = (
+    let options = 
         <View style={{
             position: 'absolute',
             top: wp("10%"),
             right: 0,
             ...styles.options
         }}>
-            <TouchableOpacity style={ styles.bottomWrapper }>
-                <Icons name="Share" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
-                    stroke:lightTheme.darkGrey,
-                    strokeWidth:"33.1px",
-                    strokeLinejoin:"round",
-                    strokeMiterlimit:"1.5"
-                }}/>
-                <Text style={ styles.headerText }>Compartilhar</Text>
+            <TouchableOpacity style={styles.bottomWrapper}>
+                <Icons 
+                    name="Share" 
+                    width={wp("10%")} 
+                    height={wp("10%")} 
+                    viewBox="0 0 625 625" 
+                    fill="none" 
+                    style={iconStyles.icon2}
+                />
+                <Text style={styles.headerText}>Compartilhar</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={ styles.bottomWrapper }
-            >
-                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                    stroke:lightTheme.darkGrey,
-                    strokeWidth:"15.9px",
-                    strokeLinejoin: "round",
-                    strokeMiterlimit:"1.5"
-                }}/>
-                <Text style={ styles.headerText }>Denunciar</Text>
+            <TouchableOpacity style={styles.bottomWrapper}>
+                <Icons 
+                    name="Remove" 
+                    width={wp("10%")} 
+                    height={wp("10%")} 
+                    viewBox="0 0 300 300"
+                    fill="none" 
+                    style={iconStyles.icon1}
+                />
+                <Text style={styles.headerText}>Denunciar</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={ styles.bottomWrapper }
-            >
-                <Icons name="Remove" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                    stroke:lightTheme.darkGrey,
-                    strokeWidth:"15.9px",
-                    strokeLinejoin: "round",
-                    strokeMiterlimit:"1.5"
-                }}/>
-                <Text style={ styles.headerText }>Excluir</Text>
+            <TouchableOpacity style={styles.bottomWrapper}>
+                <Icons 
+                    name="Remove" 
+                    width={wp("10%")} 
+                    height={wp("10%")} 
+                    viewBox="0 0 300 300" 
+                    fill="none" 
+                    style={iconStyles.icon1}
+                />
+                <Text style={styles.headerText}>Excluir</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={ styles.bottomWrapper }
-            >
-                <Icons name="Bios" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
-                    stroke:lightTheme.darkGrey,
-                    strokeWidth:"33.1px",
-                    strokeLinejoin: "round",
-                    strokeMiterlimit:"1.5"
-                }}/>
-                <Text style={ styles.headerText }>Regras</Text>
+            <TouchableOpacity style={styles.bottomWrapper}>
+                <Icons 
+                    name="Bios" 
+                    width={wp("10%")} 
+                    height={wp("10%")} 
+                    viewBox="0 0 625 625" 
+                    fill="none" 
+                    style={iconStyles.icon2}
+                />
+                <Text style={styles.headerText}>Regras</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={ styles.bottomWrapper }
-            >
-                <Icons name="Comentaries" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
-                    stroke:lightTheme.darkGrey,
-                    strokeWidth:"33.1px",
-                    strokeLinejoin: "round",
-                    strokeMiterlimit:"1.5"
-                }}/>
-                <Text style={ styles.headerText }>Mods</Text>
+            <TouchableOpacity style={styles.bottomWrapper}>
+                <Icons 
+                    name="Comentaries" 
+                    width={wp("10%")} 
+                    height={wp("10%")} 
+                    viewBox="0 0 625 625" 
+                    fill="none" 
+                    style={iconStyles.icon2}
+                />
+                <Text style={styles.headerText}>Mods</Text>
             </TouchableOpacity>
         </View>
-    )
 
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
             {   resolved ? 
                 <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-                    { bannerImage }
-                    
-                    <View style={{
-                        //marginHorizontal: wp("5%"),
-                        top: wp("-10%")
-                    }}>
+                    {bannerImage}
+                    <View style={{top: wp("-10%")}}>
                         <View style={{
                             flex: 1, 
                             padding: metric,
@@ -171,15 +151,12 @@ function Forum(props) {
                             borderRadius: metric,
                             backgroundColor: lightTheme.ligthGrey,
                         }}>
-                            <View
-                                style={{
-                                    marginBottom: metric,
-                                    overflow: 'hidden',
-                                    ...styles.bottomWrapper
-                                }}
-                            >
-                                { profileImage }
-
+                            <View style={{
+                                marginBottom: metric,
+                                overflow: 'hidden',
+                                ...styles.bottomWrapper
+                            }}>
+                                {profileImage}
                                 <View Style={styles.bottomWrapper}>
                                     <View style={{
                                         paddingLeft: metric,
@@ -189,7 +166,6 @@ function Forum(props) {
                                             numberOfLines={1}
                                             ellipsizeMode="tail"
                                             style={{
-                                                //flex: 1,
                                                 marginBottom: -wp("2.5%"),
                                                 ...styles.headerText3
                                             }}
@@ -200,22 +176,20 @@ function Forum(props) {
                                             marginBottom: metric,
                                             ...styles.bottomWrapper
                                         }}>
-                                            {
-                                                forum.tags.map(tag => (
-                                                    <Text numberOfLines={1} style={{
-                                                        paddingRight: metric/2,
-                                                        ...styles.bodyText2
-                                                    }}>
-                                                        {tag}
-                                                    </Text>                                
-                                                ))
-                                            }
+                                            {forum.tags.map(tag => 
+                                                <Text numberOfLines={1} style={{
+                                                    paddingRight: metric/2,
+                                                    ...styles.bodyText2
+                                                }}>
+                                                    {tag}
+                                                </Text>                                
+                                            )}
                                         </View>
                                     </View>
                                 </View>
                             </View>
                             
-                            <Text style={{ marginBottom: metric/2, ...styles.bodyText }}>
+                            <Text style={{marginBottom: metric/2, ...styles.bodyText}}>
                                 {forum.bios}
                             </Text>
                             
@@ -227,70 +201,81 @@ function Forum(props) {
                                 </View>
                                 
                                 <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
-                                    <TouchableOpacity
-                                        onPress={ () => {
-                                            setFollow(!follow)
-                                        }}
-                                    >
-                                        <Icons name="Arrow" width={wp("10%")} height={wp("10%")} viewBox="0 0 300 300" fill="none" style={{
-                                            stroke: follow ? lightTheme.green : lightTheme.darkGrey ,
-                                            strokeLinejoin: "round",
-                                            strokeWidth:"15.9px",
-                                            transform: [{ rotate: "180deg" }]
-                                        }}/>
+                                    <TouchableOpacity onPress={() => {
+                                        setFollow(!follow)
+                                    }}>
+                                        <Icons 
+                                            name="Arrow" 
+                                            width={wp("10%")} 
+                                            height={wp("10%")} 
+                                            viewBox="0 0 300 300" 
+                                            fill="none" 
+                                            style={{
+                                                stroke: follow ? lightTheme.green : 
+                                                lightTheme.darkGrey,
+                                                strokeLinejoin: "round",
+                                                strokeWidth: "15.9px",
+                                                transform: [{ rotate: "180deg" }]
+                                            }}
+                                        />
                                     </TouchableOpacity>
                                     <TouchableOpacity>
-                                        <Icons name="Bell" width={wp("10%")} height={wp("10%")} viewBox="0 0 625 625" fill="none" style={{
-                                            stroke: lightTheme.darkGrey,
-                                            strokeWidth:"33.1px",
-                                            strokeLinejoin: "round",
-                                            strokeMiterlimit:"1.5"
-                                        }}/>
+                                        <Icons 
+                                            name="Bell" 
+                                            width={wp("10%")} 
+                                            height={wp("10%")} 
+                                            viewBox="0 0 625 625" 
+                                            fill="none" 
+                                            style={{
+                                                stroke: lightTheme.darkGrey,
+                                                strokeWidth: "33.1px",
+                                                strokeLinejoin: "round",
+                                                strokeMiterlimit: "1.5"
+                                            }}
+                                        />
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{ marginLeft: wp("2.5%")}}
+                                    <TouchableOpacity 
+                                        style={{marginLeft: wp("2.5%")}}
                                         onPress={() => setOptionsActive(!optionsActive)}
                                     >
-                                        <Icons name="Options" width={wp("3.3%")} height={wp("10%")} viewBox="208 0 208 625" fill="none" style={{
-                                            stroke: lightTheme.red,
-                                            strokeWidth:"33.1px",
-                                            strokeLinejoin: "round",
-                                            strokeMiterlimit:"1.5"
-                                        }}/>
+                                        <Icons 
+                                            name="Options" 
+                                            width={wp("3.3%")} 
+                                            height={wp("10%")} 
+                                            viewBox="208 0 208 625" 
+                                            fill="none" 
+                                            style={iconStyles.icon5}
+                                        />
                                     </TouchableOpacity>
                                 </View>
-
-                                { optionsActive && options } 
+                                {optionsActive && options} 
                             </View>
                         </View>
                     </View>
                     
-                    <View 
-                        style={{backgroundColor: lightTheme.ligthGrey, 
-                            borderTopLeftRadius: 20,
-                            borderTopRightRadius: 20,
-                            paddingTop: metric/2,
-                            top: wp("-12.5%")
-                        }}
-                    >
+                    <View style={{
+                        backgroundColor: lightTheme.ligthGrey, 
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        paddingTop: metric/2,
+                        top: wp("-12.5%")
+                    }}>
                         {posts}
                     </View>
                 </ScrollView> : 
                 <Text style={{textAlign: "center"}}>Loading...</Text>
             }
             <InteligentButton 
-                token={props.token}
-                myInfos={props.myInfos}
+                token={props.token}                
                 screen={screen}
                 setScreen={screen => setScreen(screen)}
-                forum={props.forum}
-                postLength={props.postLength} 
+                forum={props.forum} 
                 handlePostList={props.handlePostList}
                 handleScreenList={props.handleScreenList}
-                handleDecrementPost={props.handleDecrementPost}
                 handleDecrementScreen={props.handleDecrementScreen}
             />
         </View>
-    );
+    )
 }
 
-export default Forum;
+export default Forum

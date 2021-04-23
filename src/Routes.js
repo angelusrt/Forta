@@ -1,15 +1,13 @@
-import React, { useState , useEffect} from 'react'
-import { StatusBar, View } from 'react-native'
-import { NavigationContainer } from "@react-navigation/native"
+import React, {useState} from 'react'
+import {StatusBar, View} from 'react-native'
+import {NavigationContainer} from "@react-navigation/native"
 
-import Auth from "./Screens/Auth";
+import Auth from "./Screens/Auth"
 import Tab from './Screens/Tab'
 import Settings from "./Screens/Settings"
 import Post from "./Screens/Post"
-import Forum from "./Screens/Forum";
-import Chat from "./Screens/Chat";
-
-import db from "./components/database.json";
+import Forum from "./Screens/Forum"
+import Chat from "./Screens/Chat"
 
 function Routes() {
     const[route, setRoute] = useState("Home")
@@ -19,164 +17,94 @@ function Routes() {
     const[chat, setChat] = useState("")
     const[token, setToken] = useState("")
     const[myInfos, setMyInfos] = useState("")
-    const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
-
-    const handleToken = () => {
-        setScreenList(["Tab"])
-    }
+    const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight
     
-    const handleRoute = props => {
-        setRoute(props)
-    }
+    const handleDecrementScreen = () => setScreenList(prev => {
+        const next = [...prev]
+        next.pop()
+        return next
+    })
 
-    const handleScreenList = props => {
-        setScreenList(result => [...result, props])
-    }
+    const handleDecrementPost = () => setPostList(prev => {
+        const next = [...prev]
+        next.pop()
+        return next
+    })
 
-    const handleDecrementScreen = () => {
-        setScreenList(prev => {
-            const next = [...prev]
-            next.pop()
-            return next
-        })
-    }
-    
-    const handlePostList = props => {
-        setPostList(result => [...result, props])
-        console.log(postList)
-    }
-
-    const handleDecrementPost = () => {
-        setPostList(prev => {
-            const next = [...prev]
-            next.pop()
-            return next
-        })
-    }
-
-    const handleForum = props => {
-        setForum(props)
-    }
-
-    const handleChat = props => {
-        setChat(props)
-    }
-
-    let scrn;
+    let scrn
     switch (screenList[screenList.length - 1]) {
         case "Auth": 
             scrn = 
-                <Auth 
-                    db={db} 
+                <Auth
                     token={token}
-                    setToken={ token => setToken(token) }
-                    
+                    setToken={token => setToken(token)}
                     myInfos={myInfos}
-                    setMyInfos={ myInfos => setMyInfos(myInfos) }
-
-                    handleToken={ () => handleToken() }
+                    setMyInfos={myInfos => setMyInfos(myInfos)}
+                    handleToken={() => setScreenList(["Tab"])}
                 /> 
-            break;
-        case "Tab": 
-            scrn = 
-                <Tab 
-                    db={db} 
-                    token={token}
-                    myInfos={myInfos}
-                    handlePostList={post => handlePostList(post)} 
-                    handleForum={forum => handleForum(forum)}
-                    handleChat={chat => handleChat(chat)}
-                    route={route} 
-                    setRoute={route => setRoute(route)}
-                    handleRoute={route => handleRoute(route)} 
-                    handleScreenList={props => handleScreenList(props)}
-                /> 
-            break;
+            break
         case "Settings":
             scrn = 
-                <Settings 
-                    db={db} 
-                    token={token}
-
-                    handleScreenList={props => handleScreenList(props)}
+                <Settings
+                    myInfos={myInfos}
                     handleDecrementScreen={() => handleDecrementScreen()}
                 />
-            break;
+            break
         case "Post":
             scrn = 
                 <Post 
-                    db={db}
                     token={token}
-                    myInfos={myInfos}
                     forum={forum} 
-                    post={postList[postList.length - 1]} 
-                    postLength={postList.length} 
+                    post={postList[postList.length - 1]}
                     handleDecrementPost={() => handleDecrementPost()} 
-                    handlePostList={post => handlePostList(post)} 
-                    handleScreenList={props => handleScreenList(props)}
+                    handlePostList={props => setPostList(result => [...result, props])} 
+                    handleScreenList={props => setScreenList(result => [...result, props])}
                     handleDecrementScreen={() => handleDecrementScreen()}
                 />
-            break;
+            break
         case "Forum": 
             scrn = 
-                <Forum 
-                    db={db} 
+                <Forum
                     token={token}
-                    myInfos={myInfos}
                     forum={forum} 
-                    handleForum={forum => handleForum(forum)}
-                    route={route} 
-                    handleRoute={route => handleRoute(route)} 
-                    handlePostList={post => handlePostList(post)}
-                    handleScreenList={props => handleScreenList(props)}
+                    handlePostList={props => setPostList(result => [...result, props])}
+                    handleScreenList={props => setScreenList(result => [...result, props])}
                     handleDecrementScreen={() => handleDecrementScreen()} 
                 />
-            break;
+            break
         case "Chat":
             scrn = 
-                <Chat 
-                    db={db} 
+                <Chat
                     token={token}
                     myInfos={myInfos}
-                    
-                    chat={chat} 
-                    handleChat={forum => handleForum(forum)}
-
+                    chat={chat}
                     handleDecrementScreen={() => handleDecrementScreen()} 
                 />
-            break;
+            break
         default:
             scrn = 
-                <Tab 
-                    db={db} 
-
+                <Tab
                     token={token}
                     myInfos={myInfos}
-
-                    handlePostList={post => handlePostList(post)} 
-
-                    handleForum={forum => handleForum(forum)}
-                    
-                    handleChat={chat => handleChat(chat)}
-
+                    handlePostList={props => setPostList(result => [...result, props])} 
+                    handleForum={forum => setForum(forum)}
+                    handleChat={chat => setChat(chat)}
                     route={route} 
-                    handleRoute={route => handleRoute(route)} 
-
-                    handleScreenList={props => handleScreenList(props)}
+                    setRoute={route => setRoute(route)}
+                    handleRoute={route => setRoute(route)} 
+                    handleScreenList={props => setScreenList(result => [...result, props])}
                 /> 
-            break;
+            break
     }
 
     return (
-        <View style={{ flex: 1}}>
-            <View style={{ height: STATUSBAR_HEIGHT, backgroundColor:"#F9F9F9" }}>
+        <View style={{flex: 1}}>
+            <View style={{height: STATUSBAR_HEIGHT, backgroundColor:"#F9F9F9"}}>
                 <StatusBar translucent backgroundColor="#F9F9F9" barStyle="dark-content"/>
             </View>
-            <NavigationContainer>
-                {scrn}
-            </NavigationContainer>
+            <NavigationContainer>{scrn}</NavigationContainer>
         </View>
-    );
+    )
 }
 
-export default Routes;
+export default Routes
