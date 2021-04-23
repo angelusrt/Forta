@@ -1,5 +1,5 @@
-import { StyleSheet, Platform } from 'react-native';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
+import {StyleSheet} from 'react-native'
+import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 export const lightTheme = {
   black: "#303030",
@@ -15,7 +15,6 @@ export const lightTheme = {
 }
 
 export const styles = StyleSheet.create({
-  
   //Texts
   authHeader: {
     fontFamily: 'Poppins_700Bold',
@@ -56,7 +55,6 @@ export const styles = StyleSheet.create({
     fontFamily: "Roboto_500Medium",
     fontSize: wp("4%"),
     color: lightTheme.notSoDarkGrey,
-
     lineHeight: 20
   },
   headerText2: {
@@ -81,7 +79,6 @@ export const styles = StyleSheet.create({
   cardText: {
     fontFamily: "Roboto_500Medium",
     fontSize: wp("4%"),
-
     lineHeight: 20
   },
   rateText: {
@@ -97,10 +94,8 @@ export const styles = StyleSheet.create({
     marginBottom: wp("2.5%"),
     borderRadius: wp("2.5%"),
     borderWidth: wp("0.25%"),
-    
     fontFamily: "Roboto_400Regular",
     fontSize: wp("4.5%"),
-
     backgroundColor: lightTheme.kindOfLightGrey,
     borderColor: lightTheme.notSoLightGrey,
     color: lightTheme.darkGrey
@@ -112,10 +107,8 @@ export const styles = StyleSheet.create({
     marginBottom: wp("2.5%"),
     borderRadius: wp("2.5%"),
     borderWidth: wp("0.25%"),
-    
     fontFamily: "Roboto_400Regular",
     fontSize: wp("4.5%"),
-
     backgroundColor: lightTheme.kindOfLightGrey,
     borderColor: lightTheme.notSoLightGrey,
     color: lightTheme.darkGrey
@@ -139,22 +132,10 @@ export const styles = StyleSheet.create({
     bottom: wp("20%")
   },
   card: {
-    //marginHorizontal: wp("5%"),
-    //marginVertical: wp("2.5%"),
     borderColor: lightTheme.ligthGrey,
-    //borderWidth: wp("0.5%"),
     borderTopWidth: wp("0.5%"),
     borderBottomWidth: wp("0.5%"),
     backgroundColor: lightTheme.white,
-
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
-    // elevation: 3,
   },
   card2: {
     backgroundColor: lightTheme.white,
@@ -168,6 +149,15 @@ export const styles = StyleSheet.create({
     shadowRadius: 2.22,
     elevation: 3,
   },
+  postCard: {
+    padding: wp("5%"), 
+    marginHorizontal: wp("2.5%"),
+    borderRadius: 20, 
+    borderColor: lightTheme.ligthGrey,
+    borderBottomWidth: wp("0.5%"),
+    backgroundColor: lightTheme.white,
+    marginBottom: wp("1.25%")
+  },
   bottomWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -177,17 +167,24 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: "flex-end",
   },
+  addCard: {
+    position: 'relative',
+    padding: wp("5%"), 
+    marginHorizontal: wp("2.5%"),
+    borderRadius: 20, 
+    borderColor: lightTheme.ligthGrey,
+    borderBottomWidth: wp("0.5%"),
+    backgroundColor: lightTheme.white,
+    marginBottom: wp("1.25%")
+  },
   options: {
     paddingRight: wp("5%"),
     paddingLeft: wp("4%"),
     paddingVertical: wp("5%"),
-    
     backgroundColor: lightTheme.white,
-
     borderColor: lightTheme.kindOfLightGrey,
     borderWidth: 1,
     borderRadius: 10,
-
     shadowColor: "#000",
     shadowOffset: {
         width: 0,
@@ -204,25 +201,28 @@ export const styles = StyleSheet.create({
     padding: wp("2.5%"),
     borderRadius: wp("2.5%")
   },
+  authGreenButton : {
+    marginRight: wp("2.5%"),
+    backgroundColor: lightTheme.green, 
+    width: wp("15%"),
+    padding: wp("2.5%"),
+    borderRadius: wp("2.5%"),
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   iButton: {
     flexDirection: "row",
     alignItems: "center",
-
     paddingTop: wp("2.5%"),
     paddingBottom: wp("2.5%"),
     paddingLeft: wp("2.5%"),
     paddingRight: wp("2.5%"),
-
     marginLeft: wp("2.5%"),
-
     borderRadius: 10,
-
     borderWidth: wp(".5%"),
     borderLeftWidth: 0,
-    
     borderColor: lightTheme.ligthGrey,
     backgroundColor: lightTheme.white,
-
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -231,14 +231,19 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 3,
-
     position: "absolute",
     bottom: wp("5%")
   },
-});
+})
 
 export const iconStyles = {
   //Icons
+  iconAuth: {
+    stroke: lightTheme.white,
+    strokeLinejoin: "round",
+    strokeWidth:"9px",
+    transform: [{rotate: "180deg"}]
+  },
   icon1: {
     stroke: lightTheme.darkGrey,
     strokeLinejoin: "round",
@@ -264,6 +269,31 @@ export const iconStyles = {
     strokeLinejoin: "round",
     strokeWidth:"15.9px",
     marginRight: wp("1.25%"),
-    transform: [{ rotate: "180deg" }]
+    transform: [{rotate: "180deg"}]
+  },
+  icon5: {
+    stroke: lightTheme.red,
+    strokeWidth:"33.1px",
+    strokeLinejoin: "round",
+    strokeMiterlimit:"1.5"
+  },
+  icon6: {
+    stroke: lightTheme.red,
+    strokeWidth:"33.1px",
+    strokeLinejoin: "round",
+    strokeMiterlimit:"1.5",
+    marginLeft: wp("2.5%")
+  },
+  icon7: {
+    stroke: lightTheme.darkGrey,
+    strokeWidth:"15.9px",
+    strokeLinejoin: "round",
+    strokeMiterlimit:"1.5"
+  },
+  icon8: {
+    stroke: lightTheme.darkGrey,
+    strokeLinejoin: "round",
+    strokeWidth:"15.9px",
+    transform: [{rotate: "180deg"}]
   }
 }

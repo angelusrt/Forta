@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, TextInput, Text} from "react-native"
-import { widthPercentageToDP as wp} from "react-native-responsive-screen";
+import React, {useState} from 'react'
+import {View, TouchableOpacity, TextInput, Text} from "react-native"
+import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
-import { lightTheme, styles, iconStyles } from "./../Styles.js";
-import Icons from "./Icons";
+import {lightTheme, styles, iconStyles} from "./../Styles.js"
+import Icons from "./Icons"
 
 function ForumAddCard(props) {
     const[groupName, setGroupName] = useState("")
@@ -22,9 +22,8 @@ function ForumAddCard(props) {
         }
 
         await fetch(`http://192.168.0.106:3000/api/forums/`, httpEnvelopePost)
-        .then( res => res.json())
-        .then( data => {
-            console.log(data)
+        .then(res => res.json())
+        .then(data => {
             props.handleForum(data)
             props.handleScreenList("Forum")
         })
@@ -34,26 +33,15 @@ function ForumAddCard(props) {
     const verify = () => {
         if (groupName.length > 0 && bios.length > 0 && tags.length > 0 && tags.length <= 4){
             onTryToPost()
-        } else{
-            console.log("wow")
+        } else {
             setGroupName("")
             setBios("")
             setTags([""])
         }
     }
-    console.log(tags)
+    
     return (
-        <View style={{
-            position: 'relative',
-            padding: wp("5%"), 
-            marginHorizontal: wp("2.5%"),
-            borderRadius: 20, 
-            borderColor: lightTheme.ligthGrey,
-            //borderTopWidth: wp("0.5%"),
-            borderBottomWidth: wp("0.5%"),
-            backgroundColor: lightTheme.white,
-            marginBottom: wp("1.25%")
-        }}>
+        <View style={styles.addCard}>
             <Text style={styles.headerText2}>GroupName</Text>
             <TextInput 
                 onChangeText={ text => setGroupName(text)}
@@ -95,17 +83,6 @@ function ForumAddCard(props) {
                         style={iconStyles.icon4}
                     />
                 </TouchableOpacity>
-                {/* <TouchableOpacity onPress={() => props.handleScreen("PostAdd")}>
-                    <Icons 
-                        name="Add" 
-                        width={wp("10%")} 
-                        height={wp("10%")} 
-                        viewBox="0 0 625 625" 
-                        fill="none" 
-                        style={iconStyles.icon2}
-                    />
-                    <Text style={ styles.headerText }>Add foto</Text>
-                </TouchableOpacity> */}
             </View>
         </View>
     )
@@ -126,9 +103,9 @@ function PostAddCard(props) {
             body: JSON.stringify({title,bodyText})
         }
 
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts`, httpEnvelopePost )
-        .then( res => res.json())
-        .then( data => {
+        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts`, httpEnvelopePost)
+        .then(res => res.json())
+        .then(data => {
             props.handleScreenList("Post")
             props.handlePostList(data)
         })
@@ -145,17 +122,7 @@ function PostAddCard(props) {
     }
 
     return (
-        <View style={{
-            position: 'relative',
-            padding: wp("5%"), 
-            marginHorizontal: wp("2.5%"),
-            borderRadius: 20, 
-            borderColor: lightTheme.ligthGrey,
-            //borderTopWidth: wp("0.5%"),
-            borderBottomWidth: wp("0.5%"),
-            backgroundColor: lightTheme.white,
-            marginBottom: wp("1.25%")
-        }}>
+        <View style={styles.addCard}>
             <Text style={styles.headerText2}>Title</Text>
             <TextInput 
                 onChangeText={ text => setTitle(text)}
@@ -191,17 +158,6 @@ function PostAddCard(props) {
                         style={iconStyles.icon4}
                     />
                 </TouchableOpacity>
-                {/* <TouchableOpacity onPress={() => props.handleScreen("PostAdd")}>
-                    <Icons 
-                        name="Add" 
-                        width={wp("10%")} 
-                        height={wp("10%")} 
-                        viewBox="0 0 625 625" 
-                        fill="none" 
-                        style={iconStyles.icon2}
-                    />
-                    <Text style={ styles.headerText }>Add foto</Text>
-                </TouchableOpacity> */}
             </View>
         </View>
     )
@@ -240,17 +196,7 @@ function ComentaryAddCard(props) {
     }
 
     return (
-        <View style={{
-            position: 'relative',
-            padding: wp("5%"), 
-            marginHorizontal: wp("2.5%"),
-            borderRadius: 20, 
-            borderColor: lightTheme.ligthGrey,
-            //borderTopWidth: wp("0.5%"),
-            borderBottomWidth: wp("0.5%"),
-            backgroundColor: lightTheme.white,
-            marginBottom: wp("1.25%")
-        }}>
+        <View style={styles.addCard}>
             <Text style={styles.headerText2}>Comentary</Text>
             <TextInput 
                 onChangeText={ text => setBodyText(text)}
@@ -280,24 +226,13 @@ function ComentaryAddCard(props) {
                         style={iconStyles.icon4}
                     />
                 </TouchableOpacity>
-                {/* <TouchableOpacity onPress={() => props.handleScreen("PostAdd")}>
-                    <Icons 
-                        name="Add" 
-                        width={wp("10%")} 
-                        height={wp("10%")} 
-                        viewBox="0 0 625 625" 
-                        fill="none" 
-                        style={iconStyles.icon2}
-                    />
-                    <Text style={ styles.headerText }>Add foto</Text>
-                </TouchableOpacity> */}
             </View>
         </View>
     )
 }
 
 function InteligentButton(props) {
-    let buttonIcons;
+    let buttonIcons
     switch (props.screen) {
         case "Forums":
             buttonIcons = 
@@ -333,7 +268,7 @@ function InteligentButton(props) {
                         />
                     </TouchableOpacity>
                 </React.Fragment>
-            break;
+            break
         case "Home":
         case "Chats":
         case "Invites":
@@ -360,12 +295,11 @@ function InteligentButton(props) {
                         />
                     </TouchableOpacity>
                 </React.Fragment>
-            break;
+            break
         case "ForumAdd":
             buttonIcons = 
                 <ForumAddCard 
                     token={props.token}
-                    forum={props.forum} 
                     setScreen={screen => props.setScreen(screen)}   
                     handleScreenList={ screen => props.handleScreenList(screen)}
                     handleForum={ forum => props.handleForum(forum)} 
@@ -405,7 +339,7 @@ function InteligentButton(props) {
                         />
                     </TouchableOpacity>
                 </React.Fragment>
-            break;
+            break
         case "PostAdd": 
             buttonIcons = 
                 <PostAddCard 
@@ -415,7 +349,7 @@ function InteligentButton(props) {
                     handleScreenList={ screen => props.handleScreenList(screen)}
                     handlePostList={ post => props.handlePostList(post)} 
                 />
-            break;
+            break
         case "Post":
             buttonIcons =
                 <React.Fragment>
@@ -430,7 +364,7 @@ function InteligentButton(props) {
                             viewBox="0 0 300 300" 
                             fill="none" 
                             style={iconStyles.icon1}
-                        />
+                        />  
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => props.setScreen("ComentaryAdd")}>
                         <Icons 
@@ -468,17 +402,21 @@ function InteligentButton(props) {
                             style={iconStyles.icon1}
                         />
                     </TouchableOpacity>
-                   <TextInput onChangeText={ text => props.setMessage(text)} onSubmitEditing={ () => props.verify()} style={{
-                        fontFamily: "Roboto_500Medium",
-                        paddingHorizontal: wp("2.5%"),
-                        width: wp("55%"),
-                        marginRight: wp("1.25%"),
-                        borderRadius: 10,
-                        borderWidth: wp("0.5%"),
-                        borderColor: lightTheme.kindOfLightGrey,
-                        color: lightTheme.darkGrey, 
-                        backgroundColor: lightTheme.ligthGrey
-                    }}/>
+                   <TextInput 
+				   		onChangeText={ text => props.setMessage(text)} 
+						onSubmitEditing={ () => props.verify()} 
+						style={{
+							fontFamily: "Roboto_500Medium",
+							paddingHorizontal: wp("2.5%"),
+							width: wp("55%"),
+							marginRight: wp("1.25%"),
+							borderRadius: 10,
+							borderWidth: wp("0.5%"),
+							borderColor: lightTheme.kindOfLightGrey,
+							color: lightTheme.darkGrey, 
+							backgroundColor: lightTheme.ligthGrey
+                    	}
+					}/>
                     <TouchableOpacity>
                         <Icons 
                             name="Add" 
@@ -500,7 +438,7 @@ function InteligentButton(props) {
                         />
                     </TouchableOpacity>
                 </React.Fragment>
-            break;
+            break
         case "Settings":
         default:
             buttonIcons =
@@ -514,7 +452,7 @@ function InteligentButton(props) {
                         style={iconStyles.icon1}
                     />
                 </TouchableOpacity>
-            break;
+            break
     }
 
     return (
@@ -528,4 +466,4 @@ function InteligentButton(props) {
     )
 }
 
-export default InteligentButton;
+export default InteligentButton
