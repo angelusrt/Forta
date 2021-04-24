@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import _reactNative, {View, ScrollView, Text, TouchableOpacity} from "react-native"
+import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable} from "react-native"
+import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import Icons from "./../components/Icons"
@@ -7,35 +8,128 @@ import PostCard from "./../components/PostCard"
 import InteligentButton from "../components/InteligentButton.js"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
+function Options(props) {
+    return (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Modal 
+                animationType="fade"
+                backdropOpacity={0.25}
+                isVisible={props.isModalVisible}
+                testID={'modal'}
+                animationIn="zoomInDown"
+                animationOut="zoomOut"
+                animationInTiming={600}
+                animationOutTiming={300}
+                backdropTransitionInTiming={600}
+                backdropTransitionOutTiming={300}
+                statusBarTranslucent={true}
+                onBackdropPress={() => props.setModalVisible(false)}
+            >
+                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                    <View style={{
+                        zIndex: 3,
+                        ...styles.options
+                    }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}} 
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Share" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon2}
+                            />
+                            <Text style={{
+                                marginLeft: wp("1.25%"),
+                                ...styles.headerText
+                            }}>
+                                Compartilhar
+                            </Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Bios" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon2}
+                            />
+                            <Text style={{
+                                marginLeft: wp("1.25%"),
+                                ...styles.headerText
+                            }}>
+                                Regras
+                            </Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Comentaries" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon2}
+                            />
+                            <Text style={{
+                                marginLeft: wp("1.25%"),
+                                ...styles.headerText
+                            }}>
+                                Mods
+                            </Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Remove" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300"
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                            <Text style={styles.headerText}>Denunciar</Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Remove" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                            <Text style={styles.headerText}>Excluir</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    )
+}
+
 function Forum(props) {
     const[forum, setForum] = useState()
     const[posts, setPosts] = useState([])
-    const[resolved, setResolved] = useState(false)
     const[follow, setFollow] = useState(true)
-    const[optionsActive, setOptionsActive] = useState(false)
     const[screen, setScreen] = useState("Forum")
-
+    const[resolved, setResolved] = useState(false)
+    const[isModalVisible, setModalVisible] = useState(false)
     const metric = wp("5%")
-    
-    let profileImage = 
-        <View style={{
-            width: metric * 4,
-            height: metric * 4,
-            backgroundColor: lightTheme.yellow,
-            borderRadius: 10,
-            borderColor: lightTheme.ligthGrey,
-            borderWidth: wp("0.625%")
-        }}/>
-
-    let bannerImage = 
-        <View style={{
-            width: "100%",
-            height: wp("35%"),
-            backgroundColor: lightTheme.red,
-            borderRadius: 5, 
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0
-        }}/>
 
     const httpEnvelope = {
         method: "GET",
@@ -59,9 +153,11 @@ function Forum(props) {
                     title={posts.title}
                     bodyText={posts.bodyText}
                     name={posts.author}
-                    forum={data.groupName}
+                    forum={props.forum}
+                    forumName={data.groupName}
                     rating={posts.upvotes}
                     post={posts._id}
+                    handleForum={props.handleForum}
                     handlePostList={props.handlePostList}
                     handleScreenList={props.handleScreenList}
                 />
@@ -73,90 +169,45 @@ function Forum(props) {
     
     useEffect(() => {onTryToGetForum()},[])
 
-    let options = 
-        <View style={{
-            position: 'absolute',
-            top: wp("10%"),
-            right: 0,
-            ...styles.options
-        }}>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Share" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 625 625" 
-                    fill="none" 
-                    style={iconStyles.icon2}
-                />
-                <Text style={styles.headerText}>Compartilhar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Remove" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 300 300"
-                    fill="none" 
-                    style={iconStyles.icon1}
-                />
-                <Text style={styles.headerText}>Denunciar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Remove" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 300 300" 
-                    fill="none" 
-                    style={iconStyles.icon1}
-                />
-                <Text style={styles.headerText}>Excluir</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Bios" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 625 625" 
-                    fill="none" 
-                    style={iconStyles.icon2}
-                />
-                <Text style={styles.headerText}>Regras</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Comentaries" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 625 625" 
-                    fill="none" 
-                    style={iconStyles.icon2}
-                />
-                <Text style={styles.headerText}>Mods</Text>
-            </TouchableOpacity>
-        </View>
-
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
-            {   resolved ? 
-                <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-                    {bannerImage}
-                    <View style={{top: wp("-10%")}}>
+            { resolved ? 
+                <React.Fragment>
+                    <ScrollView contentContainerStyle={{paddingBottom: 200}}>
                         <View style={{
-                            flex: 1, 
-                            padding: metric,
-                            marginHorizontal: metric/2,
-                            marginBottom: metric,
-                            borderRadius: metric,
-                            backgroundColor: lightTheme.ligthGrey,
-                        }}>
+                            width: "100%",
+                            height: wp("35%"),
+                            backgroundColor: lightTheme.red,
+                            borderRadius: 5, 
+                            borderTopLeftRadius: 0,
+                            borderTopRightRadius: 0
+                        }}/>
+                        
+                        <Pressable 
+                            onLongPress={() => setModalVisible(true)}
+                            style={{
+                                top: wp("-10%"),
+                                flex: 1, 
+                                padding: metric,
+                                marginHorizontal: metric/2,
+                                marginBottom: metric,
+                                borderRadius: metric,
+                                backgroundColor: lightTheme.ligthGrey,
+                            }}
+                        >
                             <View style={{
                                 marginBottom: metric,
                                 overflow: 'hidden',
                                 ...styles.bottomWrapper
                             }}>
-                                {profileImage}
+                                <View style={{
+                                    width: metric * 4,
+                                    height: metric * 4,
+                                    backgroundColor: lightTheme.yellow,
+                                    borderRadius: 10,
+                                    borderColor: lightTheme.ligthGrey,
+                                    borderWidth: wp("0.625%")
+                                }}/>
                                 <View Style={styles.bottomWrapper}>
                                     <View style={{
                                         paddingLeft: metric,
@@ -166,7 +217,7 @@ function Forum(props) {
                                             numberOfLines={1}
                                             ellipsizeMode="tail"
                                             style={{
-                                                marginBottom: -wp("2.5%"),
+                                                marginBottom: wp("0%"),
                                                 ...styles.headerText3
                                             }}
                                         >
@@ -199,7 +250,7 @@ function Forum(props) {
                                         {`${forum.followers.length} membros`}
                                     </Text>
                                 </View>
-                                
+                        
                                 <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
                                     <TouchableOpacity onPress={() => {
                                         setFollow(!follow)
@@ -234,46 +285,37 @@ function Forum(props) {
                                             }}
                                         />
                                     </TouchableOpacity>
-                                    <TouchableOpacity 
-                                        style={{marginLeft: wp("2.5%")}}
-                                        onPress={() => setOptionsActive(!optionsActive)}
-                                    >
-                                        <Icons 
-                                            name="Options" 
-                                            width={wp("3.3%")} 
-                                            height={wp("10%")} 
-                                            viewBox="208 0 208 625" 
-                                            fill="none" 
-                                            style={iconStyles.icon5}
-                                        />
-                                    </TouchableOpacity>
                                 </View>
-                                {optionsActive && options} 
                             </View>
+                        </Pressable>
+
+                        <Options 
+                            isModalVisible={isModalVisible}
+                            setModalVisible={prop => setModalVisible(prop)}
+                        />
+            
+                        <View style={{
+                            backgroundColor: lightTheme.ligthGrey, 
+                            borderTopLeftRadius: 20,
+                            borderTopRightRadius: 20,
+                            paddingTop: metric/2,
+                            top: wp("-12.5%")
+                        }}>
+                            {posts}
                         </View>
-                    </View>
-                    
-                    <View style={{
-                        backgroundColor: lightTheme.ligthGrey, 
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        paddingTop: metric/2,
-                        top: wp("-12.5%")
-                    }}>
-                        {posts}
-                    </View>
-                </ScrollView> : 
+                    </ScrollView>
+                    <InteligentButton 
+                        token={props.token}                
+                        screen={screen}
+                        setScreen={screen => setScreen(screen)}
+                        forum={props.forum} 
+                        handlePostList={props.handlePostList}
+                        handleScreenList={props.handleScreenList}
+                        handleDecrementScreen={props.handleDecrementScreen}
+                    />
+                </React.Fragment> : 
                 <Text style={{textAlign: "center"}}>Loading...</Text>
             }
-            <InteligentButton 
-                token={props.token}                
-                screen={screen}
-                setScreen={screen => setScreen(screen)}
-                forum={props.forum} 
-                handlePostList={props.handlePostList}
-                handleScreenList={props.handleScreenList}
-                handleDecrementScreen={props.handleDecrementScreen}
-            />
         </View>
     )
 }

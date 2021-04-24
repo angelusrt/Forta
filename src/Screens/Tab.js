@@ -167,10 +167,12 @@ function Home(props){
                     title={post.title}
                     bodyText={post.bodyText}
                     name={post.author}
-                    forum={forumInfo.groupName}
+                    forum={forumInfo._id}
+                    forumName={forumInfo.groupName}
                     rating={post.upvotes}
                     post={post._id}
                     handlePostList={props.handlePostList}
+                    handleForum={props.handleForum}
                     handleScreenList={props.handleScreenList}
                 />
             )
@@ -307,7 +309,7 @@ function Chats(props) {
     },[chats])
     
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{paddingBottom: 200}}>
             {resolved ? chat : <Text style={{textAlign: "center"}}>Loading...</Text>}
         </ScrollView>
     )
@@ -382,7 +384,7 @@ function Invites(props) {
     },[invites])
 
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{paddingBottom: 200}}>
             {resolved ? invite : <Text style={{textAlign: "center"}}>Loading...</Text>}
         </ScrollView>
     )
@@ -431,6 +433,7 @@ function Tab(props) {
                         token={props.token} 
                         handlePostList={props.handlePostList} 
                         handleScreenList={props.handleScreenList}
+                        handleForum={props.handleForum}
                     />
                 }/>
                 <tab.Screen name="Forums" children={() => 
@@ -459,7 +462,7 @@ function Tab(props) {
                 token={props.token}
                 screen={screen === "ForumAdd"? screen : props.route}
                 setScreen={screen => setScreen(screen)}
-                handleForum={forum => props.handleForum(forum)}
+                handleForum={props.handleForum}
                 handleScreenList={props.handleScreenList} 
             />
         </View>

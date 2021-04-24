@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import _reactNative, {View, ScrollView, Text, TouchableOpacity} from "react-native"
+import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable} from "react-native"
+import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import Icons from "./../components/Icons"
@@ -7,14 +8,108 @@ import PostCard from "./../components/PostCard"
 import InteligentButton from "../components/InteligentButton.js"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
+function Options(props) {
+    return (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Modal 
+                animationType="fade"
+                backdropOpacity={0.25}
+                isVisible={props.isModalVisible}
+                testID={'modal'}
+                animationIn="zoomInDown"
+                animationOut="zoomOut"
+                animationInTiming={600}
+                animationOutTiming={300}
+                backdropTransitionInTiming={600}
+                backdropTransitionOutTiming={300}
+                statusBarTranslucent={true}
+                onBackdropPress={() => props.setModalVisible(false)}
+            >
+                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                    <View style={{
+                        zIndex: 3,
+                        ...styles.options
+                    }}>
+                        <Pressable
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Star" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon2}
+                            />
+                            <Text style={{
+                                marginLeft: wp("1.25%"),
+                                ...styles.headerText
+                            }}>
+                                Salvar
+                            </Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}} 
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Share" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon2}
+                            />
+                            <Text style={{
+                                marginLeft: wp("1.25%"),
+                                ...styles.headerText
+                            }}>
+                                Compartilhar
+                            </Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Remove" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300"
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                            <Text style={styles.headerText}>Denunciar</Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Remove" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                            <Text style={styles.headerText}>Excluir</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    )
+}
+
 function Post(props) {
     const[post, setPost] = useState()
     const[comentaries, setComentaries] = useState([])
-    const[resolved, setResolved] = useState(false)
     const[likeActive, setLikeActive] = useState(false)
-    const[optionsActive, setOptionsActive] = useState(false)
     const[screen, setScreen] = useState("Post")
-
+    const[resolved, setResolved] = useState(false)
+    const[isModalVisible, setModalVisible] = useState(false)
     const metric = wp("5%")
 
     const httpEnvelope = {
@@ -41,6 +136,7 @@ function Post(props) {
                     forum={coments.forum}
                     rating={coments.upvotes}
                     post={coments._id}
+                    handleForum={props.handleForum}
                     handlePostList={props.handlePostList}
                     handleScreenList={props.handleScreenList}
                 />
@@ -52,100 +148,56 @@ function Post(props) {
 
     useEffect(() => {onTryToGetPost()},[])
 
-    let options =
-        <View style={{
-            position: 'absolute',
-            bottom: wp("10%"),
-            right: 0,
-            ...styles.options
-        }}>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Share" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 625 625" 
-                    fill="none" 
-                    style={iconStyles.icon2}
-                />
-                <Text style={styles.headerText}>Compartilhar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Star" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 625 625" 
-                    fill="none" 
-                    style={iconStyles.icon2}
-                />
-                <Text style={styles.headerText}>Salvar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Remove" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 300 300"
-                    fill="none" 
-                    style={iconStyles.icon1}
-                />
-                <Text style={styles.headerText}>Denunciar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Remove" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 300 300" 
-                    fill="none" 
-                    style={iconStyles.icon1}
-                />
-                <Text style={styles.headerText}>Excluir</Text>
-            </TouchableOpacity>
-        </View>
-
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
-            {resolved ? 
-                <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-                    <View style={{
-                        padding: wp("5%"), 
-                        marginHorizontal: wp("2.5%"),
-                        borderRadius: 20, 
-                        borderColor: lightTheme.ligthGrey,
-                        top: 0,
-                        borderBottomWidth: wp("0.5%"),
-                        backgroundColor: lightTheme.ligthGrey,
-                        marginBottom: wp("5%")
-                    }}>
-                        <View>
-                            <Text style={styles.headerText}>{post.title}</Text>
-                            <Text style={{marginBottom: wp("5%"), ...styles.bodyText}}>
-                                {post.bodyText}
-                            </Text>
+            { resolved ? 
+                <React.Fragment>
+                    <ScrollView contentContainerStyle={{paddingBottom: 200}}>
+                        <Pressable 
+                            onLongPress={() => setModalVisible(true)}
+                            style={{
+                                padding: wp("5%"), 
+                                marginHorizontal: wp("2.5%"),
+                                borderRadius: 20, 
+                                borderColor: lightTheme.ligthGrey,
+                                top: 0,
+                                borderBottomWidth: wp("0.5%"),
+                                backgroundColor: lightTheme.ligthGrey,
+                                marginBottom: wp("5%")
+                            }}
+                        >
+                            <View>
+                                <Text style={styles.headerText}>{post.title}</Text>
+                                <Text style={{marginBottom: wp("5%"), ...styles.bodyText}}>
+                                    {post.bodyText}
+                                </Text>
 
-                            <View style={styles.bottomWrapper}>
-                                <View style={{flex: 1.5, marginRight: wp("5%")}}>
-                                    <Text style={styles.headerText2} numberOfLines={1}> 
+                                <View style={{
+                                    marginBottom: wp("5%"), 
+                                    overflow: 'hidden',
+                                    ...styles.bottomWrapper
+                                }}>
+                                    <Text 
+                                        style={{
+                                            marginRight: wp("1.25%"),
+                                        ...styles.headerText2
+                                        }} 
+                                        numberOfLines={1}
+                                    > 
                                         {post.author}
                                     </Text>
                                     <Text style={styles.bodyText2} numberOfLines={1}>
-                                        Pewdie
+                                        {`at ${props.forum}`}
                                     </Text>
                                 </View>
-                                <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
-                                    <Text style={{
-                                        color: likeActive ? lightTheme.green :
-                                        lightTheme.darkGrey, 
-                                        marginBottom: wp("0.625%"),
-                                        ...styles.rateText
-                                    }}>
-                                        {post.upvotes + (likeActive && 1)}
-                                    </Text>
-                                    <TouchableOpacity onPress={() => {
-                                        setLikeActive(!likeActive)
-                                    }}>
+
+                                <View style={styles.bottomWrapper}>
+                                    <TouchableOpacity 
+                                        onPress={() => {
+                                            setLikeActive(!likeActive)
+                                        }}
+                                        style={{marginLeft: -wp("1.5%"),...styles.bottomWrapper}}
+                                    >
                                         <Icons 
                                             name="Arrow" 
                                             width={wp("10%")} 
@@ -159,47 +211,47 @@ function Post(props) {
                                                 transform: [{ rotate: "90deg" }]
                                             }}
                                         />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity 
-                                        style={{ marginLeft: wp("2.5%")}}
-                                        onPress={() => setOptionsActive(!optionsActive)}
-                                    >
-                                        <Icons 
-                                            name="Options" 
-                                            width={wp("3.3%")} 
-                                            height={wp("10%")} 
-                                            viewBox="208 0 208 625" 
-                                            fill="none" 
-                                            style={iconStyles.icon5}
-                                        />
+                                        <Text style={{
+                                            color: likeActive ? lightTheme.green :
+                                            lightTheme.darkGrey, 
+                                            marginBottom: wp("0.625%"),
+                                            ...styles.rateText
+                                        }}>
+                                            {post.upvotes + (likeActive && 1)}
+                                        </Text>
                                     </TouchableOpacity>
                                 </View>
-                                {optionsActive && options}
                             </View>
+                        </Pressable>
+                        
+                        <Options 
+                            isModalVisible={isModalVisible}
+                            setModalVisible={prop => setModalVisible(prop)}
+                        />
+
+                        <View style={{
+                            borderTopLeftRadius: 20,
+                            borderTopRightRadius: 20,
+                            paddingTop: metric/2,
+                            top: wp("0")
+                        }}>
+                            {comentaries}
                         </View>
-                    </View>
-                    <View style={{
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        paddingTop: metric/2,
-                        top: wp("0")
-                    }}>
-                        {comentaries}
-                    </View>
-                </ScrollView> :
+                    </ScrollView>
+                    <InteligentButton 
+                        token={props.token}
+                        screen={screen}
+                        setScreen={screen => setScreen(screen)}
+                        forum={props.forum}
+                        post={props.post}
+                        handlePostList={props.handlePostList}
+                        handleScreenList={props.handleScreenList}
+                        handleDecrementPost={props.handleDecrementPost} 
+                        handleDecrementScreen={props.handleDecrementScreen} 
+                    />
+                </React.Fragment>:
                 <Text style={{textAlign: "center"}}>Loading...</Text>
             }
-            <InteligentButton 
-                token={props.token}
-                screen={screen}
-                setScreen={screen => setScreen(screen)}
-                forum={props.forum}
-                post={props.post}
-                handlePostList={props.handlePostList}
-                handleScreenList={props.handleScreenList}
-                handleDecrementPost={props.handleDecrementPost} 
-                handleDecrementScreen={props.handleDecrementScreen} 
-            />
         </View>
     )
 }

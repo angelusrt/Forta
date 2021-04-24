@@ -42,13 +42,13 @@ function ForumAddCard(props) {
     
     return (
         <View style={styles.addCard}>
-            <Text style={styles.headerText2}>GroupName</Text>
+            <Text style={styles.headerText4}>GroupName</Text>
             <TextInput 
                 onChangeText={ text => setGroupName(text)}
                 style={styles.authInput}
             />
 
-            <Text style={styles.headerText2}>Bios</Text>
+            <Text style={styles.headerText4}>Bios</Text>
             <TextInput 
                 onChangeText={ text => setBios(text)}
                 numberOfLines={4}
@@ -56,7 +56,7 @@ function ForumAddCard(props) {
                 style={styles.authInput}
             />
 
-            <Text style={styles.headerText2}>Tags</Text>
+            <Text style={styles.headerText4}>Tags</Text>
             <TextInput 
                 onChangeText={ text => setTags(text.split(" ", 4))}
                 style={styles.authInput}
@@ -123,13 +123,13 @@ function PostAddCard(props) {
 
     return (
         <View style={styles.addCard}>
-            <Text style={styles.headerText2}>Title</Text>
+            <Text style={styles.headerText4}>Title</Text>
             <TextInput 
                 onChangeText={ text => setTitle(text)}
                 style={styles.authInput}
             />
 
-            <Text style={styles.headerText2}>comentary</Text>
+            <Text style={styles.headerText4}>comentary</Text>
             <TextInput 
                 onChangeText={ text => setBodyText(text)}
                 numberOfLines={4}
@@ -197,7 +197,7 @@ function ComentaryAddCard(props) {
 
     return (
         <View style={styles.addCard}>
-            <Text style={styles.headerText2}>Comentary</Text>
+            <Text style={styles.headerText4}>Comentary</Text>
             <TextInput 
                 onChangeText={ text => setBodyText(text)}
                 numberOfLines={4}
@@ -302,7 +302,7 @@ function InteligentButton(props) {
                     token={props.token}
                     setScreen={screen => props.setScreen(screen)}   
                     handleScreenList={ screen => props.handleScreenList(screen)}
-                    handleForum={ forum => props.handleForum(forum)} 
+                    handleForum={props.handleForum} 
                 />
             break    
         case "Forum":
@@ -403,12 +403,13 @@ function InteligentButton(props) {
                         />
                     </TouchableOpacity>
                    <TextInput 
-				   		onChangeText={ text => props.setMessage(text)} 
-						onSubmitEditing={ () => props.verify()} 
+				   		onChangeText={text => props.setMessage(text)} 
+                        value={props.message}
+						onSubmitEditing={() => props.verify()} 
 						style={{
 							fontFamily: "Roboto_500Medium",
 							paddingHorizontal: wp("2.5%"),
-							width: wp("55%"),
+							width: wp("65%"),
 							marginRight: wp("1.25%"),
 							borderRadius: 10,
 							borderWidth: wp("0.5%"),
@@ -417,26 +418,16 @@ function InteligentButton(props) {
 							backgroundColor: lightTheme.ligthGrey
                     	}
 					}/>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => props.verify()}>    
                         <Icons 
-                            name="Add" 
+                            name="Arrow" 
                             width={wp("10%")} 
                             height={wp("10%")} 
-                            viewBox="0 0 625 625" 
+                            viewBox="0 0 300 300" 
                             fill="none" 
-                            style={iconStyles.icon2}
+                            style={iconStyles.icon4}
                         />
-                    </TouchableOpacity>
-                    <TouchableOpacity>    
-                        <Icons 
-                            name="Options" 
-                            width={wp("3.3%")} 
-                            height={wp("10%")} 
-                            viewBox="208 0 208 625" 
-                            fill="none" 
-                            style={iconStyles.icon3}
-                        />
-                    </TouchableOpacity>
+                    </TouchableOpacity> 
                 </React.Fragment>
             break
         case "Settings":

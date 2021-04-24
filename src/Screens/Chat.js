@@ -12,14 +12,6 @@ function Chat(props) {
     const[message, setMessage] = useState("")
     const[resolved, setResolved] = useState(false)
     const metric = wp("5%")
-
-    let profileImage = 
-        <View style={{
-            width: metric * 2,
-            height: metric * 2,
-            backgroundColor: lightTheme.yellow,
-            borderRadius: 10, 
-        }}/>
     
     const httpEnvelope = {
         method: "GET",
@@ -65,7 +57,7 @@ function Chat(props) {
         .catch(err => console.log(err))
     }
 
-    useEffect(() => {getChat()},[getChat])
+    useEffect(() => {getChat()},[])
     
     const onTryToPost = async () => {
         const httpEnvelopePost = {
@@ -82,13 +74,15 @@ function Chat(props) {
         .then(res => res.json())
         .then(() => getChat())
         .catch(err => err)
+    
+        setMessage("")
     }   
 
-    const verify = () => message.length > 0 ? onTryToPost() : setMessage("")
+    const verify = async () => message.length > 0 ? onTryToPost() : setMessage("")
 
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
-            {resolved ?
+            { resolved ?
                 <React.Fragment>
                     <View style={{
                         margin: metric, 
@@ -96,7 +90,12 @@ function Chat(props) {
                         ...styles.bottomWrapper
                     }}>
                         <View style={{flex: 1.5, marginRight: metric, ...styles.bottomWrapper}}>
-                            {profileImage}
+                            <View style={{
+                                width: metric * 2,
+                                height: metric * 2,
+                                backgroundColor: lightTheme.yellow,
+                                borderRadius: 10, 
+                            }}/>
                             <View style={{marginLeft: metric/2}}>
                                 <Text numberOfLines={1} style={{bottom: "-7.5%", ...styles.headerText}}>
                                     {chat.members.filter(mem => mem.member !== props.myInfos.id)[0].member}
@@ -121,21 +120,21 @@ function Chat(props) {
                     </View>
 
                     <ScrollView contentContainerStyle={{width: "100%"}}>
-                        <View style={{backgroundColor: lightTheme.ligthGrey}}>
+                        <View style={{backgroundColor: lightTheme.ligthGrey, paddingBottom: wp("25%")}}>
                             {messages}
                         </View>
                     </ScrollView>
+                    <InteligentButton 
+                        token={props.token}
+                        message={message}
+                        setMessage={message => setMessage(message)}
+                        verify={() => verify()}
+                        handleDecrementScreen={props.handleDecrementScreen}
+                        screen="Chat"
+                    />
                 </React.Fragment> :
                 <Text>Carregando...</Text>
             }
-
-            <InteligentButton 
-                token={props.token}
-                setMessage={message => setMessage(message)}
-                verify={() => verify()}
-                handleDecrementScreen={props.handleDecrementScreen}
-                screen="Chat"
-            />
         </View>
     )
 }

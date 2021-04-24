@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {StatusBar, View} from 'react-native'
 import {NavigationContainer} from "@react-navigation/native"
+import {lightTheme} from "./Styles";
 
 import Auth from "./Screens/Auth"
 import Tab from './Screens/Tab'
@@ -57,6 +58,7 @@ function Routes() {
                     forum={forum} 
                     post={postList[postList.length - 1]}
                     handleDecrementPost={() => handleDecrementPost()} 
+                    handleForum={forum => setForum(forum)}
                     handlePostList={props => setPostList(result => [...result, props])} 
                     handleScreenList={props => setScreenList(result => [...result, props])}
                     handleDecrementScreen={() => handleDecrementScreen()}
@@ -67,6 +69,7 @@ function Routes() {
                 <Forum
                     token={token}
                     forum={forum} 
+                    handleForum={forum => setForum(forum)}
                     handlePostList={props => setPostList(result => [...result, props])}
                     handleScreenList={props => setScreenList(result => [...result, props])}
                     handleDecrementScreen={() => handleDecrementScreen()} 
@@ -99,8 +102,8 @@ function Routes() {
 
     return (
         <View style={{flex: 1}}>
-            <View style={{height: STATUSBAR_HEIGHT, backgroundColor:"#F9F9F9"}}>
-                <StatusBar translucent backgroundColor="#F9F9F9" barStyle="dark-content"/>
+            <View style={{height: STATUSBAR_HEIGHT, backgroundColor: lightTheme.ligthGrey}}>
+                <StatusBar translucent backgroundColor={lightTheme.ligthGrey} barStyle="dark-content"/>
             </View>
             <NavigationContainer>{scrn}</NavigationContainer>
         </View>

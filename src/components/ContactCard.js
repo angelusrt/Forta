@@ -1,8 +1,106 @@
 import React, {useState} from 'react'
-import {View, Text, TouchableOpacity, TouchableWithoutFeedback} from "react-native"
+import {View, Text, TouchableOpacity, Pressable} from "react-native"
+import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
+
 import Icons from "./../components/Icons"
 import {iconStyles, lightTheme, styles} from "./../Styles"
+
+function Options(props) {
+    return (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Modal 
+                animationType="fade"
+                backdropOpacity={0.25}
+                isVisible={props.isModalVisible}
+                testID={'modal'}
+                animationIn="zoomInDown"
+                animationOut="zoomOut"
+                animationInTiming={600}
+                animationOutTiming={300}
+                backdropTransitionInTiming={600}
+                backdropTransitionOutTiming={300}
+                statusBarTranslucent={true}
+                onBackdropPress={() => props.setModalVisible(false)}
+            >
+                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                    <View style={{
+                        zIndex: 3,
+                        ...styles.options
+                    }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Add" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon2}
+                            />
+                            <Text style={{
+                                marginLeft: wp("1.25%"),
+                                ...styles.headerText
+                            }}>
+                                Selecionar
+                            </Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}} 
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Share" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon2}
+                            />
+                            <Text style={{
+                                marginLeft: wp("1.25%"),
+                                ...styles.headerText
+                            }}>
+                                Compartilhar
+                            </Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Remove" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300"
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                            <Text style={styles.headerText}>Denunciar</Text>
+                        </Pressable>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                        >
+                            <Icons 
+                                name="Remove" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                            <Text style={styles.headerText}>Excluir</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    )
+}
+
 
 function ForumButtons(props) {
     const[favoriteActive, setFavoriteActive] = useState(props.favorite === 0 ? false: true)
@@ -22,16 +120,6 @@ function ForumButtons(props) {
                         strokeLinejoin: "round",
                         strokeMiterlimit:"1.5"
                     }}
-                />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => props.setOptions()}>
-                <Icons 
-                    name="Options" 
-                    width={wp("3.3%")} 
-                    height={wp("10%")} 
-                    viewBox="208 0 208 625" 
-                    fill="none" 
-                    style={iconStyles.icon6}
                 />
             </TouchableOpacity>
         </React.Fragment>
@@ -107,95 +195,48 @@ function InviteButtons(props) {
 }
 
 function ContactCard(props) {
-    const[optionsActive, setOptionsActive] = useState(false)
-
-    let options = 
-        <View style={{
-            position: 'absolute',
-            bottom: wp("10%"),
-            right: 0,
-            ...styles.options
-        }}>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Share" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 625 625" 
-                    fill="none" 
-                    style={iconStyles.icon2}
-                />
-                <Text style={styles.headerText}>Compartilhar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Star" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 625 625" 
-                    fill="none" 
-                    style={iconStyles.icon2}
-                />
-                <Text style={styles.headerText}>Salvar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Remove" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 300 300"
-                    fill="none" 
-                    style={iconStyles.icon1}
-                />
-                <Text style={styles.headerText}>Denunciar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomWrapper}>
-                <Icons 
-                    name="Remove" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 300 300" 
-                    fill="none" 
-                    style={iconStyles.icon1}
-                />
-                <Text style={styles.headerText}>Excluir</Text>
-            </TouchableOpacity>
-        </View>
+    const[isModalVisible, setModalVisible] = useState(false)
 
     return (
-        <TouchableWithoutFeedback onPress={() => {
-            props.handleScreenList(props.mode)
-            props.mode === "Forum" ? props.handleForum(props.forum) :
-            props.mode === "Chat" ? props.handleChat(props.chat) :
-            null 
-        }}>
-            <View style={{
-                borderRadius: 20, 
-                overflow: 'visible', 
-                padding: wp("5%"), 
-                marginHorizontal: wp("2.5%"),
-                marginBottom: wp("1.25%"),
-                ...styles.card, 
-                ...styles.bottomWrapper
-            }}>
+        <View>
+            <Pressable 
+                onLongPress={() => props.mode === "Forum" ? setModalVisible(true) : null} 
+                android_ripple={{color: lightTheme.ligthGrey}}
+                onPress={() => {
+                    props.handleScreenList(props.mode)
+                    props.mode === "Forum" ? props.handleForum(props.forum) :
+                    props.mode === "Chat" ? props.handleChat(props.chat) :
+                    null 
+                }}
+                style={{
+                    borderRadius: 20, 
+                    overflow: 'visible', 
+                    padding: wp("5%"), 
+                    marginHorizontal: wp("2.5%"),
+                    marginBottom: wp("1.25%"),
+                    zIndex: 0,
+                    elevation: 0,
+                    ...styles.card, 
+                    ...styles.bottomWrapper
+                }}
+            >
                 <View style={{
                     width: wp("10%"),
                     height: wp("10%"),
-                    backgroundColor: lightTheme.notSoDarkGrey,
+                    backgroundColor: lightTheme.notSoLightGrey,
                     borderRadius: 10, 
                 }}/>
-                <View style={{flex: 2, marginRight: wp("5%"), marginLeft: wp("2.5%")}}>
-                    <Text style={styles.headerText2} numberOfLines={1}>{props.title}</Text>
 
-                    <Text style={styles.bodyText2} numberOfLines={1}>{props.subtitle}</Text>
+                <View style={{flex: 2, marginRight: wp("5%"), marginLeft: wp("2.5%")}}>
+                    <Text style={styles.headerText4} numberOfLines={1}>{props.title}</Text>
+
+                    <Text style={styles.bodyText4} numberOfLines={1}>{props.subtitle}</Text>
                 </View>
+                
                 <View style={styles.rightButtonsWrapper}>
                     {   
                         props.mode === "Forum" ?
-                        <ForumButtons 
-                            setOptions={() => setOptionsActive(!optionsActive)} 
-                            favorite={props.favorite}
-                        /> :
+                        <ForumButtons favorite={props.favorite}/> :
                         props.mode === "Chat" ? 
                         <ChatButtons 
                             favorite={props.favorite} 
@@ -203,10 +244,14 @@ function ContactCard(props) {
                         /> :
                         <InviteButtons/>
                     }
-                    {optionsActive && options} 
+                    
                 </View>
-            </View>
-        </TouchableWithoutFeedback>
+            </Pressable>
+            <Options
+                isModalVisible={isModalVisible}
+                setModalVisible={prop => setModalVisible(prop)}
+            />
+        </View>
     )
 }
 

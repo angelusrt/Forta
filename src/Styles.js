@@ -7,7 +7,7 @@ export const lightTheme = {
   notSoDarkGrey: "rgba(80,80,80,.75)",
   notSoLightGrey: "#C4C4C4",
   kindOfLightGrey: "#EBEBEB",
-  ligthGrey: "#F9F9F9",
+  ligthGrey: "#f4f4f4",//#F9F9F9
   white: "#FFFFFF",
   red: "#BF2E2E",
   green: "#2DCC54",
@@ -58,19 +58,29 @@ export const styles = StyleSheet.create({
     lineHeight: 20
   },
   headerText2: {
-    fontFamily: "Poppins_700Bold",
-    fontSize: wp("4%"),
-    color: lightTheme.notSoDarkGrey
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: wp("3%"),
+    color: lightTheme.notSoLightGrey
   },
   bodyText2: {
     fontFamily: "Roboto_500Medium",
-    fontSize: wp("4%"),
+    fontSize: wp("3.5%"),
     color: lightTheme.notSoLightGrey
   },
   headerText3: {
     fontFamily: "Poppins_700Bold",
     fontSize: wp("5.5%"),
     color: lightTheme.darkGrey
+  },
+  headerText4: {
+    fontFamily: "Poppins_700Bold",
+    fontSize: wp("4%"),
+    color: lightTheme.darkGrey
+  },
+  bodyText4: {
+    fontFamily: "Roboto_500Medium",
+    fontSize: wp("4%"),
+    color: lightTheme.notSoDarkGrey
   },
   headerCardText: {
     fontFamily: "Poppins_700Bold",
@@ -178,9 +188,8 @@ export const styles = StyleSheet.create({
     marginBottom: wp("1.25%")
   },
   options: {
-    paddingRight: wp("5%"),
-    paddingLeft: wp("4%"),
-    paddingVertical: wp("5%"),
+    paddingTop: wp("1.25%"),
+    paddingBottom: wp("1.25%"),
     backgroundColor: lightTheme.white,
     borderColor: lightTheme.kindOfLightGrey,
     borderWidth: 1,
@@ -207,6 +216,13 @@ export const styles = StyleSheet.create({
     width: wp("15%"),
     padding: wp("2.5%"),
     borderRadius: wp("2.5%"),
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  optionButtons: {
+    paddingRight: wp("5%"),
+    paddingLeft: wp("2.5%"),
+    paddingVertical: wp("1.25%"),
     flexDirection: 'row',
     alignItems: 'center'
   },
