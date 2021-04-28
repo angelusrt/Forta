@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import _reactNative, {View, ScrollView, Text, Switch, TouchableOpacity} from "react-native"
+import _reactNative, {View, ScrollView, Text, Switch, TouchableOpacity, Pressable} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import Icons from "./../components/Icons"
@@ -25,227 +25,228 @@ function Settings(props) {
                 <View style={{
                     width: "100%",
                     height: wp("35%"),
-                    backgroundColor: lightTheme.red,
+                    backgroundColor: lightTheme.notSoLightGrey,
                     borderRadius: 5, 
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0
                 }}/>
-                <View>
-                    <View style={{
-                        marginHorizontal: wp("2.5%"),
-                        top: wp("-10%"),
-                    }}>
-                        <View style={{
+
+                <View style={{
+                    marginHorizontal: wp("2.5%"),
+                    top: wp("-10%"),
+                }}>
+                    <Pressable 
+                        android_ripple={{color: lightTheme.kindOfLightGrey}}
+                        style={{
                             flex: 1, 
                             paddingHorizontal: metric,
                             paddingVertical: metric,
                             marginBottom: metric,
                             borderRadius: metric,
+                            borderColor: lightTheme.ligthGrey,
+                            borderWidth: wp("0.5%"),
                             backgroundColor: lightTheme.ligthGrey,
                             ...styles.bottomWrapper
-                        }}>
-                            <View style={{
-                                width: metric * 4,
-                                height: metric * 4,
-                                backgroundColor: lightTheme.yellow,
-                                borderRadius: 10
-                            }}/>
-                            <View style={{
-                                marginLeft: metric,
-                                width: metric * 9
-                            }}>
-                                <Text numberOfLines={1} style={{
-                                    fontFamily: 'Poppins_700Bold',
-                                    color: lightTheme.darkGrey,
-                                    fontSize: wp("7%"),
-                                    marginBottom: -wp("2.5%")    
-                                }}>
-                                    {props.myInfos.username}
-                                </Text>
-                                <Text numberOfLines={1} style={styles.authSubheader}>
-                                    {props.myInfos.bios}
-                                </Text>
-                            </View>
-
-                            <TouchableOpacity style={{
-                                position: 'absolute',
-                                right: metric
-                            }}>
-                                <Icons 
-                                    name="Arrow" 
-                                    width={wp("10%")} 
-                                    height={wp("10%")} 
-                                    viewBox="0 0 300 300" 
-                                    fill="none" 
-                                    style={iconStyles.icon8}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        
+                        }}
+                    >
                         <View style={{
-                            flex: 1, 
-                            height: metric * 2.5,
-                            justifyContent: 'space-between', 
-                            paddingHorizontal: metric,
-                            ...styles.bottomWrapper
+                            width: metric * 4,
+                            height: metric * 4,
+                            backgroundColor: lightTheme.yellow,
+                            borderRadius: 10
+                        }}/>
+
+                        <View style={{
+                            marginLeft: metric,
+                            width: metric * 9
                         }}>
-                            <Text style={styles.headerText}>Mudar Email</Text>
-                            <Icons 
-                                name="Arrow" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none" 
-                                style={iconStyles.icon8}
-                            />
+                            <Text numberOfLines={1} style={{
+                                fontFamily: 'Poppins_700Bold',
+                                color: lightTheme.darkGrey,
+                                fontSize: wp("7%"),
+                                marginBottom: -wp("2.5%")    
+                            }}>
+                                {props.myInfos.username}
+                            </Text>
+                            <Text numberOfLines={1} style={styles.authSubheader}>
+                                {props.myInfos.bios}
+                            </Text>
                         </View>
 
-                        <View 
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none"
+                            style={{position: "absolute", right: metric, ...iconStyles.icon8}}
+                        />
+                    </Pressable>
+                    
+                    <View style={{
+                        backgroundColor: lightTheme.ligthGrey,
+                        paddingVertical: metric/2,
+                        marginBottom: metric/2,
+                        borderRadius: 10,
+                    }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
                             style={{
                                 flex: 1, 
-                                height: metric * 2.5,
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
+                            <Text style={styles.headerText}>Mudar Email</Text>
+                        </Pressable>
+
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
                                 justifyContent: 'space-between', 
                                 paddingHorizontal: metric,
                                 ...styles.bottomWrapper
                             }}
                         >
                             <Text style={styles.headerText}>Mudar Senha</Text>
-                            <Icons 
-                                name="Arrow" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none"
-                                style={iconStyles.icon8}
-                            />
-                        </View>
+                        </Pressable>
 
-                        <View 
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
                             style={{
                                 flex: 1, 
-                                height: metric * 2.5,
+                                paddingVertical: metric/2,
                                 justifyContent: 'space-between', 
                                 paddingHorizontal: metric,
-                                marginBottom: metric,
                                 ...styles.bottomWrapper
                             }}
                         >
                             <Text style={styles.headerText}>Deletar Conta</Text>
-                            <Icons 
-                                name="Arrow" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none"
-                                style={iconStyles.icon8}
-                            />
-                        </View>
+                        </Pressable>
+                    </View>
 
-                        <View style={{
-                            flex: 1, 
-                            height: metric * 2.5,
-                            justifyContent: 'space-between', 
-                            paddingHorizontal: metric,
-                            ...styles.bottomWrapper
-                        }}>
+                    <View style={{
+                        backgroundColor: lightTheme.ligthGrey,
+                        paddingVertical: metric/2,
+                        marginBottom: metric/2,
+                        borderRadius: 10,
+                    }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
                             <Text style={styles.headerText}>Modo escuro</Text>
                             <Switch
-                                trackColor={{false: lightTheme.darkGrey, true: lightTheme.green}}
+                                trackColor={{false: lightTheme.notSoDarkGrey, true: lightTheme.green}}
                                 thumbColor={lightTheme.kindOfLightGrey}
-                                ios_backgroundColor={lightTheme.darkGrey}
+                                ios_backgroundColor={lightTheme.notSoDarkGrey}
                                 onValueChange={toggleDarkModeSwitch}
                                 value={isDarkModeEnabled}
                             />
-                        </View>
+                        </Pressable>
 
-                        <View style={{
-                            flex: 1, 
-                            height: metric * 2.5,
-                            justifyContent: 'space-between', 
-                            paddingHorizontal: metric,
-                            ...styles.bottomWrapper
-                        }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
                             <Text style={styles.headerText}>Notificações</Text>
                             <Switch
-                                trackColor={{false: lightTheme.darkGrey, true: lightTheme.green}}
+                                trackColor={{false: lightTheme.notSoDarkGrey, true: lightTheme.green}}
                                 thumbColor={lightTheme.kindOfLightGrey}
-                                ios_backgroundColor={lightTheme.darkGrey}
+                                ios_backgroundColor={lightTheme.notSoDarkGrey}
                                 onValueChange={toggleNotificationSwitch}
                                 value={isNotificationEnabled}
                             />
-                        </View>
+                        </Pressable>
 
-                        <View style={{
-                            flex: 1, 
-                            height: metric * 2.5,
-                            justifyContent: 'space-between', 
-                            paddingHorizontal: metric,
-                            ...styles.bottomWrapper
-                        }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
                             <Text style={styles.headerText}>Download Imagens</Text>
                             <Switch
-                                trackColor={{ false: lightTheme.darkGrey, true: lightTheme.green }}
+                                trackColor={{ false: lightTheme.notSoDarkGrey, true: lightTheme.green }}
                                 thumbColor={lightTheme.kindOfLightGrey}
-                                ios_backgroundColor={lightTheme.darkGrey}
+                                ios_backgroundColor={lightTheme.notSoDarkGrey}
                                 onValueChange={toggleDownloadImagesSwitch}
                                 value={isDownloadImagesEnabled}
                             />
-                        </View>
+                        </Pressable>
 
-                        <View style={{
-                            flex: 1, 
-                            height: metric * 2.5,
-                            justifyContent: 'space-between', 
-                            paddingHorizontal: metric,
-                            marginBottom: metric,
-                            ...styles.bottomWrapper
-                        }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
                             <Text style={styles.headerText}>Borrar NSFW</Text>
                             <Switch
-                                trackColor={{ false: lightTheme.darkGrey, true: lightTheme.green }}
+                                trackColor={{ false: lightTheme.notSoDarkGrey, true: lightTheme.green }}
                                 thumbColor={lightTheme.kindOfLightGrey}
-                                ios_backgroundColor={lightTheme.darkGrey}
+                                ios_backgroundColor={lightTheme.notSoDarkGrey}
                                 onValueChange={toggleNSFWSwitch}
                                 value={isNSFWEnabled}
                             />
-                        </View>
-
-                        <View style={{
-                            flex: 1, 
-                            height: metric * 2.5,
-                            justifyContent: 'space-between', 
-                            paddingHorizontal: metric,
-                            ...styles.bottomWrapper
-                        }}>
+                        </Pressable>
+                    </View>
+                    
+                    <View style={{
+                        backgroundColor: lightTheme.ligthGrey,
+                        paddingVertical: metric/2,
+                        marginBottom: metric/2,
+                        borderRadius: 10,
+                    }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
                             <Text style={styles.headerText}>Ver favoritos</Text>
-                            <Icons 
-                                name="Arrow" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none" 
-                                style={iconStyles.icon8}
-                            />
-                        </View>
+                        </Pressable>
 
-                        <View style={{
-                            flex: 1, 
-                            height: metric * 2.5,
-                            justifyContent: 'space-between', 
-                            paddingHorizontal: metric,
-                            marginBottom: metric,
-                            ...styles.bottomWrapper
-                        }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
                             <Text style={styles.headerText}>Sobre e termos</Text>
-                            <Icons 
-                                name="Arrow" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none" 
-                                style={iconStyles.icon8}
-                            />
-                        </View>
+                        </Pressable>
                     </View>
                 </View>
             </ScrollView>

@@ -143,8 +143,7 @@ export const styles = StyleSheet.create({
   },
   card: {
     borderColor: lightTheme.ligthGrey,
-    borderTopWidth: wp("0.5%"),
-    borderBottomWidth: wp("0.5%"),
+    borderWidth: wp("0.5%"),
     backgroundColor: lightTheme.white,
   },
   card2: {
@@ -183,7 +182,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: wp("2.5%"),
     borderRadius: 20, 
     borderColor: lightTheme.ligthGrey,
-    borderBottomWidth: wp("0.5%"),
+    borderWidth: wp("0.5%"),
     backgroundColor: lightTheme.white,
     marginBottom: wp("1.25%")
   },
@@ -234,9 +233,8 @@ export const styles = StyleSheet.create({
     paddingLeft: wp("2.5%"),
     paddingRight: wp("2.5%"),
     marginLeft: wp("2.5%"),
-    borderRadius: 10,
+    borderRadius: 20,
     borderWidth: wp(".5%"),
-    borderLeftWidth: 0,
     borderColor: lightTheme.ligthGrey,
     backgroundColor: lightTheme.white,
     shadowColor: "#000",
@@ -248,7 +246,6 @@ export const styles = StyleSheet.create({
     shadowRadius: 2.22,
     elevation: 3,
     position: "absolute",
-    bottom: wp("5%")
   },
 })
 
@@ -311,5 +308,17 @@ export const iconStyles = {
     strokeLinejoin: "round",
     strokeWidth:"15.9px",
     transform: [{rotate: "180deg"}]
-  }
+  },
+  icon9: {
+    stroke: lightTheme.darkGrey,
+    strokeLinejoin: "round",
+    strokeWidth:"15.9px"
+  },
+  icon10: {
+    stroke: lightTheme.darkGrey,
+    strokeWidth:"33.1px",
+    strokeLinejoin: "round",
+    strokeMiterlimit:"1.5",
+    opacity: 0.75
+  },
 }

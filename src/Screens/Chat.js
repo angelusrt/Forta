@@ -1,10 +1,41 @@
 import React, {useState, useEffect} from 'react'
-import _reactNative, {View, ScrollView, Text, TouchableOpacity} from "react-native"
+import _reactNative, {View, ScrollView, Text, TouchableOpacity, Animated, Easing} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import Icons from "./../components/Icons"
 import InteligentButton from "../components/InteligentButton.js"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
+
+function Refresh(){
+    const[animRot, setAnimRot] = useState(new Animated.Value(0))
+
+    const spin = animRot.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg']
+    })
+
+    useEffect(() => {
+        Animated.loop(Animated.timing(animRot,{
+            toValue: 1,
+            duration: 450,
+            easing: Easing.linear,
+            useNativeDriver: true
+        })).start()
+    },[animRot])
+
+    return(
+        <Animated.View style={{transform: [{ rotate: spin }], flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Icons 
+                name="Refresh" 
+                width={wp("20%")} 
+                height={wp("20%")} 
+                viewBox="0 0 625 625" 
+                fill="none" 
+                style={iconStyles.icon10}
+            />
+        </Animated.View>
+    )
+}
 
 function Chat(props) {
     const[chat, setChat] = useState({})
@@ -133,7 +164,7 @@ function Chat(props) {
                         screen="Chat"
                     />
                 </React.Fragment> :
-                <Text>Carregando...</Text>
+                <Refresh/>
             }
         </View>
     )

@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {View, TouchableOpacity, TextInput, Text} from "react-native"
+import React, {useState, useRef, useEffect} from 'react'
+import {View, TouchableOpacity, TextInput, Text, Animated} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import {lightTheme, styles, iconStyles} from "./../Styles.js"
@@ -231,10 +231,44 @@ function ComentaryAddCard(props) {
     )
 }
 
+function usePrevious(value) {
+    const ref = useRef()
+    
+    useEffect(() => {
+        ref.current = value
+    })
+    
+    return ref.current
+}
+
 function InteligentButton(props) {
+    const fadeAnim = useRef(new Animated.Value(0)).current
+    const prevScreen = usePrevious(props.screen)
+    const[active, setActive] = useState(false)
+
+    React.useEffect(() => {
+        fadeAnim.setValue(0)
+        setActive(true)
+        if(active === true){
+            Animated.timing(
+                fadeAnim,
+                {
+                    toValue: 1,
+                    duration: 250,
+                    useNativeDriver: true
+                }
+            ).start()
+        }
+        if(fadeAnim === 1){
+            setActive(false)
+        }
+    }, [fadeAnim, prevScreen])
+    
+
     let buttonIcons
     switch (props.screen) {
         case "Forums":
+
             buttonIcons = 
                 <React.Fragment>
                     <TouchableOpacity>
@@ -440,7 +474,7 @@ function InteligentButton(props) {
                         height={wp("10%")} 
                         viewBox="0 0 300 300" 
                         fill="none" 
-                        style={iconStyles.icon1}
+                        style={iconStyles.icon9}
                     />
                 </TouchableOpacity>
             break
@@ -450,8 +484,14 @@ function InteligentButton(props) {
         <View>
             { 
                 props.screen === "PostAdd" || props.screen === "ForumAdd" || props.screen === "ComentaryAdd" ? 
-                <View style={{position: "absolute", bottom: wp("5%"), width: wp("100%")}}>{buttonIcons}</View> : 
-                <View style={styles.iButton}>{buttonIcons}</View>
+                <Animated.View
+                    style={{position: "absolute", bottom: wp("5%"), opacity: fadeAnim, width: wp("100%")}}
+                >
+                    {buttonIcons}
+                </Animated.View> : 
+                <Animated.View style={{bottom: wp("5%"), opacity: fadeAnim, ...styles.iButton}}>
+                    {buttonIcons}
+                </Animated.View>
             } 
         </View>
     )

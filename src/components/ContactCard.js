@@ -16,9 +16,9 @@ function Options(props) {
                 testID={'modal'}
                 animationIn="zoomInDown"
                 animationOut="zoomOut"
-                animationInTiming={600}
+                animationInTiming={300}
                 animationOutTiming={300}
-                backdropTransitionInTiming={600}
+                backdropTransitionInTiming={300}
                 backdropTransitionOutTiming={300}
                 statusBarTranslucent={true}
                 onBackdropPress={() => props.setModalVisible(false)}

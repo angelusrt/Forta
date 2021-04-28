@@ -1,16 +1,16 @@
 import React, {useState, useEffect} from 'react'
-import _reactNative, {View, ScrollView, Text} from "react-native"
+import _reactNative, {View, ScrollView, Text, Animated, Easing} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs"
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var _reactNativeTabView = require("react-native-tab-view")
 
-import {lightTheme, styles} from "./../Styles.js"
+import Icons from "./../components/Icons"
 import PostCard from "./../components/PostCard.js"
 import ContactCard from "./../components/ContactCard.js"
 import InteligentButton from "../components/InteligentButton.js"
-
+import {lightTheme, styles, iconStyles} from "./../Styles.js"
 
 function TabBarTop(props) {
     const {
@@ -125,6 +125,37 @@ function TabBarTop(props) {
     }))
 }  
 
+function Refresh(){
+    const[animRot, setAnimRot] = useState(new Animated.Value(0))
+
+    const spin = animRot.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg']
+    })
+
+    useEffect(() => {
+        Animated.loop(Animated.timing(animRot,{
+            toValue: 1,
+            duration: 450,
+            easing: Easing.linear,
+            useNativeDriver: true
+        })).start()
+    },[animRot])
+
+    return(
+        <Animated.View style={{transform: [{ rotate: spin }], flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Icons 
+                name="Refresh" 
+                width={wp("20%")} 
+                height={wp("20%")} 
+                viewBox="0 0 625 625" 
+                fill="none" 
+                style={iconStyles.icon10}
+            />
+        </Animated.View>
+    )
+}
+
 function Home(props){
     const[forums, setForums] = useState([])
     const[posts, setPosts] = useState([])
@@ -184,9 +215,9 @@ function Home(props){
     },[forums])
     
     return (
-        <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-            {resolved ? posts : <Text style={{textAlign: "center"}}>Loading...</Text>}
-        </ScrollView>
+        <ScrollView contentContainerStyle={{paddingBottom: 200, justifyContent: "center"}}>
+            {resolved ? posts : <Refresh/>}
+        </ScrollView> 
     )
 }
 
@@ -246,8 +277,8 @@ function Forums(props) {
     },[forums])
     
     return (
-        <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-            {resolved ? forum : <Text style={{textAlign: "center"}}>Loading...</Text>}
+        <ScrollView contentContainerStyle={{paddingBottom: 200, justifyContent: "center"}}>
+            {resolved ? forum : <Refresh/>}
         </ScrollView>
     )
 }
@@ -309,8 +340,8 @@ function Chats(props) {
     },[chats])
     
     return (
-        <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-            {resolved ? chat : <Text style={{textAlign: "center"}}>Loading...</Text>}
+        <ScrollView contentContainerStyle={{paddingBottom: 200, justifyContent: "center"}}>
+            {resolved ? chat : <Refresh/>}
         </ScrollView>
     )
 }
@@ -384,8 +415,8 @@ function Invites(props) {
     },[invites])
 
     return (
-        <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-            {resolved ? invite : <Text style={{textAlign: "center"}}>Loading...</Text>}
+        <ScrollView contentContainerStyle={{paddingBottom: 200, justifyContent: "center"}}>
+            {resolved ? invite : <Refresh/>}
         </ScrollView>
     )
 }

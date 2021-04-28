@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable} from "react-native"
+import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable, Animated, Easing} from "react-native"
 import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
@@ -18,9 +18,9 @@ function Options(props) {
                 testID={'modal'}
                 animationIn="zoomInDown"
                 animationOut="zoomOut"
-                animationInTiming={600}
+                animationInTiming={300}
                 animationOutTiming={300}
-                backdropTransitionInTiming={600}
+                backdropTransitionInTiming={300}
                 backdropTransitionOutTiming={300}
                 statusBarTranslucent={true}
                 onBackdropPress={() => props.setModalVisible(false)}
@@ -103,6 +103,37 @@ function Options(props) {
     )
 }
 
+function Refresh(){
+    const[animRot, setAnimRot] = useState(new Animated.Value(0))
+
+    const spin = animRot.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg']
+    })
+
+    useEffect(() => {
+        Animated.loop(Animated.timing(animRot,{
+            toValue: 1,
+            duration: 450,
+            easing: Easing.linear,
+            useNativeDriver: true
+        })).start()
+    },[animRot])
+
+    return(
+        <Animated.View style={{transform: [{ rotate: spin }], flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Icons 
+                name="Refresh" 
+                width={wp("20%")} 
+                height={wp("20%")} 
+                viewBox="0 0 625 625" 
+                fill="none" 
+                style={iconStyles.icon10}
+            />
+        </Animated.View>
+    )
+}
+
 function Post(props) {
     const[post, setPost] = useState()
     const[comentaries, setComentaries] = useState([])
@@ -149,7 +180,7 @@ function Post(props) {
     useEffect(() => {onTryToGetPost()},[])
 
     return (
-        <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
+        <View style={{flex: 1, justifyContent: "center", backgroundColor: lightTheme.ligthGrey}}>
             { resolved ? 
                 <React.Fragment>
                     <ScrollView contentContainerStyle={{paddingBottom: 200}}>
@@ -249,8 +280,8 @@ function Post(props) {
                         handleDecrementPost={props.handleDecrementPost} 
                         handleDecrementScreen={props.handleDecrementScreen} 
                     />
-                </React.Fragment>:
-                <Text style={{textAlign: "center"}}>Loading...</Text>
+                </React.Fragment> :
+                <Refresh/>
             }
         </View>
     )
