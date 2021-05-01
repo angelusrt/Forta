@@ -101,8 +101,7 @@ function Options(props) {
     )
 }
 
-
-function ForumButtons(props) {
+function ForumAndChatButtons(props) {
     const[favoriteActive, setFavoriteActive] = useState(props.favorite === 0 ? false: true)
 
     return(
@@ -113,33 +112,6 @@ function ForumButtons(props) {
                     width={wp("10%")} 
                     height={wp("10%")} 
                     viewBox="0 0 625 625" 
-                    fill="none" 
-                    style={{
-                        stroke: favoriteActive?lightTheme.yellow:lightTheme.darkGrey,
-                        strokeWidth:"33.1px",
-                        strokeLinejoin: "round",
-                        strokeMiterlimit:"1.5"
-                    }}
-                />
-            </TouchableOpacity>
-        </React.Fragment>
-    )
-}
-
-function ChatButtons(props) {
-    const[favoriteActive, setFavoriteActive] = useState(props.favorite === 0 ? false: true)
-
-    return(
-        <React.Fragment>
-            <Text style={styles.bodyText2}>{props.lastSaw}</Text>
-            <TouchableOpacity onPress={() => setFavoriteActive(!favoriteActive)} style={{
-                marginLeft: wp("2.5%")
-            }}>
-                <Icons 
-                    name="Star" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 625 625"
                     fill="none" 
                     style={{
                         stroke: favoriteActive?lightTheme.yellow:lightTheme.darkGrey,
@@ -203,7 +175,8 @@ function ContactCard(props) {
                 onLongPress={() => props.mode === "Forum" ? setModalVisible(true) : null} 
                 android_ripple={{color: lightTheme.ligthGrey}}
                 onPress={() => {
-                    props.handleScreenList(props.mode)
+                    props.mode === "Chat" || props.mode === "Forum" ? 
+                    props.handleScreenList(props.mode) : null
                     props.mode === "Forum" ? props.handleForum(props.forum) :
                     props.mode === "Chat" ? props.handleChat(props.chat) :
                     null 
@@ -235,16 +208,13 @@ function ContactCard(props) {
                 
                 <View style={styles.rightButtonsWrapper}>
                     {   
-                        props.mode === "Forum" ?
-                        <ForumButtons favorite={props.favorite}/> :
-                        props.mode === "Chat" ? 
-                        <ChatButtons 
-                            favorite={props.favorite} 
-                            lastSaw={props.lastSaw}
-                        /> :
-                        <InviteButtons/>
+                        props.mode === "Invite" ?
+                        <InviteButtons/> :
+                        props.mode !== "User" ?
+                        <ForumAndChatButtons 
+                            favorite={props.favorite}
+                        />: null
                     }
-                    
                 </View>
             </Pressable>
             <Options

@@ -326,7 +326,6 @@ function Chats(props) {
                     subtitle={chatInfo.messages.length !== 0 ? chatInfo.messages[chatInfo.messages.length - 1].message : "<nada ainda!>"}
                     mode="Chat"
                     favorite={false}
-                    lastSaw="Just now"
                     chat={chatInfo._id}
                     handleChat={props.handleChat}
                     handleScreenList={props.handleScreenList}
@@ -424,79 +423,83 @@ function Invites(props) {
 function Tab(props) {
     const[screen, setScreen] = useState(null)
     const tab = createMaterialTopTabNavigator()
-    
     let handleRoute = prop => props.handleRoute(prop)
     
     return (
-        <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
-            <tab.Navigator  
-                initialRouteName={props.route}
-                tabBar={props => <TabBarTop handleRoute={route => handleRoute(route)} {...props} />}
-                tabBarOptions={{
-                    renderIndicator: () => null,
-                    activeTintColor: lightTheme.darkGrey,
-                    inactiveTintColor: lightTheme.notSoLightGrey,
-                    tabStyle: {
-                        padding: 0,
-                        width: 'auto',
-                    },
-                    style: {
-                        backgroundColor: lightTheme.ligthGrey,
-                        shadowColor: 'transparent',
-                        elevation: 0,
-                    },
-                    labelStyle: {
-                        fontFamily: 'Poppins_700Bold',
-                        fontSize: wp("5%"),
-                        textTransform: 'none',
+        <React.Fragment>
+            <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
+                <tab.Navigator  
+                    initialRouteName={props.route}
+                    tabBar={props => <TabBarTop handleRoute={route => handleRoute(route)} {...props} />}
+                    tabBarOptions={{
+                        renderIndicator: () => null,
+                        activeTintColor: lightTheme.darkGrey,
+                        inactiveTintColor: lightTheme.notSoLightGrey,
+                        tabStyle: {
+                            padding: 0,
+                            width: 'auto',
+                        },
+                        style: {
+                            backgroundColor: lightTheme.ligthGrey,
+                            shadowColor: 'transparent',
+                            elevation: 0,
+                        },
+                        labelStyle: {
+                            fontFamily: 'Poppins_700Bold',
+                            fontSize: wp("5%"),
+                            textTransform: 'none',
 
-                        margin: 0,
-                        padding: wp("2.5%"),
-                    },
-                    contentContainerStyle: {
-                        justifyContent: 'center'
-                    }
-                }}
-                sceneContainerStyle={{backgroundColor: lightTheme.ligthGrey}}
-            >
-                <tab.Screen name="Home" children={() => 
-                    <Home  
-                        token={props.token} 
-                        handlePostList={props.handlePostList} 
-                        handleScreenList={props.handleScreenList}
-                        handleForum={props.handleForum}
-                    />
-                }/>
-                <tab.Screen name="Forums" children={() => 
-                    <Forums 
-                        token={props.token}  
-                        handleForum={props.handleForum} 
-                        handleScreenList={props.handleScreenList}
-                    />
-                }/>
-                <tab.Screen name="Chats" children={() => 
-                    <Chats 
-                        token={props.token}  
-                        myInfos={props.myInfos}
-                        handleChat={props.handleChat} 
-                        handleScreenList={props.handleScreenList}
-                    />
-                }/>
-                <tab.Screen name="Invites" children={() => 
-                    <Invites  
-                        token={props.token}
-                        myInfos={props.myInfos}
-                    />
-                }/>
-            </tab.Navigator>
+                            margin: 0,
+                            padding: wp("2.5%"),
+                        },
+                        contentContainerStyle: {
+                            justifyContent: 'center'
+                        }
+                    }}
+                    sceneContainerStyle={{backgroundColor: lightTheme.ligthGrey}}
+                >
+                    <tab.Screen name="Home" children={() => 
+                        <Home  
+                            token={props.token} 
+                            handlePostList={props.handlePostList} 
+                            handleScreenList={props.handleScreenList}
+                            handleForum={props.handleForum}
+                        />
+                    }/>
+                    <tab.Screen name="Forums" children={() => 
+                        <Forums 
+                            token={props.token}  
+                            handleForum={props.handleForum} 
+                            handleScreenList={props.handleScreenList}
+                        />
+                    }/>
+                    <tab.Screen name="Chats" children={() => 
+                        <Chats 
+                            token={props.token}  
+                            myInfos={props.myInfos}
+                            handleChat={props.handleChat} 
+                            handleScreenList={props.handleScreenList}
+                        />
+                    }/>
+                    <tab.Screen name="Invites" children={() => 
+                        <Invites  
+                            token={props.token}
+                            myInfos={props.myInfos}
+                        />
+                    }/>
+                </tab.Navigator>
+            </View>
             <InteligentButton 
                 token={props.token}
-                screen={screen === "ForumAdd"? screen : props.route}
+                screen={
+                    screen === "ForumAdd" || screen === "ForumSearch" || 
+                    screen === "UserSearch" ? screen : props.route
+                }
                 setScreen={screen => setScreen(screen)}
                 handleForum={props.handleForum}
                 handleScreenList={props.handleScreenList} 
             />
-        </View>
+        </React.Fragment>
     )
 }
 

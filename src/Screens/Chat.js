@@ -136,18 +136,6 @@ function Chat(props) {
                                 </Text>
                             </View>
                         </View>
-                        <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
-                            <TouchableOpacity style={{ marginLeft: wp("2.5%")}}>
-                                <Icons 
-                                    name="Options" 
-                                    width={wp("3.3%")} 
-                                    height={wp("10%")} 
-                                    viewBox="208 0 208 625" 
-                                    fill="none" 
-                                    style={iconStyles.icon5}
-                                />
-                            </TouchableOpacity>
-                        </View>
                     </View>
 
                     <ScrollView contentContainerStyle={{width: "100%"}}>

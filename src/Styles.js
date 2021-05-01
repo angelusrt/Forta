@@ -103,25 +103,36 @@ export const styles = StyleSheet.create({
     marginTop: wp("1%"),
     marginBottom: wp("2.5%"),
     borderRadius: wp("2.5%"),
-    borderWidth: wp("0.25%"),
+    borderWidth: wp("0.5%"),
     fontFamily: "Roboto_400Regular",
     fontSize: wp("4.5%"),
     backgroundColor: lightTheme.kindOfLightGrey,
     borderColor: lightTheme.notSoLightGrey,
     color: lightTheme.darkGrey
   },
-  input2: {
-    paddingVertical: wp("1%"),
-    paddingHorizontal: wp("2%"),
+  addInput: {
+    paddingVertical: wp("2%"),
+    paddingHorizontal: wp("4%"),
     marginTop: wp("1%"),
     marginBottom: wp("2.5%"),
     borderRadius: wp("2.5%"),
-    borderWidth: wp("0.25%"),
+    borderWidth: wp("0.5%"),
     fontFamily: "Roboto_400Regular",
     fontSize: wp("4.5%"),
-    backgroundColor: lightTheme.kindOfLightGrey,
-    borderColor: lightTheme.notSoLightGrey,
+    backgroundColor: lightTheme.ligthGrey,
+    borderColor: lightTheme.kindOfLightGrey,
     color: lightTheme.darkGrey
+  },
+  chatInput: {
+    fontFamily: "Roboto_500Medium",
+    paddingHorizontal: wp("2.5%"),
+    width: wp("65%"),
+    marginRight: wp("1.25%"),
+    borderRadius: 10,
+    borderWidth: wp("0.5%"),
+    borderColor: lightTheme.kindOfLightGrey,
+    color: lightTheme.darkGrey, 
+    backgroundColor: lightTheme.ligthGrey
   },
 
   //Cards and containers

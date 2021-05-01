@@ -41,7 +41,6 @@ function Login(props) {
         })
         .catch(err => console.log(err))
 
-
         await fetch("http://192.168.0.106:3000/api/user/infos", httpEnvelopeGet)
         .then(res => res.json())
         .then(data => props.setMyInfos(data))
@@ -68,10 +67,6 @@ function Login(props) {
                     style={ styles.authInput }
                 />
 
-                <TouchableOpacity onPress={() => props.navigation.navigate("ChangePassword")}>
-                    <Text style={styles.authSubtitle}>Não se lembra da senha? Mude!</Text>
-                </TouchableOpacity>
-
                 <TouchableOpacity onPress={() => props.navigation.navigate("Register")}>
                     <Text style={styles.authSubtitle}>Não tem uma conta? Crie!</Text>
                 </TouchableOpacity>
@@ -87,64 +82,7 @@ function Login(props) {
                             style={iconStyles.iconAuth}
                         />
                     </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => onTryToLog()} style={{
-                        backgroundColor: lightTheme.ligthGrey, 
-                        ...styles.authButton,
-                        ...styles.bottomWrapper 
-                    }}>
-                        <Icons 
-                            name="Google" 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={iconStyles.icon7}
-                        />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => onTryToLog()} style={{
-                        backgroundColor: lightTheme.ligthGrey, 
-                        ...styles.authButton,
-                        ...styles.bottomWrapper 
-                    }}>
-                        <Icons 
-                            name="Facebook" 
-                            viewBox="0 0 625 625" 
-                            fill="none" 
-                            style={iconStyles.icon2}/>    
-                    </TouchableOpacity>
                 </View>
-            </View>
-        </View>
-    )
-}
-
-function ChangePassword() {
-    return(
-        <View style={styles.authContainer}>
-            <View style={styles.authCard}>
-                <Text style={styles.authHeader}>Mude sua senha</Text>
-                
-                <Text style={styles.authTitle}>Senha</Text>
-                <TextInput secureTextEntry={true} style={styles.authInput}/>
-                
-                <Text style={styles.authTitle}>Repita sua senha</Text>
-                <TextInput secureTextEntry={true} style={styles.authInput}/>
-
-                <TouchableOpacity onPress={() => onTryToLog()} style={{
-                    marginRight: wp("2.5%"),
-                    marginTop: wp("5%"),
-                    backgroundColor: lightTheme.green, 
-                    ...styles.authButton,
-                    ...styles.bottomWrapper 
-                }}>
-                    <Icons 
-                        name="Arrow" 
-                        width={wp("10%")} 
-                        height={wp("10%")} 
-                        viewBox="0 0 300 300" 
-                        fill={lightTheme.white} 
-                        style={iconStyles.iconAuth}/>
-                </TouchableOpacity>
             </View>
         </View>
     )
@@ -167,7 +105,7 @@ function Register(props) {
     return(
         <View style={styles.authContainer}>
             <View style={styles.authCard}>
-                <Text style={styles.authSubheader}>01/03</Text>
+                <Text style={styles.authSubheader}>01/02</Text>
 
                 <Text style={styles.authHeader}>Registre</Text>
                 
@@ -208,31 +146,6 @@ function Register(props) {
                             fill={lightTheme.white} 
                             style={iconStyles.iconAuth}
                         />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => onTryToLog()} style={{
-                        backgroundColor: lightTheme.ligthGrey, 
-                        ...styles.authButton,
-                        ...styles.bottomWrapper 
-                    }}>
-                        <Icons 
-                            name="Google" 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={iconStyles.icon7}
-                        />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => onTryToLog()} style={{
-                        backgroundColor: lightTheme.ligthGrey, 
-                        ...styles.authButton,
-                        ...styles.bottomWrapper 
-                    }}>
-                        <Icons 
-                            name="Facebook" 
-                            viewBox="0 0 625 625" 
-                            fill="none" 
-                            style={iconStyles.icon2}/>    
                     </TouchableOpacity>
                 </View>
             </View>
@@ -336,7 +249,7 @@ function User(props) {
                     </View>
                 </View>
 
-                <Text style={styles.authSubheader}>03/03</Text>
+                <Text style={styles.authSubheader}>02/02</Text>
 
                 <Text style={{...styles.authHeader}}>Crie seu usuário</Text>
                 
@@ -414,11 +327,7 @@ function Auth(props) {
                     />
                 }
             </Stack.Screen>
-            <Stack.Screen 
-                name="ChangePassword" 
-                component={ChangePassword} 
-                options={{header: () => null}}
-            />
+            
             <Stack.Screen name="Register" options={{header: () => null}}>
                 {prop => 
                     <Register
