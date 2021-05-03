@@ -189,7 +189,8 @@ export const styles = StyleSheet.create({
   },
   addCard: {
     position: 'relative',
-    padding: wp("5%"), 
+    paddingVertical: wp("2.5%"),
+    paddingHorizontal: wp("5%"),
     marginHorizontal: wp("2.5%"),
     borderRadius: 20, 
     borderColor: lightTheme.ligthGrey,
@@ -239,10 +240,7 @@ export const styles = StyleSheet.create({
   iButton: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: wp("2.5%"),
-    paddingBottom: wp("2.5%"),
-    paddingLeft: wp("2.5%"),
-    paddingRight: wp("2.5%"),
+    padding: wp("2.5%"),
     marginLeft: wp("2.5%"),
     borderRadius: 20,
     borderWidth: wp(".5%"),

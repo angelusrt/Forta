@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable, Animated, Easing} from "react-native"
 import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
@@ -161,9 +161,28 @@ function Forum(props) {
     const[resolved, setResolved] = useState(false)
     const[isModalVisible, setModalVisible] = useState(false)
     const metric = wp("5%")
-
     const httpEnvelope = {
         method: "GET",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': props.token
+        }
+    }
+    const httpEnvelopePatch = {
+        method: "PATCH",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': props.token
+        }
+    }
+    const httpEnvelopeDelete = {
+        method: "DELETE",
         headers: {
             'accept-encoding': 'gzip, deflate, br',
             accept: '*/*',
@@ -180,7 +199,7 @@ function Forum(props) {
             setForum(data)                
             setPosts(data.posts.map((posts, index) =>
                 <PostCard 
-                    key={`2854_${index}`}
+                    key={index}
                     title={posts.title}
                     bodyText={posts.bodyText}
                     name={posts.author}
@@ -193,11 +212,35 @@ function Forum(props) {
                     handleScreenList={props.handleScreenList}
                 />
             ))
+            onTrytoGetUserMyForum()
             setResolved(true)
         })
         .catch( err => console.log(err))
     }
+
+    const onTrytoGetUserMyForum = async () => {
+        return await fetch(`http://192.168.0.106:3000/api/user/myForums`, httpEnvelope)
+        .then(res => res.json())
+        .then(data => setFollow(data.indexOf(props.forum) !== -1 ? true : false))
+        .catch(err => console.log(err))
+    }
     
+    const onTrytoFollow = async () => {
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, httpEnvelopePatch)
+        .then(res => res.json())
+        .then(data => data === "You followed" ? onTryToGetForum() : null)
+        .catch(err => console.log(err))
+    }
+
+    const onTrytoUnfollow = async () => {
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, httpEnvelopeDelete)
+        .then(res => res.json())
+        .then(data => data === "Removed sucessfully" ? onTryToGetForum() : null)
+        .catch(err => console.log(err))
+    }
+    
+    const verify = () => follow === true ? onTrytoUnfollow() : onTrytoFollow()
+
     useEffect(() => {onTryToGetForum()},[])
 
     return (
@@ -258,8 +301,8 @@ function Forum(props) {
                                             marginBottom: metric,
                                             ...styles.bottomWrapper
                                         }}>
-                                            {forum.tags.map(tag => 
-                                                <Text numberOfLines={1} style={{
+                                            {forum.tags.map((tag, index) => 
+                                                <Text key={index} numberOfLines={1} style={{
                                                     paddingRight: metric/2,
                                                     ...styles.bodyText2
                                                 }}>
@@ -283,9 +326,18 @@ function Forum(props) {
                                 </View>
                         
                                 <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
-                                    <TouchableOpacity onPress={() => {
-                                        setFollow(!follow)
-                                    }}>
+                                    <TouchableOpacity 
+                                        onPress={() => verify()}
+                                        style={{flexDirection: 'row', alignItems: "center"}}
+                                    >
+                                        <Text style={{
+                                            color: follow ? lightTheme.green : 
+                                            lightTheme.darkGrey, 
+                                            marginRight: wp("1.25%"),
+                                            ...styles.rateText
+                                        }}>
+                                            Seguindo
+                                        </Text>
                                         <Icons 
                                             name="Arrow" 
                                             width={wp("10%")} 
@@ -298,21 +350,6 @@ function Forum(props) {
                                                 strokeLinejoin: "round",
                                                 strokeWidth: "15.9px",
                                                 transform: [{ rotate: "180deg" }]
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity>
-                                        <Icons 
-                                            name="Bell" 
-                                            width={wp("10%")} 
-                                            height={wp("10%")} 
-                                            viewBox="0 0 625 625" 
-                                            fill="none" 
-                                            style={{
-                                                stroke: lightTheme.darkGrey,
-                                                strokeWidth: "33.1px",
-                                                strokeLinejoin: "round",
-                                                strokeMiterlimit: "1.5"
                                             }}
                                         />
                                     </TouchableOpacity>

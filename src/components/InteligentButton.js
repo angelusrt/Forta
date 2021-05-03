@@ -72,8 +72,13 @@ function ForumSearch(props) {
                     </Text>
                 }
             </View>
-            <View style={{bottom: wp("5%"),...styles.addCard}}>
-                <Text style={styles.headerText4}>Pesquise um forum</Text>
+            <View style={{bottom: wp("4%"), ...styles.addCard}}>
+                <Text style={{
+                    marginTop: wp("2.5%"),
+                    ...styles.headerText4
+                }}>
+                    Pesquise um forum
+                </Text>
                 <TextInput 
                     onChangeText={ text => setGroupName(text)}
                     style={styles.addInput}
@@ -87,7 +92,7 @@ function ForumSearch(props) {
                             height={wp("10%")} 
                             viewBox="0 0 300 300" 
                             fill="none" 
-                            style={iconStyles.icon1}
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => verify()}>    
@@ -152,8 +157,13 @@ function ForumAddCard(props) {
                     Crie Forum 
                 </Text>
             </View>
-            <View style={{bottom: wp("5%"),...styles.addCard}}>
-                <Text style={styles.headerText4}>Nome do forum</Text>
+            <View style={{bottom: wp("4%"),...styles.addCard}}>
+                <Text style={{
+                    marginTop: wp("2.5%"),
+                    ...styles.headerText4
+                }}>
+                    Nome do forum
+                </Text>
                 <TextInput 
                     onChangeText={ text => setGroupName(text)}
                     style={styles.addInput}
@@ -181,7 +191,7 @@ function ForumAddCard(props) {
                             height={wp("10%")} 
                             viewBox="0 0 300 300" 
                             fill="none" 
-                            style={iconStyles.icon1}
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => verify()}>    
@@ -244,8 +254,13 @@ function PostAddCard(props) {
                     Crie Postagem
                 </Text>
             </View>
-            <View style={{bottom: wp("5%"),...styles.addCard}}>
-                <Text style={styles.headerText4}>Título</Text>
+            <View style={{bottom: wp("4%"),...styles.addCard}}>
+                <Text style={{
+                    marginTop: wp("2.5%"),
+                    ...styles.headerText4
+                }}>
+                    Título
+                </Text>
                 <TextInput 
                     onChangeText={ text => setTitle(text)}
                     style={styles.addInput}
@@ -267,7 +282,7 @@ function PostAddCard(props) {
                             height={wp("10%")} 
                             viewBox="0 0 300 300" 
                             fill="none" 
-                            style={iconStyles.icon1}
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => verify()}>    
@@ -329,8 +344,13 @@ function ComentaryAddCard(props) {
                     Crie Comentário 
                 </Text>
             </View>
-            <View style={{bottom: wp("5%"),...styles.addCard}}>
-                <Text style={styles.headerText4}>Comentário</Text>
+            <View style={{bottom: wp("4%"),...styles.addCard}}>
+                <Text style={{
+                    marginTop: wp("2.5%"),
+                    ...styles.headerText4
+                }}>
+                    Comentário
+                </Text>
                 <TextInput 
                     onChangeText={ text => setBodyText(text)}
                     numberOfLines={4}
@@ -346,7 +366,7 @@ function ComentaryAddCard(props) {
                             height={wp("10%")} 
                             viewBox="0 0 300 300" 
                             fill="none" 
-                            style={iconStyles.icon1}
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => verify()}>    
@@ -427,8 +447,13 @@ function UserSearch(props) {
                     </Text>
                 }
             </View>
-            <View style={{bottom: wp("5%"),...styles.addCard}}>
-                <Text style={styles.headerText4}>Pesquise um usuário</Text>
+            <View style={{bottom: wp("4%"),...styles.addCard}}>
+                <Text style={{
+                    marginTop: wp("2.5%"),
+                    ...styles.headerText4
+                }}>
+                    Pesquise um usúario
+                </Text>
                 <TextInput 
                     onChangeText={ text => setUsername(text)}
                     style={styles.addInput}
@@ -442,7 +467,7 @@ function UserSearch(props) {
                             height={wp("10%")} 
                             viewBox="0 0 300 300" 
                             fill="none" 
-                            style={iconStyles.icon1}
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => verify()}>    

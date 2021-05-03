@@ -68,6 +68,7 @@ function Routes() {
             scrn = 
                 <Forum
                     token={token}
+                    myInfos={myInfos}
                     forum={forum} 
                     handleForum={forum => setForum(forum)}
                     handlePostList={props => setPostList(result => [...result, props])}
