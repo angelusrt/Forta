@@ -412,6 +412,8 @@ function UserSearch(props) {
                         title={users.username}
                         subtitle={users.bios}
                         mode="User"
+                        user={users.id}
+                        token={props.token}
                     />
                 )}) : null
             )
@@ -685,7 +687,11 @@ function InteligentButton(props) {
                 />
             break
         case "UserSearch":
-            buttonIcons = <UserSearch setScreen={screen => props.setScreen(screen)}/>
+            buttonIcons = 
+                <UserSearch 
+                    setScreen={screen => props.setScreen(screen)}
+                    token={props.token}
+                />
             break    
         case "Chat":
             buttonIcons =

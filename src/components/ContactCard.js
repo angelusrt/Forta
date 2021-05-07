@@ -125,43 +125,177 @@ function ForumAndChatButtons(props) {
     )
 }
 
-function InviteButtons(props) {
+function InviteUserButtons(props) {
     const[accept, setAccept] = useState(false)
-    const[deny, setDeny] = useState(false)
+    const httpEnvelopePost = {
+        method: "POST",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'auth-token': props.token
+        },
+        body: JSON.stringify({user: props.user})
+    }
+    console.log(props.user)
+    const invite = async () => {
+        setAccept(true)
+        await fetch(`http://192.168.0.106:3000/api/chats/`, httpEnvelopePost)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
 
     return(
         <React.Fragment>
-            <Text style={styles.bodyText2}>{props.lastSaw}</Text>
-            <TouchableOpacity onPress={() => setAccept(!accept)}>
+            <TouchableOpacity onPress={() => !accept ? invite() : null}>
                 <Icons 
-                    name="Accept" 
+                    name="Invite" 
                     width={wp("10%")} 
                     height={wp("10%")} 
-                    viewBox="0 0 300 300" 
+                    viewBox="0 0 625 625" 
                     fill="none" 
                     style={{
-                        stroke: accept?lightTheme.green:lightTheme.darkGrey,
-                        strokeWidth: "15.9px",
+                        stroke: accept ? lightTheme.green : lightTheme.darkGrey,
+                        strokeWidth: "33.1px",
+                        strokeLinecap: "round",
                         strokeLinejoin: "round",
-                        strokeMiterlimit:"1.5"
-                    }
-                }/>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setDeny(!deny)}>
-                <Icons 
-                    name="Remove" 
-                    width={wp("10%")} 
-                    height={wp("10%")} 
-                    viewBox="0 0 300 300" 
-                    fill="none" 
-                    style={{
-                        stroke: deny?lightTheme.red:lightTheme.darkGrey,
-                        strokeWidth:"15.9px",
-                        strokeLinejoin: "round",
-                        strokeMiterlimit:"1.5"
-                    }
-                }/>
-            </TouchableOpacity>
+                        strokeMiterlimit: "1.5"
+                    }}
+                />
+            </TouchableOpacity> 
+        </React.Fragment>
+    )
+}
+
+function InviteButtons(props) {
+    const[accept, setAccept] = useState(false)
+    const[deny, setDeny] = useState(false)
+    const httpEnvelopePatch = {
+        method: "PATCH",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': props.token
+        }
+    }
+    const httpEnvelopeDelete = {
+        method: "DELETE",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': props.token
+        }
+    }
+    
+    const clearInvite = async () => {
+        await fetch(`http://192.168.0.106:3000/api/invites/${props.invite}`, httpEnvelopeDelete)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
+
+    //console.log(props.path + " " + props.invite)
+    const update = async () => {
+        setAccept(true)
+        
+        if(props.description === "chat"){
+            await fetch(`http://192.168.0.106:3000/api/chats/${props.path}`, httpEnvelopePatch)
+            .then(res => res.json())
+            .then(data => data === "Updated" ? clearInvite() : null)
+            .catch(err => console.log(err))
+        } else if(props.description === "forum"){
+            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, httpEnvelopePatch)
+            .then(res => res.json())
+            .then(data => data === "Updated" ? clearInvite() : null)
+            .catch(err => console.log(err))
+        } else {
+            await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, httpEnvelopePatch)
+            .then(res => res.json())
+            .then(data => data === "Updated" ? clearInvite() : null)
+            .catch(err => console.log(err))
+        }
+    }
+
+    const clear = async () => {
+        setDeny(true)
+
+        if(props.description === "chat"){
+            await fetch(`http://192.168.0.106:3000/api/chats/${props.path}`, httpEnvelopeDelete)
+            .then(res => res.json())
+            .then(data => data === "Removed" ? clearInvite() : null)
+            .catch(err => console.log(err))
+        } else if(props.description === "forum"){
+            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, httpEnvelopeDelete)
+            .then(res => res.json())
+            .then(data => data === "Removed" ? clearInvite() : null)
+            .catch(err => console.log(err))
+        } else {
+            await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, httpEnvelopeDelete)
+            .then(res => res.json())
+            .then(data => data === "Removed" ? clearInvite() : null)
+            .catch(err => console.log(err))
+        }
+    }
+
+    return(
+        <React.Fragment>
+            {
+                props.isSender ? 
+                <TouchableOpacity onPress={() => !deny ? clear() : null}>
+                    <Icons 
+                        name="Remove" 
+                        width={wp("10%")} 
+                        height={wp("10%")} 
+                        viewBox="0 0 300 300" 
+                        fill="none" 
+                        style={{
+                            stroke: deny ? lightTheme.red : lightTheme.darkGrey,
+                            strokeWidth:"15.9px",
+                            strokeLinejoin: "round",
+                            strokeMiterlimit:"1.5"
+                        }}
+                    />
+                </TouchableOpacity> :
+                <React.Fragment>
+                    <TouchableOpacity onPress={() => !accept && !deny ? update() : null}>
+                        <Icons 
+                            name="Accept" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={{
+                                stroke: accept ? lightTheme.green : lightTheme.darkGrey,
+                                strokeWidth: "15.9px",
+                                strokeLinejoin: "round",
+                                strokeMiterlimit:"1.5"
+                            }
+                        }/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => !accept && !deny ? clear() : null}>
+                        <Icons 
+                            name="Remove" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={{
+                                stroke: deny ? lightTheme.red : lightTheme.darkGrey,
+                                strokeWidth:"15.9px",
+                                strokeLinejoin: "round",
+                                strokeMiterlimit:"1.5"
+                            }
+                        }/>
+                    </TouchableOpacity>
+                </React.Fragment>
+            }
         </React.Fragment>
     )
 }
@@ -203,17 +337,35 @@ function ContactCard(props) {
                 <View style={{flex: 2, marginRight: wp("5%"), marginLeft: wp("2.5%")}}>
                     <Text style={styles.headerText4} numberOfLines={1}>{props.title}</Text>
 
-                    <Text style={styles.bodyText4} numberOfLines={1}>{props.subtitle}</Text>
+                    <Text style={styles.bodyText4} numberOfLines={1}>
+                        {
+                            !props.isSender ? props.subtitle : 
+                            props.description === 'mod' ? "Você convidou como mod!" :
+                            props.description === 'chat' ? "Você convidou para conversar!" :
+                            props.description === 'group' ? "Você convidou para um grupo!" :
+                            "Erro" 
+                        }
+                    </Text>
                 </View>
                 
                 <View style={styles.rightButtonsWrapper}>
                     {   
                         props.mode === "Invite" ?
-                        <InviteButtons/> :
+                        <InviteButtons 
+                            isSender={props.isSender}
+                            invite={props.invite} 
+                            description={props.description}
+                            path={props.path}
+                            token={props.token}
+                        /> :
                         props.mode !== "User" ?
                         <ForumAndChatButtons 
                             favorite={props.favorite}
-                        />: null
+                        /> :
+                        <InviteUserButtons
+                            user={props.user}
+                            token={props.token}
+                        /> 
                     }
                 </View>
             </Pressable>

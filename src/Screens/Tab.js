@@ -403,7 +403,13 @@ function Invites(props) {
                         "Erro"
                     }
                     mode="Invite"
+                    description={inviteInfo.description}
+                    isSender={
+                        inviteInfo.sender === props.myInfos.id ? true : false
+                    }
+                    path={inviteInfo.path}
                     invite={inviteInfo._id}
+                    token={props.token}
                 />
             )
         })).then(data => {
