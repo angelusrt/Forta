@@ -161,26 +161,15 @@ function Home(props){
     const[posts, setPosts] = useState([])
     const[resolved, setResolved] = useState(false)
 
-    const httpEnvelope = {
-        method: "GET",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
-
     const onTryToGetMyForums = async () => {
-        return await fetch("http://192.168.0.106:3000/api/user/myForums", httpEnvelope)
+        return await fetch("http://192.168.0.106:3000/api/user/myForums", props.getEnvelope)
         .then(res => res.json())
         .then(data => setForums(data))
         .catch(err => console.log(err))
     }
     
     const onTryToGetForum = async forum => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, httpEnvelope)
+        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -195,6 +184,8 @@ function Home(props){
             return forumInfo.posts.map( (post, idP) => 
                 <PostCard 
                     key={idF + "_" + idP}
+                    myInfos={props.myInfos}
+                    deleteEnvelope={props.deleteEnvelope}
                     title={post.title}
                     bodyText={post.bodyText}
                     name={post.author}
@@ -226,26 +217,15 @@ function Forums(props) {
     const[forum, setForum] = useState()
     const[resolved, setResolved] = useState(false)
 
-    const httpEnvelope = {
-        method: "GET",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
-
     const onTryToGetMyForums = async () => {
-        return await fetch("http://192.168.0.106:3000/api/user/myForums", httpEnvelope)
+        return await fetch("http://192.168.0.106:3000/api/user/myForums", props.getEnvelope)
         .then(res => res.json())
         .then(data => setForums(data))
         .catch(err => console.log(err))
     }
     
     const onTryToGetForum = async (forum) => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, httpEnvelope)
+        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -260,8 +240,11 @@ function Forums(props) {
             return (
                 <ContactCard
                     key={index}
+                    myInfos={props.myInfos}
+                    deleteEnvelope={props.deleteEnvelope}
                     title={forumInfo.groupName}
                     subtitle={`${forumInfo.followers.length} seguidores`}
+                    owner={forumInfo.owner}
                     mode="Forum"
                     favorite={false}
                     forum={forumInfo._id}
@@ -288,26 +271,15 @@ function Chats(props) {
     const[chat, setChat] = useState()
     const[resolved, setResolved] = useState(false)
 
-    const httpEnvelope = {
-        method: "GET",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
-
     const onTryToGetMyChats = async () => {
-        return await fetch( "http://192.168.0.106:3000/api/user/myChat", httpEnvelope)
+        return await fetch( "http://192.168.0.106:3000/api/user/myChat", props.getEnvelope)
         .then(res => res.json())
         .then(data => setChats(data))
         .catch(err => err)
     }
     
     const onTryToGetChat = async (chat) => { 
-        return await fetch( `http://192.168.0.106:3000/api/chats/${chat}`, httpEnvelope)
+        return await fetch( `http://192.168.0.106:3000/api/chats/${chat}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -322,6 +294,7 @@ function Chats(props) {
             return (
                 <ContactCard
                     key={index}
+                    deleteEnvelope={props.deleteEnvelope}
                     title={chatInfo.members.filter(mem => mem.member !== props.myInfos.id)[0].member}
                     subtitle={chatInfo.messages.length !== 0 ? chatInfo.messages[chatInfo.messages.length - 1].message : "<nada ainda!>"}
                     mode="Chat"
@@ -350,26 +323,15 @@ function Invites(props) {
     const[invite, setInvite] = useState()
     const[resolved, setResolved] = useState(false)
 
-    const httpEnvelope = {
-        method: "GET",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
-
     const onTryToGetMyInvites = async () => {
-        return await fetch("http://192.168.0.106:3000/api/user/myInvites", httpEnvelope)
+        return await fetch("http://192.168.0.106:3000/api/user/myInvites", props.getEnvelope)
         .then(res => res.json())
         .then(data => setInvites(data))
         .catch(err => err)
     }
     
     const onTryToGetInvite = async (invite) => { 
-        return await fetch(`http://192.168.0.106:3000/api/invites/${invite}`, httpEnvelope)
+        return await fetch(`http://192.168.0.106:3000/api/invites/${invite}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -384,6 +346,8 @@ function Invites(props) {
             return (
                 <ContactCard
                     key={index}
+                    patchEnvelope={props.patchEnvelope}
+                    deleteEnvelope={props.deleteEnvelope}
                     imagePlaceholder={
                         <View style={{
                             width: wp("10%"),
@@ -467,6 +431,9 @@ function Tab(props) {
                     <tab.Screen name="Home" children={() => 
                         <Home  
                             token={props.token} 
+                            myInfos={props.myInfos}
+                            getEnvelope={props.getEnvelope}
+                            deleteEnvelope={props.deleteEnvelope}
                             handlePostList={props.handlePostList} 
                             handleScreenList={props.handleScreenList}
                             handleForum={props.handleForum}
@@ -475,6 +442,9 @@ function Tab(props) {
                     <tab.Screen name="Forums" children={() => 
                         <Forums 
                             token={props.token}  
+                            myInfos={props.myInfos}
+                            getEnvelope={props.getEnvelope}
+                            deleteEnvelope={props.deleteEnvelope}
                             handleForum={props.handleForum} 
                             handleScreenList={props.handleScreenList}
                         />
@@ -483,6 +453,8 @@ function Tab(props) {
                         <Chats 
                             token={props.token}  
                             myInfos={props.myInfos}
+                            getEnvelope={props.getEnvelope}
+                            deleteEnvelope={props.deleteEnvelope}
                             handleChat={props.handleChat} 
                             handleScreenList={props.handleScreenList}
                         />
@@ -491,12 +463,18 @@ function Tab(props) {
                         <Invites  
                             token={props.token}
                             myInfos={props.myInfos}
+                            getEnvelope={props.getEnvelope}
+                            patchEnvelope={props.patchEnvelope}
+                            deleteEnvelope={props.deleteEnvelope}
                         />
                     }/>
                 </tab.Navigator>
             </View>
             <InteligentButton 
                 token={props.token}
+                myInfos={props.myInfos}
+                getEnvelope={props.getEnvelope}
+                deleteEnvelope={props.deleteEnvelope}
                 screen={
                     screen === "ForumAdd" || screen === "ForumSearch" || 
                     screen === "UserSearch" ? screen : props.route

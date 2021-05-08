@@ -9,6 +9,13 @@ import InteligentButton from "../components/InteligentButton.js"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Options(props) {
+    const deletePost = async() => {
+        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, props.deleteEnvelope)
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
+    }
+
     return (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
             <Modal 
@@ -30,44 +37,6 @@ function Options(props) {
                         zIndex: 3,
                         ...styles.options
                     }}>
-                        <Pressable
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Star" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 625 625" 
-                                fill="none" 
-                                style={iconStyles.icon2}
-                            />
-                            <Text style={{
-                                marginLeft: wp("1.25%"),
-                                ...styles.headerText
-                            }}>
-                                Salvar
-                            </Text>
-                        </Pressable>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}} 
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Share" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 625 625" 
-                                fill="none" 
-                                style={iconStyles.icon2}
-                            />
-                            <Text style={{
-                                marginLeft: wp("1.25%"),
-                                ...styles.headerText
-                            }}>
-                                Compartilhar
-                            </Text>
-                        </Pressable>
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
@@ -82,20 +51,24 @@ function Options(props) {
                             />
                             <Text style={styles.headerText}>Denunciar</Text>
                         </Pressable>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Remove" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none" 
-                                style={iconStyles.icon1}
-                            />
-                            <Text style={styles.headerText}>Excluir</Text>
-                        </Pressable>
+                        {
+                            props.name === props.myInfos.id ? 
+                            <Pressable 
+                                android_ripple={{color: lightTheme.ligthGrey}}
+                                onPress={() => deletePost()}
+                                style={styles.optionButtons}
+                            >
+                                <Icons 
+                                    name="Remove" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300" 
+                                    fill="none" 
+                                    style={iconStyles.icon1}
+                                />
+                                <Text style={styles.headerText}>Excluir</Text>
+                            </Pressable> : null
+                        }
                     </View>
                 </View>
             </Modal>
@@ -142,31 +115,25 @@ function Post(props) {
     const[resolved, setResolved] = useState(false)
     const[isModalVisible, setModalVisible] = useState(false)
     const metric = wp("5%")
-
-    const httpEnvelope = {
-        method: "GET",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000'
-        }
-    }
     
     const onTryToGetPost = async () => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, httpEnvelope)
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, props.getEnvelope)
         .then(res => res.json())
         .then(data =>{            
             setPost(data)
             setComentaries(data.comentaries !== null ? data.comentaries.map((coments, index) => 
                 <PostCard 
                     key={index}
+                    token={props.token}
+                    myInfos={props.myInfos}
+                    deleteEnvelope={props.deleteEnvelope}
                     title={null}
                     bodyText={coments.bodyText}
                     name={coments.author}
-                    forum={coments.forum}
                     rating={coments.upvotes}
-                    post={coments._id}
+                    post={props.post}
+                    coments={coments._id}
+                    forum={coments.forum}
                     handleForum={props.handleForum}
                     handlePostList={props.handlePostList}
                     handleScreenList={props.handleScreenList}
@@ -258,6 +225,12 @@ function Post(props) {
                         <Options 
                             isModalVisible={isModalVisible}
                             setModalVisible={prop => setModalVisible(prop)}
+                            deleteEnvelope={props.deleteEnvelope}
+                            token={props.token}
+                            myInfos={props.myInfos}
+                            forum={props.forum}
+                            post={props.post}
+                            name={post.author}
                         />
 
                         <View style={{

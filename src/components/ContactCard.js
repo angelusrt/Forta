@@ -7,6 +7,13 @@ import Icons from "./../components/Icons"
 import {iconStyles, lightTheme, styles} from "./../Styles"
 
 function Options(props) {
+    const deleteForum = async() => {
+        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, props.deleteEnvelope)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
+
     return (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
             <Modal 
@@ -33,7 +40,7 @@ function Options(props) {
                             style={styles.optionButtons}
                         >
                             <Icons 
-                                name="Add" 
+                                name="Bios" 
                                 width={wp("10%")} 
                                 height={wp("10%")} 
                                 viewBox="0 0 625 625" 
@@ -44,15 +51,15 @@ function Options(props) {
                                 marginLeft: wp("1.25%"),
                                 ...styles.headerText
                             }}>
-                                Selecionar
+                                Regras
                             </Text>
                         </Pressable>
                         <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}} 
+                            android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
                         >
                             <Icons 
-                                name="Share" 
+                                name="Comentaries" 
                                 width={wp("10%")} 
                                 height={wp("10%")} 
                                 viewBox="0 0 625 625" 
@@ -63,7 +70,7 @@ function Options(props) {
                                 marginLeft: wp("1.25%"),
                                 ...styles.headerText
                             }}>
-                                Compartilhar
+                                Mods
                             </Text>
                         </Pressable>
                         <Pressable 
@@ -80,8 +87,63 @@ function Options(props) {
                             />
                             <Text style={styles.headerText}>Denunciar</Text>
                         </Pressable>
+                        {
+                            props.owner === props.myInfos.id ? 
+                            <Pressable 
+                                android_ripple={{color: lightTheme.ligthGrey}}
+                                onPress={() => deleteForum()}
+                                style={styles.optionButtons}
+                            >
+                                <Icons 
+                                    name="Remove" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300" 
+                                    fill="none" 
+                                    style={iconStyles.icon1}
+                                />
+                                <Text style={styles.headerText}>Excluir</Text>
+                            </Pressable> : null
+                        }
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    )
+}
+
+function ChatOptions(props) {
+    const deleteChat = async() => {
+        await fetch(`http://192.168.0.106:3000/api/chats/${props.chat}`, props.deleteEnvelope)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
+
+    return (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Modal 
+                animationType="fade"
+                backdropOpacity={0.25}
+                isVisible={props.isModalVisible}
+                testID={'modal'}
+                animationIn="zoomInDown"
+                animationOut="zoomOut"
+                animationInTiming={300}
+                animationOutTiming={300}
+                backdropTransitionInTiming={300}
+                backdropTransitionOutTiming={300}
+                statusBarTranslucent={true}
+                onBackdropPress={() => props.setModalVisible(false)}
+            >
+                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                    <View style={{
+                        zIndex: 3,
+                        ...styles.options
+                    }}>
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
+                            onPress={() => deleteChat()}
                             style={styles.optionButtons}
                         >
                             <Icons 
@@ -173,50 +235,29 @@ function InviteUserButtons(props) {
 function InviteButtons(props) {
     const[accept, setAccept] = useState(false)
     const[deny, setDeny] = useState(false)
-    const httpEnvelopePatch = {
-        method: "PATCH",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
-    const httpEnvelopeDelete = {
-        method: "DELETE",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
     
     const clearInvite = async () => {
-        await fetch(`http://192.168.0.106:3000/api/invites/${props.invite}`, httpEnvelopeDelete)
+        await fetch(`http://192.168.0.106:3000/api/invites/${props.invite}`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
     }
 
-    //console.log(props.path + " " + props.invite)
     const update = async () => {
         setAccept(true)
         
         if(props.description === "chat"){
-            await fetch(`http://192.168.0.106:3000/api/chats/${props.path}`, httpEnvelopePatch)
+            await fetch(`http://192.168.0.106:3000/api/chats/${props.path}`, props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? clearInvite() : null)
             .catch(err => console.log(err))
         } else if(props.description === "forum"){
-            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, httpEnvelopePatch)
+            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? clearInvite() : null)
             .catch(err => console.log(err))
         } else {
-            await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, httpEnvelopePatch)
+            await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? clearInvite() : null)
             .catch(err => console.log(err))
@@ -227,17 +268,17 @@ function InviteButtons(props) {
         setDeny(true)
 
         if(props.description === "chat"){
-            await fetch(`http://192.168.0.106:3000/api/chats/${props.path}`, httpEnvelopeDelete)
+            await fetch(`http://192.168.0.106:3000/api/chats/${props.path}`, props.deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? clearInvite() : null)
             .catch(err => console.log(err))
         } else if(props.description === "forum"){
-            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, httpEnvelopeDelete)
+            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, props.deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? clearInvite() : null)
             .catch(err => console.log(err))
         } else {
-            await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, httpEnvelopeDelete)
+            await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, props.deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? clearInvite() : null)
             .catch(err => console.log(err))
@@ -302,11 +343,14 @@ function InviteButtons(props) {
 
 function ContactCard(props) {
     const[isModalVisible, setModalVisible] = useState(false)
-
+    
     return (
         <View>
             <Pressable 
-                onLongPress={() => props.mode === "Forum" ? setModalVisible(true) : null} 
+                onLongPress={() => {
+                    props.mode === "Forum" || props.mode === "Chat" ? 
+                    setModalVisible(true) : null
+                }} 
                 android_ripple={{color: lightTheme.ligthGrey}}
                 onPress={() => {
                     props.mode === "Chat" || props.mode === "Forum" ? 
@@ -352,11 +396,12 @@ function ContactCard(props) {
                     {   
                         props.mode === "Invite" ?
                         <InviteButtons 
+                            patchEnvelope={props.patchEnvelope}
+                            deleteEnvelope={props.deleteEnvelope}
                             isSender={props.isSender}
                             invite={props.invite} 
                             description={props.description}
                             path={props.path}
-                            token={props.token}
                         /> :
                         props.mode !== "User" ?
                         <ForumAndChatButtons 
@@ -369,10 +414,23 @@ function ContactCard(props) {
                     }
                 </View>
             </Pressable>
-            <Options
-                isModalVisible={isModalVisible}
-                setModalVisible={prop => setModalVisible(prop)}
-            />
+            {
+                props.mode === "Forum" ?
+                <Options
+                    isModalVisible={isModalVisible}
+                    setModalVisible={prop => setModalVisible(prop)}
+                    deleteEnvelope={props.deleteEnvelope}
+                    myInfos={props.myInfos}
+                    owner={props.owner}
+                    forum={props.forum}
+                /> :
+                <ChatOptions
+                    isModalVisible={isModalVisible}
+                    setModalVisible={prop => setModalVisible(prop)}
+                    deleteEnvelope={props.deleteEnvelope}
+                    chat={props.chat}
+                /> 
+            }
         </View>
     )
 }

@@ -8,14 +8,7 @@ import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Settings(props) {
     const[isDarkModeEnabled, setIsDarkModeEnabled] = useState(false)
-    const[isNotificationEnabled, setIsNotificationEnabled] = useState(false)
-    const[isDownloadImagesEnabled, setIsDownloadImagesEnabled] = useState(false)
-    const[isNSFWEnabled, setIsNSFWEnabled] = useState(false)
-
     const toggleDarkModeSwitch = () => setIsDarkModeEnabled(!isDarkModeEnabled)
-    const toggleNotificationSwitch = () => setIsNotificationEnabled(!isNotificationEnabled)
-    const toggleDownloadImagesSwitch = () => setIsDownloadImagesEnabled(!isDownloadImagesEnabled)
-    const toggleNSFWSwitch = () => setIsNSFWEnabled(!isNSFWEnabled)
 
     const metric = wp("5%")
 
@@ -35,13 +28,11 @@ function Settings(props) {
                     marginHorizontal: wp("2.5%"),
                     top: wp("-10%"),
                 }}>
-                    <Pressable 
-                        android_ripple={{color: lightTheme.kindOfLightGrey}}
+                    <View 
                         style={{
                             flex: 1, 
                             paddingHorizontal: metric,
                             paddingVertical: metric,
-                            marginBottom: metric,
                             borderRadius: metric,
                             borderColor: lightTheme.ligthGrey,
                             borderWidth: wp("0.5%"),
@@ -72,17 +63,40 @@ function Settings(props) {
                                 {props.myInfos.bios}
                             </Text>
                         </View>
-
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none"
-                            style={{position: "absolute", right: metric, ...iconStyles.icon8}}
-                        />
-                    </Pressable>
+                    </View>
                     
+                    <View style={{
+                        backgroundColor: lightTheme.ligthGrey,
+                        paddingVertical: metric/2,
+                        marginBottom: metric/2,
+                        borderRadius: 10,
+                    }}>
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
+                            <Text style={styles.headerText}>Mudar Nome</Text>
+                        </Pressable>
+
+                        <Pressable 
+                            android_ripple={{color: lightTheme.kindOfLightGrey}}
+                            style={{
+                                flex: 1, 
+                                paddingVertical: metric/2,
+                                justifyContent: 'space-between', 
+                                paddingHorizontal: metric,
+                                ...styles.bottomWrapper
+                            }}
+                        >
+                            <Text style={styles.headerText}>Mudar Bios</Text>
+                        </Pressable>
+                    </View>
                     <View style={{
                         backgroundColor: lightTheme.ligthGrey,
                         paddingVertical: metric/2,
@@ -114,7 +128,14 @@ function Settings(props) {
                         >
                             <Text style={styles.headerText}>Mudar Senha</Text>
                         </Pressable>
+                    </View>
 
+                    <View style={{
+                        backgroundColor: lightTheme.ligthGrey,
+                        paddingVertical: metric/2,
+                        marginBottom: metric/2,
+                        borderRadius: 10,
+                    }}>
                         <Pressable 
                             android_ripple={{color: lightTheme.kindOfLightGrey}}
                             style={{
@@ -126,126 +147,6 @@ function Settings(props) {
                             }}
                         >
                             <Text style={styles.headerText}>Deletar Conta</Text>
-                        </Pressable>
-                    </View>
-
-                    <View style={{
-                        backgroundColor: lightTheme.ligthGrey,
-                        paddingVertical: metric/2,
-                        marginBottom: metric/2,
-                        borderRadius: 10,
-                    }}>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.kindOfLightGrey}}
-                            style={{
-                                flex: 1, 
-                                paddingVertical: metric/2,
-                                justifyContent: 'space-between', 
-                                paddingHorizontal: metric,
-                                ...styles.bottomWrapper
-                            }}
-                        >
-                            <Text style={styles.headerText}>Modo escuro</Text>
-                            <Switch
-                                trackColor={{false: lightTheme.notSoDarkGrey, true: lightTheme.green}}
-                                thumbColor={lightTheme.kindOfLightGrey}
-                                ios_backgroundColor={lightTheme.notSoDarkGrey}
-                                onValueChange={toggleDarkModeSwitch}
-                                value={isDarkModeEnabled}
-                            />
-                        </Pressable>
-
-                        <Pressable 
-                            android_ripple={{color: lightTheme.kindOfLightGrey}}
-                            style={{
-                                flex: 1, 
-                                paddingVertical: metric/2,
-                                justifyContent: 'space-between', 
-                                paddingHorizontal: metric,
-                                ...styles.bottomWrapper
-                            }}
-                        >
-                            <Text style={styles.headerText}>Notificações</Text>
-                            <Switch
-                                trackColor={{false: lightTheme.notSoDarkGrey, true: lightTheme.green}}
-                                thumbColor={lightTheme.kindOfLightGrey}
-                                ios_backgroundColor={lightTheme.notSoDarkGrey}
-                                onValueChange={toggleNotificationSwitch}
-                                value={isNotificationEnabled}
-                            />
-                        </Pressable>
-
-                        <Pressable 
-                            android_ripple={{color: lightTheme.kindOfLightGrey}}
-                            style={{
-                                flex: 1, 
-                                paddingVertical: metric/2,
-                                justifyContent: 'space-between', 
-                                paddingHorizontal: metric,
-                                ...styles.bottomWrapper
-                            }}
-                        >
-                            <Text style={styles.headerText}>Download Imagens</Text>
-                            <Switch
-                                trackColor={{ false: lightTheme.notSoDarkGrey, true: lightTheme.green }}
-                                thumbColor={lightTheme.kindOfLightGrey}
-                                ios_backgroundColor={lightTheme.notSoDarkGrey}
-                                onValueChange={toggleDownloadImagesSwitch}
-                                value={isDownloadImagesEnabled}
-                            />
-                        </Pressable>
-
-                        <Pressable 
-                            android_ripple={{color: lightTheme.kindOfLightGrey}}
-                            style={{
-                                flex: 1, 
-                                paddingVertical: metric/2,
-                                justifyContent: 'space-between', 
-                                paddingHorizontal: metric,
-                                ...styles.bottomWrapper
-                            }}
-                        >
-                            <Text style={styles.headerText}>Borrar NSFW</Text>
-                            <Switch
-                                trackColor={{ false: lightTheme.notSoDarkGrey, true: lightTheme.green }}
-                                thumbColor={lightTheme.kindOfLightGrey}
-                                ios_backgroundColor={lightTheme.notSoDarkGrey}
-                                onValueChange={toggleNSFWSwitch}
-                                value={isNSFWEnabled}
-                            />
-                        </Pressable>
-                    </View>
-                    
-                    <View style={{
-                        backgroundColor: lightTheme.ligthGrey,
-                        paddingVertical: metric/2,
-                        marginBottom: metric/2,
-                        borderRadius: 10,
-                    }}>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.kindOfLightGrey}}
-                            style={{
-                                flex: 1, 
-                                paddingVertical: metric/2,
-                                justifyContent: 'space-between', 
-                                paddingHorizontal: metric,
-                                ...styles.bottomWrapper
-                            }}
-                        >
-                            <Text style={styles.headerText}>Ver favoritos</Text>
-                        </Pressable>
-
-                        <Pressable 
-                            android_ripple={{color: lightTheme.kindOfLightGrey}}
-                            style={{
-                                flex: 1, 
-                                paddingVertical: metric/2,
-                                justifyContent: 'space-between', 
-                                paddingHorizontal: metric,
-                                ...styles.bottomWrapper
-                            }}
-                        >
-                            <Text style={styles.headerText}>Sobre e termos</Text>
                         </Pressable>
                     </View>
                 </View>

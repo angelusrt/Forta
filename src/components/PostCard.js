@@ -7,6 +7,20 @@ import Icons from "./../components/Icons"
 import {lightTheme, styles, iconStyles} from "./../Styles"
 
 function Options(props) {
+    const deletePost = async() => {
+        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, props.deleteEnvelope)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
+
+    const deleteComents = async() => {
+        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}/comentaries/${props.coments}`, props.deleteEnvelope)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
+
     return (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
             <Modal 
@@ -28,25 +42,6 @@ function Options(props) {
                         zIndex: 3,
                         ...styles.options
                     }}>
-                        <Pressable
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Star" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 625 625" 
-                                fill="none" 
-                                style={iconStyles.icon2}
-                            />
-                            <Text style={{
-                                marginLeft: wp("1.25%"),
-                                ...styles.headerText
-                            }}>
-                                Salvar
-                            </Text>
-                        </Pressable>
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
@@ -61,20 +56,24 @@ function Options(props) {
                             />
                             <Text style={styles.headerText}>Denunciar</Text>
                         </Pressable>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Remove" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none" 
-                                style={iconStyles.icon1}
-                            />
-                            <Text style={styles.headerText}>Excluir</Text>
-                        </Pressable>
+                        {
+                            props.name === props.myInfos.id ? 
+                            <Pressable 
+                                android_ripple={{color: lightTheme.ligthGrey}}
+                                onPress={() => props.mode === "Posts" ? deletePost() : deleteComents()}
+                                style={styles.optionButtons}
+                            >
+                                <Icons 
+                                    name="Remove" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300" 
+                                    fill="none" 
+                                    style={iconStyles.icon1}
+                                />
+                                <Text style={styles.headerText}>Excluir</Text>
+                            </Pressable> : null
+                        }
                     </View>
                 </View>
             </Modal>
@@ -208,6 +207,13 @@ function PostCard(props) {
             <Options 
                 isModalVisible={isModalVisible}
                 setModalVisible={prop => setModalVisible(prop)}
+                deleteEnvelope={props.deleteEnvelope}
+                mode={props.title === null ? "Coments" : "Posts"}
+                myInfos={props.myInfos}
+                name={props.name}
+                forum={props.forum}
+                post={props.post}
+                coments={props.title === null ? props.coments : null}
             />
         </View>
     )

@@ -43,20 +43,9 @@ function Chat(props) {
     const[message, setMessage] = useState("")
     const[resolved, setResolved] = useState(false)
     const metric = wp("5%")
-    
-    const httpEnvelope = {
-        method: "GET",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
 
     const getChat = async () => {
-        await fetch(`http://192.168.0.106:3000/api/chats/${props.chat}`, httpEnvelope)
+        await fetch(`http://192.168.0.106:3000/api/chats/${props.chat}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setChat(data)

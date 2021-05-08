@@ -11,18 +11,7 @@ function ForumSearch(props) {
     const[forums, setForums] = useState(null)
 
     const onTryToGet = async () => {
-        const httpEnvelopeGet = {
-            method: "GET",
-            headers: {
-                'accept-encoding': 'gzip, deflate, br',
-                Accept: 'application/json',
-                connection: 'keep-alive',
-                host: 'localhost:3000',
-                'Content-Type': 'application/json'
-            }
-        }
-
-        await fetch(`http://192.168.0.106:3000/api/forums/find/${groupName}`, httpEnvelopeGet)
+        await fetch(`http://192.168.0.106:3000/api/forums/find/${groupName}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -30,8 +19,12 @@ function ForumSearch(props) {
                 data[0] !== null ? data.map((forumInfo, index) => { return (
                     <ContactCard
                         key={index}
+                        token={props.token}
+                        myInfos={props.myInfos}
+                        deleteEnvelope={props.deleteEnvelope}
                         title={forumInfo.groupName}
                         subtitle={`${forumInfo.followers.length} seguidores`}
+                        owner={forumInfo.owner}
                         mode="Forum"
                         favorite={false}
                         forum={forumInfo._id}
@@ -390,18 +383,7 @@ function UserSearch(props) {
     const[users, setUsers] = useState(null)
 
     const onTryToGet = async () => {
-        const httpEnvelopeGet = {
-            method: "GET",
-            headers: {
-                'accept-encoding': 'gzip, deflate, br',
-                Accept: 'application/json',
-                connection: 'keep-alive',
-                host: 'localhost:3000',
-                'Content-Type': 'application/json'
-            }
-        }
-
-        await fetch(`http://192.168.0.106:3000/api/chats/find/${username}`, httpEnvelopeGet)
+        await fetch(`http://192.168.0.106:3000/api/chats/find/${username}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -601,6 +583,10 @@ function InteligentButton(props) {
         case "ForumSearch":
             buttonIcons = 
                 <ForumSearch 
+                    getEnvelope={props.getEnvelope}
+                    deleteEnvelope={props.deleteEnvelope}
+                    myInfos={props.myInfos}
+                    token={props.token}
                     setScreen={screen => props.setScreen(screen)}
                     handleScreenList={ screen => props.handleScreenList(screen)}
                     handleForum={props.handleForum} 
@@ -689,6 +675,7 @@ function InteligentButton(props) {
         case "UserSearch":
             buttonIcons = 
                 <UserSearch 
+                    getEnvelope={props.getEnvelope}
                     setScreen={screen => props.setScreen(screen)}
                     token={props.token}
                 />

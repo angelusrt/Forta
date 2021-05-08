@@ -9,6 +9,13 @@ import InteligentButton from "../components/InteligentButton.js"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Options(props) {
+    const deleteForum = async() => {
+        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, props.deleteEnvelope)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
+
     return (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
             <Modal 
@@ -30,25 +37,6 @@ function Options(props) {
                         zIndex: 3,
                         ...styles.options
                     }}>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}} 
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Share" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 625 625" 
-                                fill="none" 
-                                style={iconStyles.icon2}
-                            />
-                            <Text style={{
-                                marginLeft: wp("1.25%"),
-                                ...styles.headerText
-                            }}>
-                                Compartilhar
-                            </Text>
-                        </Pressable>
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
@@ -101,20 +89,24 @@ function Options(props) {
                             />
                             <Text style={styles.headerText}>Denunciar</Text>
                         </Pressable>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Remove" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none" 
-                                style={iconStyles.icon1}
-                            />
-                            <Text style={styles.headerText}>Excluir</Text>
-                        </Pressable>
+                        {
+                            props.owner === props.myInfos.id ? 
+                            <Pressable 
+                                android_ripple={{color: lightTheme.ligthGrey}}
+                                onPress={() => deleteForum()}
+                                style={styles.optionButtons}
+                            >
+                                <Icons 
+                                    name="Remove" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300" 
+                                    fill="none" 
+                                    style={iconStyles.icon1}
+                                />
+                                <Text style={styles.headerText}>Excluir</Text>
+                            </Pressable> : null
+                        }
                     </View>
                 </View>
             </Modal>
@@ -161,45 +153,18 @@ function Forum(props) {
     const[resolved, setResolved] = useState(false)
     const[isModalVisible, setModalVisible] = useState(false)
     const metric = wp("5%")
-    const httpEnvelope = {
-        method: "GET",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
-    const httpEnvelopePatch = {
-        method: "PATCH",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
-    const httpEnvelopeDelete = {
-        method: "DELETE",
-        headers: {
-            'accept-encoding': 'gzip, deflate, br',
-            accept: '*/*',
-            connection: 'keep-alive',
-            host: 'localhost:3000',
-            'auth-token': props.token
-        }
-    }
 
     const onTryToGetForum = async () => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, httpEnvelope)
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setForum(data)                
             setPosts(data.posts.map((posts, index) =>
                 <PostCard 
                     key={index}
+                    token={props.token}
+                    myInfos={props.myInfos}
+                    deleteEnvelope={props.deleteEnvelope}
                     title={posts.title}
                     bodyText={posts.bodyText}
                     name={posts.author}
@@ -219,21 +184,21 @@ function Forum(props) {
     }
 
     const onTrytoGetUserMyForum = async () => {
-        return await fetch(`http://192.168.0.106:3000/api/user/myForums`, httpEnvelope)
+        return await fetch(`http://192.168.0.106:3000/api/user/myForums`, props.getEnvelope)
         .then(res => res.json())
         .then(data => setFollow(data.indexOf(props.forum) !== -1 ? true : false))
         .catch(err => console.log(err))
     }
     
     const onTrytoFollow = async () => {
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, httpEnvelopePatch)
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, props.patchEnvelope)
         .then(res => res.json())
         .then(data => data === "You followed" ? onTryToGetForum() : null)
         .catch(err => console.log(err))
     }
 
     const onTrytoUnfollow = async () => {
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, httpEnvelopeDelete)
+        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => data === "Removed sucessfully" ? onTryToGetForum() : null)
         .catch(err => console.log(err))
@@ -360,6 +325,10 @@ function Forum(props) {
                         <Options 
                             isModalVisible={isModalVisible}
                             setModalVisible={prop => setModalVisible(prop)}
+                            deleteEnvelope={props.deleteEnvelope}
+                            myInfos={props.myInfos}
+                            owner={forum.owner}
+                            forum={props.forum}
                         />
             
                         <View style={{

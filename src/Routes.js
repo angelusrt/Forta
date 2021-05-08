@@ -20,6 +20,39 @@ function Routes() {
     const[myInfos, setMyInfos] = useState("")
     const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight
     
+    const getEnvelope = {
+        method: "GET",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': token
+        }
+    }
+
+    const patchEnvelope = {
+        method: "PATCH",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': token
+        }
+    }
+
+    const deleteEnvelope = {
+        method: "DELETE",
+        headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            accept: '*/*',
+            connection: 'keep-alive',
+            host: 'localhost:3000',
+            'auth-token': token
+        }
+    }
+
     const handleDecrementScreen = () => setScreenList(prev => {
         const next = [...prev]
         next.pop()
@@ -55,11 +88,14 @@ function Routes() {
             scrn = 
                 <Post 
                     token={token}
-                    forum={forum} 
+                    myInfos={myInfos}
+                    getEnvelope={getEnvelope}
+                    deleteEnvelope={deleteEnvelope}
                     post={postList[postList.length - 1]}
-                    handleDecrementPost={() => handleDecrementPost()} 
+                    handleDecrementPost={() => handleDecrementPost()}
+                    handlePostList={props => setPostList(result => [...result, props])}  
+                    forum={forum} 
                     handleForum={forum => setForum(forum)}
-                    handlePostList={props => setPostList(result => [...result, props])} 
                     handleScreenList={props => setScreenList(result => [...result, props])}
                     handleDecrementScreen={() => handleDecrementScreen()}
                 />
@@ -69,6 +105,9 @@ function Routes() {
                 <Forum
                     token={token}
                     myInfos={myInfos}
+                    getEnvelope={getEnvelope}
+                    patchEnvelope={patchEnvelope}
+                    deleteEnvelope={deleteEnvelope}
                     forum={forum} 
                     handleForum={forum => setForum(forum)}
                     handlePostList={props => setPostList(result => [...result, props])}
@@ -81,6 +120,7 @@ function Routes() {
                 <Chat
                     token={token}
                     myInfos={myInfos}
+                    getEnvelope={getEnvelope}
                     chat={chat}
                     handleDecrementScreen={() => handleDecrementScreen()} 
                 />
@@ -90,12 +130,15 @@ function Routes() {
                 <Tab
                     token={token}
                     myInfos={myInfos}
-                    handlePostList={props => setPostList(result => [...result, props])} 
+                    getEnvelope={getEnvelope}
+                    patchEnvelope={patchEnvelope}
+                    deleteEnvelope={deleteEnvelope}
                     handleForum={forum => setForum(forum)}
                     handleChat={chat => setChat(chat)}
                     route={route} 
                     setRoute={route => setRoute(route)}
                     handleRoute={route => setRoute(route)} 
+                    handlePostList={props => setPostList(result => [...result, props])} 
                     handleScreenList={props => setScreenList(result => [...result, props])}
                 /> 
             break
