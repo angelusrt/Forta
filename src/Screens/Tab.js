@@ -361,9 +361,9 @@ function Invites(props) {
                         inviteInfo.sender
                     }
                     subtitle={
-                        inviteInfo.description === 'mod' ? "Quer te convidar como mod!" :
-                        inviteInfo.description === 'chat' ? "Quer conversar com você!" :
-                        inviteInfo.description === 'group' ? "Quer te convidar para um grupo!" :
+                        inviteInfo.description === 'mod' ? "Convidou-lhe para ser mod" :
+                        inviteInfo.description === 'chat' ? "Convidou-lhe a conversar" :
+                        inviteInfo.description === 'group' ? "Convidou-lhe a um grupo" :
                         "Erro"
                     }
                     mode="Invite"
@@ -371,6 +371,7 @@ function Invites(props) {
                     isSender={
                         inviteInfo.sender === props.myInfos.id ? true : false
                     }
+                    receiver={inviteInfo.receiver}
                     path={inviteInfo.path}
                     invite={inviteInfo._id}
                     token={props.token}

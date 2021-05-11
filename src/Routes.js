@@ -9,6 +9,7 @@ import Settings from "./Screens/Settings"
 import Post from "./Screens/Post"
 import Forum from "./Screens/Forum"
 import Chat from "./Screens/Chat"
+import Mods from "./Screens/Mods"
 
 function Routes() {
     const[route, setRoute] = useState("Home")
@@ -19,7 +20,6 @@ function Routes() {
     const[token, setToken] = useState("")
     const[myInfos, setMyInfos] = useState("")
     const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight
-    
     const getEnvelope = {
         method: "GET",
         headers: {
@@ -30,7 +30,6 @@ function Routes() {
             'auth-token': token
         }
     }
-
     const patchEnvelope = {
         method: "PATCH",
         headers: {
@@ -41,7 +40,6 @@ function Routes() {
             'auth-token': token
         }
     }
-
     const deleteEnvelope = {
         method: "DELETE",
         headers: {
@@ -122,6 +120,17 @@ function Routes() {
                     myInfos={myInfos}
                     getEnvelope={getEnvelope}
                     chat={chat}
+                    handleDecrementScreen={() => handleDecrementScreen()} 
+                />
+            break
+        case "Mods":
+            scrn = 
+                <Mods
+                    token={token}
+                    myInfos={myInfos}
+                    getEnvelope={getEnvelope}
+                    patchEnvelope={patchEnvelope}
+                    forum={forum}
                     handleDecrementScreen={() => handleDecrementScreen()} 
                 />
             break

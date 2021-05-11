@@ -59,6 +59,10 @@ function Options(props) {
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
+                            onPress={() => {
+                                props.handleScreenList("Mods")
+                                props.handleForum(props.forum) 
+                            }}
                         >
                             <Icons 
                                 name="Comentaries" 
@@ -193,14 +197,14 @@ function Forum(props) {
     const onTrytoFollow = async () => {
         return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, props.patchEnvelope)
         .then(res => res.json())
-        .then(data => data === "You followed" ? onTryToGetForum() : null)
+        .then(data => data === "Followed" ? onTryToGetForum() : null)
         .catch(err => console.log(err))
     }
 
     const onTrytoUnfollow = async () => {
         return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, props.deleteEnvelope)
         .then(res => res.json())
-        .then(data => data === "Removed sucessfully" ? onTryToGetForum() : null)
+        .then(data => data === "Removed" ? onTryToGetForum() : null)
         .catch(err => console.log(err))
     }
     
@@ -326,6 +330,8 @@ function Forum(props) {
                             isModalVisible={isModalVisible}
                             setModalVisible={prop => setModalVisible(prop)}
                             deleteEnvelope={props.deleteEnvelope}
+                            handleScreenList={props.handleScreenList}
+                            handleForum={props.handleForum}
                             myInfos={props.myInfos}
                             owner={forum.owner}
                             forum={props.forum}

@@ -57,6 +57,10 @@ function Options(props) {
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
+                            onPress={() => {
+                                props.handleScreenList("Mods")
+                                props.handleForum(props.forum) 
+                            }}
                         >
                             <Icons 
                                 name="Comentaries" 
@@ -187,10 +191,10 @@ function ForumAndChatButtons(props) {
     )
 }
 
-function InviteUserButtons(props) {
-    const[accept, setAccept] = useState(false)
-    const httpEnvelopePost = {
-        method: "POST",
+function ModButtons(props) {
+    const[deny, setDeny] = useState(false)
+    const deleteEnvelope = {
+        method: "DELETE",
         headers: {
             'accept-encoding': 'gzip, deflate, br',
             connection: 'keep-alive',
@@ -199,15 +203,92 @@ function InviteUserButtons(props) {
             'Content-Type': 'application/json',
             'auth-token': props.token
         },
-        body: JSON.stringify({user: props.user})
+        body: JSON.stringify({mods: [{mod: props.user}]})
     }
-    console.log(props.user)
-    const invite = async () => {
-        setAccept(true)
-        await fetch(`http://192.168.0.106:3000/api/chats/`, httpEnvelopePost)
+
+    const removeMod = async () => {
+        setDeny(true)
+
+        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/mods`, deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
+    }
+
+    return(
+        <React.Fragment>
+            {
+                props.myInfos.id === props.owner && props.stats ? 
+                <TouchableOpacity onPress={() => !deny ? removeMod() : null}>
+                    <Icons 
+                        name="Remove" 
+                        width={wp("10%")} 
+                        height={wp("10%")} 
+                        viewBox="0 0 300 300" 
+                        fill="none" 
+                        style={{
+                            stroke: deny ? lightTheme.red : lightTheme.darkGrey,
+                            strokeWidth:"15.9px",
+                            strokeLinejoin: "round",
+                            strokeMiterlimit:"1.5"
+                        }}
+                    />
+                </TouchableOpacity> : 
+                null
+            } 
+        </React.Fragment>
+    )
+}
+
+function InviteUserButtons(props) {
+    const[accept, setAccept] = useState(false)
+    
+    const invite = async () => {
+        setAccept(true)
+
+        if(props.description === "chat"){
+            const postEnvelope = {
+                method: "POST",
+                headers: {
+                    'accept-encoding': 'gzip, deflate, br',
+                    connection: 'keep-alive',
+                    host: 'localhost:3000',
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'auth-token': props.token
+                },
+                body: JSON.stringify({user: props.user})
+            }
+
+            await fetch(`http://192.168.0.106:3000/api/chats/`, postEnvelope)
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
+
+        } else if(props.description === "mod"){
+            const patchEnvelope = {
+                method: "PATCH",
+                headers: {
+                    'accept-encoding': 'gzip, deflate, br',
+                    connection: 'keep-alive',
+                    host: 'localhost:3000',
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'auth-token': props.token
+                },
+                body: JSON.stringify({mods: [{mod: props.user}]})
+            }
+            console.log(patchEnvelope)
+            await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/mods`, patchEnvelope)
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
+
+        } 
+        // else {
+
+        // }
+        
     }
 
     return(
@@ -251,11 +332,13 @@ function InviteButtons(props) {
             .then(res => res.json())
             .then(data => data === "Updated" ? clearInvite() : null)
             .catch(err => console.log(err))
-        } else if(props.description === "forum"){
+        
+        } else if(props.description === "mod"){
             await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? clearInvite() : null)
             .catch(err => console.log(err))
+        
         } else {
             await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, props.patchEnvelope)
             .then(res => res.json())
@@ -272,11 +355,26 @@ function InviteButtons(props) {
             .then(res => res.json())
             .then(data => data === "Removed" ? clearInvite() : null)
             .catch(err => console.log(err))
-        } else if(props.description === "forum"){
-            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, props.deleteEnvelope)
+        
+        } else if(props.description === "mod"){
+            const deleteEnvelope = {
+                method: "DELETE",
+                headers: {
+                    'accept-encoding': 'gzip, deflate, br',
+                    connection: 'keep-alive',
+                    host: 'localhost:3000',
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'auth-token': props.token
+                },
+                body: JSON.stringify({mods: [{mod: props.receiver}]})
+            }
+            console.log(deleteEnvelope)
+            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? clearInvite() : null)
-            .catch(err => console.log(err))
+            //.catch(err => console.log(err))
+        
         } else {
             await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, props.deleteEnvelope)
             .then(res => res.json())
@@ -384,9 +482,9 @@ function ContactCard(props) {
                     <Text style={styles.bodyText4} numberOfLines={1}>
                         {
                             !props.isSender ? props.subtitle : 
-                            props.description === 'mod' ? "Você convidou como mod!" :
-                            props.description === 'chat' ? "Você convidou para conversar!" :
-                            props.description === 'group' ? "Você convidou para um grupo!" :
+                            props.description === 'mod' ? "Convidaste para ser mod" :
+                            props.description === 'chat' ? "Convidaste para conversar" :
+                            props.description === 'group' ? "Convidaste para um grupo" :
                             "Erro" 
                         }
                     </Text>
@@ -398,10 +496,20 @@ function ContactCard(props) {
                         <InviteButtons 
                             patchEnvelope={props.patchEnvelope}
                             deleteEnvelope={props.deleteEnvelope}
+                            token={props.token}
                             isSender={props.isSender}
                             invite={props.invite} 
                             description={props.description}
                             path={props.path}
+                            receiver={props.receiver}
+                        /> :
+                        props.mode === "Mod" ? 
+                        <ModButtons
+                            myInfos={props.myInfos}
+                            owner={props.owner}
+                            user={props.user}
+                            token={props.token}
+                            stats={props.stats}
                         /> :
                         props.mode !== "User" ?
                         <ForumAndChatButtons 
@@ -410,6 +518,8 @@ function ContactCard(props) {
                         <InviteUserButtons
                             user={props.user}
                             token={props.token}
+                            description={props.description}
+                            forum={props.forum}
                         /> 
                     }
                 </View>
@@ -420,9 +530,11 @@ function ContactCard(props) {
                     isModalVisible={isModalVisible}
                     setModalVisible={prop => setModalVisible(prop)}
                     deleteEnvelope={props.deleteEnvelope}
+                    handleScreenList={props.handleScreenList}
+                    handleForum={props.handleForum}
+                    forum={props.forum}
                     myInfos={props.myInfos}
                     owner={props.owner}
-                    forum={props.forum}
                 /> :
                 <ChatOptions
                     isModalVisible={isModalVisible}

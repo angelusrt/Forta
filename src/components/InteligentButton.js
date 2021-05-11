@@ -394,6 +394,8 @@ function UserSearch(props) {
                         title={users.username}
                         subtitle={users.bios}
                         mode="User"
+                        description={props.description}
+                        forum={props.description === "mod" ? props.forum : null}
                         user={users.id}
                         token={props.token}
                     />
@@ -444,7 +446,11 @@ function UserSearch(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("Chats")}>    
+                    <TouchableOpacity onPress={() => {
+                        props.description === "chat" ?
+                        props.setScreen("Chats") :
+                        props.setScreen("Mods")
+                    }}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -626,6 +632,48 @@ function InteligentButton(props) {
                     </TouchableOpacity>
                 </React.Fragment>
             break
+        case "Mods":
+            buttonIcons =
+                <React.Fragment>
+                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={
+                                props.myInfos.id === props.owner ?
+                                iconStyles.icon1 : iconStyles.icon9
+                            }
+                        />
+                    </TouchableOpacity>
+                    {   
+                        props.myInfos.id === props.owner ?
+                        <TouchableOpacity onPress={() => props.setScreen("ModsSearch")}>
+                            <Icons 
+                                name="Add" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon2}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    }
+                </React.Fragment>
+            break
+        case "ModsSearch":
+            buttonIcons = 
+                <UserSearch 
+                    getEnvelope={props.getEnvelope}
+                    setScreen={screen => props.setScreen(screen)}
+                    description="mod"
+                    forum={props.forum}
+                    token={props.token}
+                />
+            break 
         case "PostAdd": 
             buttonIcons = 
                 <PostAddCard 
@@ -677,6 +725,7 @@ function InteligentButton(props) {
                 <UserSearch 
                     getEnvelope={props.getEnvelope}
                     setScreen={screen => props.setScreen(screen)}
+                    description="chat"
                     token={props.token}
                 />
             break    
@@ -732,7 +781,7 @@ function InteligentButton(props) {
             { 
                 props.screen === "PostAdd" || props.screen === "ForumAdd" || 
                 props.screen === "ComentaryAdd" || props.screen === "ForumSearch" ||
-                props.screen === "UserSearch"?
+                props.screen === "UserSearch" || props.screen === "ModsSearch"?
                 <Animated.View style={{
                     position: "absolute",
                     height: hp("100%"),
