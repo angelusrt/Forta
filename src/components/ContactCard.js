@@ -8,7 +8,7 @@ import {iconStyles, lightTheme, styles} from "./../Styles"
 
 function Options(props) {
     const deleteForum = async() => {
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, props.deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
@@ -118,7 +118,7 @@ function Options(props) {
 
 function ChatOptions(props) {
     const deleteChat = async() => {
-        await fetch(`http://192.168.0.106:3000/api/chats/${props.chat}`, props.deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
@@ -209,7 +209,7 @@ function ModButtons(props) {
     const removeMod = async () => {
         setDeny(true)
 
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/mods`, deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/mods`, deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
@@ -260,7 +260,7 @@ function InviteUserButtons(props) {
                 body: JSON.stringify({user: props.user})
             }
 
-            await fetch(`http://192.168.0.106:3000/api/chats/`, postEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/chats/`, postEnvelope)
             .then(res => res.json())
             .then(data => console.log(data))
             .catch(err => console.log(err))
@@ -279,7 +279,7 @@ function InviteUserButtons(props) {
                 body: JSON.stringify({mods: [{mod: props.user}]})
             }
             console.log(patchEnvelope)
-            await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/mods`, patchEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/mods`, patchEnvelope)
             .then(res => res.json())
             .then(data => console.log(data))
             .catch(err => console.log(err))
@@ -318,7 +318,7 @@ function InviteButtons(props) {
     const[deny, setDeny] = useState(false)
     
     const clearInvite = async () => {
-        await fetch(`http://192.168.0.106:3000/api/invites/${props.invite}`, props.deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/invites/${props.invite}`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
@@ -328,19 +328,19 @@ function InviteButtons(props) {
         setAccept(true)
         
         if(props.description === "chat"){
-            await fetch(`http://192.168.0.106:3000/api/chats/${props.path}`, props.patchEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/chats/${props.path}`, props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? clearInvite() : null)
             .catch(err => console.log(err))
         
         } else if(props.description === "mod"){
-            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, props.patchEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/forums/${props.path}/mods`, props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? clearInvite() : null)
             .catch(err => console.log(err))
         
         } else {
-            await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, props.patchEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/groups/${props.path}/pendent`, props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? clearInvite() : null)
             .catch(err => console.log(err))
@@ -351,7 +351,7 @@ function InviteButtons(props) {
         setDeny(true)
 
         if(props.description === "chat"){
-            await fetch(`http://192.168.0.106:3000/api/chats/${props.path}`, props.deleteEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/chats/${props.path}`, props.deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? clearInvite() : null)
             .catch(err => console.log(err))
@@ -370,13 +370,13 @@ function InviteButtons(props) {
                 body: JSON.stringify({mods: [{mod: props.receiver}]})
             }
             console.log(deleteEnvelope)
-            await fetch(`http://192.168.0.106:3000/api/forums/${props.path}/mods`, deleteEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/forums/${props.path}/mods`, deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? clearInvite() : null)
             //.catch(err => console.log(err))
         
         } else {
-            await fetch(`http://192.168.0.106:3000/api/groups/${props.path}/pendent`, props.deleteEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/groups/${props.path}/pendent`, props.deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? clearInvite() : null)
             .catch(err => console.log(err))

@@ -7,9 +7,8 @@ import InteligentButton from "../components/InteligentButton.js"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Settings(props) {
-    const[isDarkModeEnabled, setIsDarkModeEnabled] = useState(false)
-    const toggleDarkModeSwitch = () => setIsDarkModeEnabled(!isDarkModeEnabled)
-
+    const[screen, setScreen] = useState("Settings")
+    const[options, setOptions] = useState("")
     const metric = wp("5%")
 
     return (
@@ -55,11 +54,12 @@ function Settings(props) {
                                 fontFamily: 'Poppins_700Bold',
                                 color: lightTheme.darkGrey,
                                 fontSize: wp("7%"),
-                                marginBottom: -wp("2.5%")    
+                                marginTop: -metric/2,
+                                marginBottom: -metric/4    
                             }}>
                                 {props.myInfos.username}
                             </Text>
-                            <Text numberOfLines={1} style={styles.authSubheader}>
+                            <Text numberOfLines={1} style={styles.bodyText2}>
                                 {props.myInfos.bios}
                             </Text>
                         </View>
@@ -80,6 +80,10 @@ function Settings(props) {
                                 paddingHorizontal: metric,
                                 ...styles.bottomWrapper
                             }}
+                            onPress={() => {
+                                setOptions("Name")
+                                setScreen("SettingsOptions")
+                            }}
                         >
                             <Text style={styles.headerText}>Mudar Nome</Text>
                         </Pressable>
@@ -93,16 +97,14 @@ function Settings(props) {
                                 paddingHorizontal: metric,
                                 ...styles.bottomWrapper
                             }}
+                            onPress={() => {
+                                setOptions("Bios")
+                                setScreen("SettingsOptions")
+                            }}
                         >
                             <Text style={styles.headerText}>Mudar Bios</Text>
                         </Pressable>
-                    </View>
-                    <View style={{
-                        backgroundColor: lightTheme.ligthGrey,
-                        paddingVertical: metric/2,
-                        marginBottom: metric/2,
-                        borderRadius: 10,
-                    }}>
+
                         <Pressable 
                             android_ripple={{color: lightTheme.kindOfLightGrey}}
                             style={{
@@ -111,6 +113,10 @@ function Settings(props) {
                                 justifyContent: 'space-between', 
                                 paddingHorizontal: metric,
                                 ...styles.bottomWrapper
+                            }}
+                            onPress={() => {
+                                setOptions("Email")
+                                setScreen("SettingsOptions")
                             }}
                         >
                             <Text style={styles.headerText}>Mudar Email</Text>
@@ -124,6 +130,10 @@ function Settings(props) {
                                 justifyContent: 'space-between', 
                                 paddingHorizontal: metric,
                                 ...styles.bottomWrapper
+                            }}
+                            onPress={() => {
+                                setOptions("Password")
+                                setScreen("SettingsOptions")
                             }}
                         >
                             <Text style={styles.headerText}>Mudar Senha</Text>
@@ -145,15 +155,26 @@ function Settings(props) {
                                 paddingHorizontal: metric,
                                 ...styles.bottomWrapper
                             }}
+                            onPress={() => {
+                                setOptions("Delete")
+                                setScreen("SettingsOptions")
+                            }}
                         >
-                            <Text style={styles.headerText}>Deletar Conta</Text>
+                            <Text style={{color: lightTheme.red, ...styles.headerCardText}}>Deletar Conta</Text>
                         </Pressable>
                     </View>
                 </View>
             </ScrollView>
             <InteligentButton 
+                token={props.token}
+                options={options}
+                setMyInfos={props.setMyInfos}
+                screen={screen}
+                setScreen={screen => setScreen(screen)}
+                handleScreenList={props.handleScreenList}
                 handleDecrementScreen={props.handleDecrementScreen} 
-                screen="Settings"
+                getEnvelope={props.getEnvelope}
+                deleteEnvelope={props.deleteEnvelope}
             />
         </View>
     );

@@ -10,7 +10,7 @@ import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Options(props) {
     const deleteForum = async() => {
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, props.deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
@@ -159,7 +159,7 @@ function Forum(props) {
     const metric = wp("5%")
 
     const onTryToGetForum = async () => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, props.getEnvelope)
+        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setForum(data)                
@@ -188,21 +188,21 @@ function Forum(props) {
     }
 
     const onTrytoGetUserMyForum = async () => {
-        return await fetch(`http://192.168.0.106:3000/api/user/myForums`, props.getEnvelope)
+        return await fetch(`http://192.168.0.111:3000/api/user/myForums`, props.getEnvelope)
         .then(res => res.json())
         .then(data => setFollow(data.indexOf(props.forum) !== -1 ? true : false))
         .catch(err => console.log(err))
     }
     
     const onTrytoFollow = async () => {
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, props.patchEnvelope)
+        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/follow`, props.patchEnvelope)
         .then(res => res.json())
         .then(data => data === "Followed" ? onTryToGetForum() : null)
         .catch(err => console.log(err))
     }
 
     const onTrytoUnfollow = async () => {
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/follow`, props.deleteEnvelope)
+        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/follow`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => data === "Removed" ? onTryToGetForum() : null)
         .catch(err => console.log(err))
@@ -220,111 +220,118 @@ function Forum(props) {
                         <View style={{
                             width: "100%",
                             height: wp("35%"),
-                            backgroundColor: lightTheme.red,
+                            backgroundColor: lightTheme.notSoLightGrey,
                             borderRadius: 5, 
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0
                         }}/>
                         
-                        <Pressable 
-                            onLongPress={() => setModalVisible(true)}
-                            style={{
-                                top: wp("-10%"),
-                                flex: 1, 
-                                padding: metric,
-                                marginHorizontal: metric/2,
-                                marginBottom: metric,
-                                borderRadius: metric,
-                                backgroundColor: lightTheme.ligthGrey,
-                            }}
-                        >
-                            <View style={{
-                                marginBottom: metric,
-                                overflow: 'hidden',
-                                ...styles.bottomWrapper
-                            }}>
+                        <View style={{
+                            borderRadius: metric, 
+                            overflow: 'hidden',
+                            top: wp("-10%"),
+                            flex: 1, 
+                            marginHorizontal: metric/2,
+                            marginBottom: metric,
+                            backgroundColor: lightTheme.ligthGrey,
+                        }}>
+                            <Pressable 
+                                onLongPress={() => setModalVisible(true)}
+                                android_ripple={{
+                                    color: lightTheme.kindOfLightGrey, 
+                                    borderless: true
+                                }}
+                                style={{padding: metric}}
+                            >
                                 <View style={{
-                                    width: metric * 4,
-                                    height: metric * 4,
-                                    backgroundColor: lightTheme.yellow,
-                                    borderRadius: 10,
-                                    borderColor: lightTheme.ligthGrey,
-                                    borderWidth: wp("0.625%")
-                                }}/>
-                                <View Style={styles.bottomWrapper}>
+                                    marginBottom: metric,
+                                    overflow: 'hidden',
+                                    ...styles.bottomWrapper
+                                }}>
                                     <View style={{
-                                        paddingLeft: metric,
-                                        width: metric * 13
-                                    }}>
-                                        <Text 
-                                            numberOfLines={1}
-                                            ellipsizeMode="tail"
-                                            style={{
-                                                marginBottom: wp("0%"),
-                                                ...styles.headerText3
-                                            }}
-                                        >
-                                            {forum.groupName}
-                                        </Text>
+                                        width: metric * 4,
+                                        height: metric * 4,
+                                        backgroundColor: lightTheme.yellow,
+                                        borderRadius: 10,
+                                    }}/>
+                                    <View Style={styles.bottomWrapper}>
                                         <View style={{
-                                            marginBottom: metric,
-                                            ...styles.bottomWrapper
+                                            paddingLeft: metric,
+                                            width: metric * 13
                                         }}>
-                                            {forum.tags.map((tag, index) => 
-                                                <Text key={index} numberOfLines={1} style={{
-                                                    paddingRight: metric/2,
-                                                    ...styles.bodyText2
-                                                }}>
-                                                    {tag}
-                                                </Text>                                
-                                            )}
+                                            <Text 
+                                                numberOfLines={1}
+                                                ellipsizeMode="tail"
+                                                style={{
+                                                    marginTop: metric/4,
+                                                    marginBottom: -metric/4,
+                                                    fontFamily: "Poppins_700Bold",
+                                                    fontSize: wp("7%"),
+                                                    color: lightTheme.darkGrey
+                                                }}
+                                            >
+                                                {forum.groupName}
+                                            </Text>
+                                            <View style={{
+                                                marginBottom: metric,
+                                                ...styles.bottomWrapper
+                                            }}>
+                                                {forum.tags.map((tag, index) => 
+                                                    <Text key={index} numberOfLines={1} style={{
+                                                        paddingRight: metric/2,
+                                                        ...styles.bodyText2
+                                                    }}>
+                                                        {tag}
+                                                    </Text>                                
+                                                )}
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                            
-                            <Text style={{marginBottom: metric/2, ...styles.bodyText}}>
-                                {forum.bios}
-                            </Text>
-                            
-                            <View style={styles.bottomWrapper}>
-                                <View style={{flex: 1.5, marginRight: wp("5%")}}>
-                                    <Text style={{color: lightTheme.darkGrey, ...styles.rateText}}>
-                                        {`${forum.followers.length} membros`}
-                                    </Text>
-                                </View>
-                        
-                                <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
-                                    <TouchableOpacity 
-                                        onPress={() => verify()}
-                                        style={{flexDirection: 'row', alignItems: "center"}}
-                                    >
-                                        <Text style={{
-                                            color: follow ? lightTheme.green : 
-                                            lightTheme.darkGrey, 
-                                            marginRight: wp("1.25%"),
-                                            ...styles.rateText
-                                        }}>
-                                            Seguindo
+                                
+                                <Text style={{marginBottom: metric/2, ...styles.bodyText}}>
+                                    {forum.bios}
+                                </Text>
+                                
+                                <View style={styles.bottomWrapper}>
+                                    <View style={{flex: 1.5, marginRight: wp("5%")}}>
+                                        <Text style={{color: lightTheme.darkGrey, ...styles.rateText}}>
+                                            {`${forum.followers.length} membros`}
                                         </Text>
-                                        <Icons 
-                                            name="Arrow" 
-                                            width={wp("10%")} 
-                                            height={wp("10%")} 
-                                            viewBox="0 0 300 300" 
-                                            fill="none" 
-                                            style={{
-                                                stroke: follow ? lightTheme.green : 
-                                                lightTheme.darkGrey,
-                                                strokeLinejoin: "round",
-                                                strokeWidth: "15.9px",
-                                                transform: [{ rotate: "180deg" }]
-                                            }}
-                                        />
-                                    </TouchableOpacity>
+                                    </View>
+                            
+                                    <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
+                                        <TouchableOpacity 
+                                            onPress={() => verify()}
+                                            style={{flexDirection: 'row', alignItems: "center"}}
+                                        >
+                                            <Text style={{
+                                                color: follow ? lightTheme.green : 
+                                                lightTheme.darkGrey, 
+                                                marginRight: wp("1.25%"),
+                                                ...styles.rateText
+                                            }}>
+                                                Seguindo
+                                            </Text>
+                                            <Icons 
+                                                name="Arrow" 
+                                                width={wp("10%")} 
+                                                height={wp("10%")} 
+                                                viewBox="0 0 300 300" 
+                                                fill="none" 
+                                                style={{
+                                                    stroke: follow ? lightTheme.green : 
+                                                    lightTheme.darkGrey,
+                                                    strokeLinejoin: "round",
+                                                    strokeWidth: "15.9px",
+                                                    transform: [{ rotate: "180deg" }]
+                                                }}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                            </View>
-                        </Pressable>
+                            </Pressable>
+                        </View>
 
                         <Options 
                             isModalVisible={isModalVisible}

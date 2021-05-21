@@ -8,14 +8,14 @@ import {lightTheme, styles, iconStyles} from "./../Styles"
 
 function Options(props) {
     const deletePost = async() => {
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, props.deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
     }
 
     const deleteComents = async() => {
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}/comentaries/${props.coments}`, props.deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}/comentaries/${props.coments}`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))

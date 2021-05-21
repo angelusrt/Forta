@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {StatusBar, View} from 'react-native'
+import {StatusBar, View, Platform} from 'react-native'
 import {NavigationContainer} from "@react-navigation/native"
 import {lightTheme} from "./Styles";
 
@@ -78,8 +78,13 @@ function Routes() {
         case "Settings":
             scrn = 
                 <Settings
+                    token={token}
                     myInfos={myInfos}
+                    setMyInfos={myInfos => setMyInfos(myInfos)}
+                    handleScreenList={props => setScreenList([props])}
                     handleDecrementScreen={() => handleDecrementScreen()}
+                    getEnvelope={getEnvelope}
+                    deleteEnvelope={deleteEnvelope}
                 />
             break
         case "Post":

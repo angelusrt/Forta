@@ -246,14 +246,6 @@ export const styles = StyleSheet.create({
     borderWidth: wp(".5%"),
     borderColor: lightTheme.ligthGrey,
     backgroundColor: lightTheme.white,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
     position: "absolute",
   },
 })

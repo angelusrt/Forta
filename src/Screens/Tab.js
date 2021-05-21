@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import _reactNative, {View, ScrollView, Text, Animated, Easing} from "react-native"
+import * as _reactNative from "react-native"
+import {View, ScrollView, Animated, Easing} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs"
 
@@ -162,14 +163,14 @@ function Home(props){
     const[resolved, setResolved] = useState(false)
 
     const onTryToGetMyForums = async () => {
-        return await fetch("http://192.168.0.106:3000/api/user/myForums", props.getEnvelope)
+        return await fetch("http://192.168.0.111:3000/api/user/myForums", props.getEnvelope)
         .then(res => res.json())
         .then(data => setForums(data))
         .catch(err => console.log(err))
     }
     
     const onTryToGetForum = async forum => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, props.getEnvelope)
+        return await fetch(`http://192.168.0.111:3000/api/forums/${forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -218,14 +219,14 @@ function Forums(props) {
     const[resolved, setResolved] = useState(false)
 
     const onTryToGetMyForums = async () => {
-        return await fetch("http://192.168.0.106:3000/api/user/myForums", props.getEnvelope)
+        return await fetch("http://192.168.0.111:3000/api/user/myForums", props.getEnvelope)
         .then(res => res.json())
         .then(data => setForums(data))
         .catch(err => console.log(err))
     }
     
     const onTryToGetForum = async (forum) => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${forum}`, props.getEnvelope)
+        return await fetch(`http://192.168.0.111:3000/api/forums/${forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -272,14 +273,14 @@ function Chats(props) {
     const[resolved, setResolved] = useState(false)
 
     const onTryToGetMyChats = async () => {
-        return await fetch( "http://192.168.0.106:3000/api/user/myChat", props.getEnvelope)
+        return await fetch( "http://192.168.0.111:3000/api/user/myChat", props.getEnvelope)
         .then(res => res.json())
         .then(data => setChats(data))
         .catch(err => err)
     }
     
     const onTryToGetChat = async (chat) => { 
-        return await fetch( `http://192.168.0.106:3000/api/chats/${chat}`, props.getEnvelope)
+        return await fetch( `http://192.168.0.111:3000/api/chats/${chat}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -324,14 +325,14 @@ function Invites(props) {
     const[resolved, setResolved] = useState(false)
 
     const onTryToGetMyInvites = async () => {
-        return await fetch("http://192.168.0.106:3000/api/user/myInvites", props.getEnvelope)
+        return await fetch("http://192.168.0.111:3000/api/user/myInvites", props.getEnvelope)
         .then(res => res.json())
         .then(data => setInvites(data))
         .catch(err => err)
     }
     
     const onTryToGetInvite = async (invite) => { 
-        return await fetch(`http://192.168.0.106:3000/api/invites/${invite}`, props.getEnvelope)
+        return await fetch(`http://192.168.0.111:3000/api/invites/${invite}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))

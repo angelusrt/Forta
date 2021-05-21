@@ -11,7 +11,7 @@ function ForumSearch(props) {
     const[forums, setForums] = useState(null)
 
     const onTryToGet = async () => {
-        await fetch(`http://192.168.0.106:3000/api/forums/find/${groupName}`, props.getEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/find/${groupName}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -50,7 +50,7 @@ function ForumSearch(props) {
             <View style={{flex:1, width: wp("100%")}}>
                 <Text style={{
                     marginLeft: wp("7.5%"), 
-                    marginTop: wp("10%"),
+                    marginTop: wp("14%"),
                     ...styles.headerText3
                 }}>
                     Forums encontrados
@@ -120,7 +120,7 @@ function ForumAddCard(props) {
             body: JSON.stringify({groupName,bios,tags})
         }
 
-        await fetch(`http://192.168.0.106:3000/api/forums/`, httpEnvelopePost)
+        await fetch(`http://192.168.0.111:3000/api/forums/`, httpEnvelopePost)
         .then(res => res.json())
         .then(data => {
             props.handleForum(data)
@@ -144,7 +144,7 @@ function ForumAddCard(props) {
             <View style={{flex: 1}}>
                 <Text style={{
                     marginLeft: wp("7.5%"), 
-                    marginTop: wp("10%"),
+                    marginTop: wp("14%"),
                     ...styles.headerText3
                 }}>
                     Crie Forum 
@@ -218,7 +218,7 @@ function PostAddCard(props) {
             body: JSON.stringify({title,bodyText})
         }
 
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts`, httpEnvelopePost)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts`, httpEnvelopePost)
         .then(res => res.json())
         .then(data => {
             props.handleScreenList("Post")
@@ -241,7 +241,7 @@ function PostAddCard(props) {
             <View style={{flex: 1}}>
                 <Text style={{
                     marginLeft: wp("7.5%"), 
-                    marginTop: wp("10%"),
+                    marginTop: wp("14%"),
                     ...styles.headerText3
                 }}>
                     Crie Postagem
@@ -308,7 +308,7 @@ function ComentaryAddCard(props) {
             body: JSON.stringify({bodyText})
         }
 
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, httpEnvelopePost)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, httpEnvelopePost)
         .then(res => res.json())
         .then(data => {
             props.handleScreenList("Post")
@@ -331,7 +331,7 @@ function ComentaryAddCard(props) {
             <View style={{flex: 1}}>
                 <Text style={{
                     marginLeft: wp("7.5%"), 
-                    marginTop: wp("10%"),
+                    marginTop: wp("14%"),
                     ...styles.headerText3
                 }}>
                     Crie Comentário 
@@ -378,12 +378,183 @@ function ComentaryAddCard(props) {
     )
 }
 
+function SettingsOptionsCard(props) {
+    const[headerText, setHeaderText] = useState("")
+    const[bodyText, setBodyText] = useState("")
+    const[text, setText] = useState("")
+    const[link, setLink] = useState("")
+    const[patchEnvelope, setPatchEnvelope] = useState({})
+
+    const switchOperation = () => {
+        switch (props.options) {
+            case "Name":
+                setHeaderText("Novo nome")
+                setBodyText("Nome")
+                setLink("http://192.168.0.111:3000/api/user/username")
+                setPatchEnvelope({
+                    method: "PATCH",
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'auth-token': props.token
+                    },
+                    body: JSON.stringify({username: text})
+                })
+                break
+            case "Bios":
+                setHeaderText("Novo bios")
+                setBodyText("Bios")
+                setLink("http://192.168.0.111:3000/api/user/bios")
+                setPatchEnvelope({
+                    method: "PATCH",
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'auth-token': props.token
+                    },
+                    body: JSON.stringify({bios: text})
+                })
+                break
+            case "Email":
+                setHeaderText("Novo email")
+                setBodyText("Email")
+                setLink("http://192.168.0.111:3000/api/user/email")
+                setPatchEnvelope({
+                    method: "PATCH",
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'auth-token': props.token
+                    },
+                    body: JSON.stringify({email: text})
+                })
+                break
+            case "Password":
+                setHeaderText("Nova senha")
+                setBodyText("Senha")
+                setLink("http://192.168.0.111:3000/api/user/password")
+                setPatchEnvelope({
+                    method: "PATCH",
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'auth-token': props.token
+                    },
+                    body: JSON.stringify({password: text})
+                })
+                break
+            case "Delete":
+                setHeaderText("Deletar conta")
+                setLink("http://192.168.0.111:3000/api/user/user")
+                break
+            default: 
+                setText("")
+                setLink("")
+                break
+        }
+    }
+
+    useEffect(() => {switchOperation()},[text])
+
+    const onTryToPatch = async () => {
+        await fetch(link, props.options === "Delete"? props.deleteEnvelope : patchEnvelope)
+        .then(res => res.json())
+        .then(data => {
+            data === "Updated" ? getNewInfos() : 
+            data === "Removed" ? handleScreenList("Auth") : 
+            null
+        })
+        .catch(err => err)
+    }   
+
+    const getNewInfos = async () => {
+        await fetch("http://192.168.0.111:3000/api/user/infos", props.getEnvelope)
+        .then(res => res.json())
+        .then(data => {
+            if (data != null){
+                props.setMyInfos(data)
+                props.setScreen("Settings")
+            }
+        })
+        .catch(err => err)
+    }
+
+    const verify = () => {
+        if (props.options === "Delete" || 
+            ((props.options === "Name" || props.options === "Bios") && text.length > 0) || 
+            (props.options === "Email" && text.length >= 7) || 
+            (props.options === "Password" && text.length >= 8)
+        ){
+            onTryToPatch()
+        } else {
+            setText("")
+            setLink("")
+        }
+    }
+    
+    return (
+        <React.Fragment>
+            <View style={{flex: 1}}>
+                <Text style={{
+                    marginLeft: wp("7.5%"), 
+                    marginTop: wp("14%"),
+                    ...styles.headerText3
+                }}>
+                    {headerText}
+                </Text>
+            </View>
+            <View style={{bottom: wp("4%"),...styles.addCard}}>
+                {
+                    props.options !== "Delete" ? 
+                    <React.Fragment>
+                        <Text style={{
+                            marginTop: wp("2.5%"),
+                            ...styles.headerText4
+                        }}>
+                            {bodyText}
+                        </Text>
+                        <TextInput 
+                            onChangeText={ text => setText(text)}
+                            style={styles.addInput}
+                            secureTextEntry={props.options === "Password" ? true : false}
+                        />
+                    </React.Fragment> :
+                    null
+                }
+
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => verify()}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={iconStyles.icon4}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </React.Fragment>
+    )
+}
+
 function UserSearch(props) {
     const[username, setUsername] = useState("")
     const[users, setUsers] = useState(null)
 
     const onTryToGet = async () => {
-        await fetch(`http://192.168.0.106:3000/api/chats/find/${username}`, props.getEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/chats/find/${username}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -418,7 +589,7 @@ function UserSearch(props) {
             <View style={{flex:1, width: wp("100%")}}>
                 <Text style={{
                     marginLeft: wp("7.5%"), 
-                    marginTop: wp("10%"),
+                    marginTop: wp("14%"),
                     ...styles.headerText3
                 }}>
                     Usúarios encontrados
@@ -489,7 +660,7 @@ function InteligentButton(props) {
     const prevScreen = usePrevious(props.screen)
     const[active, setActive] = useState(false)
 
-    React.useEffect(() => {
+    useEffect(() => {
         fadeAnim.setValue(0)
         setActive(true)
         if(active === true){
@@ -506,7 +677,6 @@ function InteligentButton(props) {
             setActive(false)
         }
     }, [fadeAnim, prevScreen])
-    
 
     let buttonIcons
     switch (props.screen) {
@@ -667,11 +837,11 @@ function InteligentButton(props) {
         case "ModsSearch":
             buttonIcons = 
                 <UserSearch 
+                    token={props.token}
+                    forum={props.forum}
+                    description="mod"
                     getEnvelope={props.getEnvelope}
                     setScreen={screen => props.setScreen(screen)}
-                    description="mod"
-                    forum={props.forum}
-                    token={props.token}
                 />
             break 
         case "PostAdd": 
@@ -760,6 +930,19 @@ function InteligentButton(props) {
                     </TouchableOpacity> 
                 </React.Fragment>
             break
+        case "SettingsOptions": 
+            buttonIcons =
+                <SettingsOptionsCard
+                    token={props.token}
+                    options={props.options}
+                    setMyInfos={props.setMyInfos}
+                    screen={props.screen}
+                    setScreen={props.setScreen}
+                    handleScreenList={props.handleScreenList}
+                    getEnvelope={props.getEnvelope}
+                    deleteEnvelope={props.deleteEnvelope}
+                />
+            break
         case "Settings":
         default:
             buttonIcons =
@@ -781,7 +964,8 @@ function InteligentButton(props) {
             { 
                 props.screen === "PostAdd" || props.screen === "ForumAdd" || 
                 props.screen === "ComentaryAdd" || props.screen === "ForumSearch" ||
-                props.screen === "UserSearch" || props.screen === "ModsSearch"?
+                props.screen === "UserSearch" || props.screen === "ModsSearch" ||
+                props.screen === "SettingsOptions" ?
                 <Animated.View style={{
                     position: "absolute",
                     height: hp("100%"),

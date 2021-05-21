@@ -10,7 +10,7 @@ import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Options(props) {
     const deletePost = async() => {
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, props.deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, props.deleteEnvelope)
             .then(res => res.json())
             .then(data => console.log(data))
             .catch(err => console.log(err))
@@ -117,7 +117,7 @@ function Post(props) {
     const metric = wp("5%")
     
     const onTryToGetPost = async () => { 
-        return await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}/posts/${props.post}`, props.getEnvelope)
+        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, props.getEnvelope)
         .then(res => res.json())
         .then(data =>{            
             setPost(data)
@@ -151,76 +151,85 @@ function Post(props) {
             { resolved ? 
                 <React.Fragment>
                     <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-                        <Pressable 
-                            onLongPress={() => setModalVisible(true)}
-                            style={{
-                                padding: wp("5%"), 
-                                marginHorizontal: wp("2.5%"),
-                                borderRadius: 20, 
-                                borderColor: lightTheme.ligthGrey,
-                                top: 0,
-                                borderBottomWidth: wp("0.5%"),
-                                backgroundColor: lightTheme.ligthGrey,
-                                marginBottom: wp("5%")
-                            }}
-                        >
-                            <View>
-                                <Text style={styles.headerText}>{post.title}</Text>
-                                <Text style={{marginBottom: wp("5%"), ...styles.bodyText}}>
-                                    {post.bodyText}
-                                </Text>
-
-                                <View style={{
-                                    marginBottom: wp("5%"), 
-                                    overflow: 'hidden',
-                                    ...styles.bottomWrapper
-                                }}>
-                                    <Text 
-                                        style={{
-                                            marginRight: wp("1.25%"),
-                                        ...styles.headerText2
-                                        }} 
-                                        numberOfLines={1}
-                                    > 
-                                        {post.author}
+                        
+                        <View style={{
+                            flex: 1, 
+                            top: 0,
+                            overflow: 'hidden',
+                            marginHorizontal: metric/2,
+                            marginBottom: metric,
+                            marginTop: metric,
+                            borderRadius: 20, 
+                            borderColor: lightTheme.ligthGrey,
+                            borderBottomWidth: wp("0.5%"),
+                            backgroundColor: lightTheme.ligthGrey,
+                        }}>
+                            <Pressable 
+                                onLongPress={() => setModalVisible(true)}
+                                android_ripple={{
+                                    color: lightTheme.kindOfLightGrey, 
+                                    borderless: true
+                                }}
+                                style={{padding: wp("5%")}}
+                            >
+                                <View>
+                                    <Text style={styles.headerText}>{post.title}</Text>
+                                    <Text style={{marginBottom: wp("5%"), ...styles.bodyText}}>
+                                        {post.bodyText}
                                     </Text>
-                                    <Text style={styles.bodyText2} numberOfLines={1}>
-                                        {`at ${props.forum}`}
-                                    </Text>
-                                </View>
 
-                                <View style={styles.bottomWrapper}>
-                                    <TouchableOpacity 
-                                        onPress={() => {
-                                            setLikeActive(!likeActive)
-                                        }}
-                                        style={{marginLeft: -wp("1.5%"),...styles.bottomWrapper}}
-                                    >
-                                        <Icons 
-                                            name="Arrow" 
-                                            width={wp("10%")} 
-                                            height={wp("10%")} 
-                                            viewBox="0 0 300 300" 
-                                            fill="none" 
+                                    <View style={{
+                                        marginBottom: wp("5%"), 
+                                        overflow: 'hidden',
+                                        ...styles.bottomWrapper
+                                    }}>
+                                        <Text 
                                             style={{
-                                                stroke: likeActive?lightTheme.green:lightTheme.darkGrey ,
-                                                strokeLinejoin: "round",
-                                                strokeWidth:"15.9px",
-                                                transform: [{ rotate: "90deg" }]
-                                            }}
-                                        />
-                                        <Text style={{
-                                            color: likeActive ? lightTheme.green :
-                                            lightTheme.darkGrey, 
-                                            marginBottom: wp("0.625%"),
-                                            ...styles.rateText
-                                        }}>
-                                            {post.upvotes + (likeActive && 1)}
+                                                marginRight: wp("1.25%"),
+                                            ...styles.headerText2
+                                            }} 
+                                            numberOfLines={1}
+                                        > 
+                                            {post.author}
                                         </Text>
-                                    </TouchableOpacity>
+                                        <Text style={styles.bodyText2} numberOfLines={1}>
+                                            {`at ${props.forum}`}
+                                        </Text>
+                                    </View>
+
+                                    <View style={styles.bottomWrapper}>
+                                        <TouchableOpacity 
+                                            onPress={() => {
+                                                setLikeActive(!likeActive)
+                                            }}
+                                            style={{marginLeft: -wp("1.5%"),...styles.bottomWrapper}}
+                                        >
+                                            <Icons 
+                                                name="Arrow" 
+                                                width={wp("10%")} 
+                                                height={wp("10%")} 
+                                                viewBox="0 0 300 300" 
+                                                fill="none" 
+                                                style={{
+                                                    stroke: likeActive?lightTheme.green:lightTheme.darkGrey ,
+                                                    strokeLinejoin: "round",
+                                                    strokeWidth:"15.9px",
+                                                    transform: [{ rotate: "90deg" }]
+                                                }}
+                                            />
+                                            <Text style={{
+                                                color: likeActive ? lightTheme.green :
+                                                lightTheme.darkGrey, 
+                                                marginBottom: wp("0.625%"),
+                                                ...styles.rateText
+                                            }}>
+                                                {post.upvotes + (likeActive && 1)}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                            </View>
-                        </Pressable>
+                            </Pressable>
+                        </View>
                         
                         <Options 
                             isModalVisible={isModalVisible}

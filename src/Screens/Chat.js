@@ -45,7 +45,7 @@ function Chat(props) {
     const metric = wp("5%")
 
     const getChat = async () => {
-        await fetch(`http://192.168.0.106:3000/api/chats/${props.chat}`, props.getEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setChat(data)
@@ -90,7 +90,7 @@ function Chat(props) {
             body: JSON.stringify({message})
         }
 
-        await fetch(`http://192.168.0.106:3000/api/chats/${props.chat}/messages`, httpEnvelopePost)
+        await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}/messages`, httpEnvelopePost)
         .then(res => res.json())
         .then(() => getChat())
         .catch(err => err)

@@ -25,7 +25,7 @@ function Login(props) {
         
         let httpEnvelopeGet = {}
 
-        await fetch("http://192.168.0.106:3000/api/user/login", httpEnvelopePost)
+        await fetch("http://192.168.0.111:3000/api/user/login", httpEnvelopePost)
         .then(res => JSON.parse(JSON.stringify(res)).headers.map["auth-token"])
         .then(data => {
             props.setToken(data)
@@ -41,7 +41,7 @@ function Login(props) {
         })
         .catch(err => console.log(err))
 
-        await fetch("http://192.168.0.106:3000/api/user/infos", httpEnvelopeGet)
+        await fetch("http://192.168.0.111:3000/api/user/infos", httpEnvelopeGet)
         .then(res => res.json())
         .then(data => props.setMyInfos(data))
         .catch(err => console.log(err))
@@ -170,7 +170,7 @@ function User(props) {
         }
         let httpEnvelopeGet = {}
 
-        await fetch("http://192.168.0.106:3000/api/user/register", httpEnvelopePost)
+        await fetch("http://192.168.0.111:3000/api/user/register", httpEnvelopePost)
         .then(res => res.json())
         .then(data => {
             props.setToken(data)
@@ -186,7 +186,7 @@ function User(props) {
         })
         .catch(err => err)
 
-        await fetch("http://192.168.0.106:3000/api/user/infos", httpEnvelopeGet)
+        await fetch("http://192.168.0.111:3000/api/user/infos", httpEnvelopeGet)
         .then(res => res.json())
         .then(data => props.setMyInfos(data))
         .catch(err => console.log(err))

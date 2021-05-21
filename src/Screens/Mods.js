@@ -12,7 +12,7 @@ function Mods(props) {
     const[screen, setScreen] = useState("Mods")
 
     const onTryToGetMods = async () => {
-        await fetch(`http://192.168.0.106:3000/api/forums/${props.forum}`, props.getEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -64,12 +64,12 @@ function Mods(props) {
             </View>
             <InteligentButton 
                 token={props.token}     
-                myInfos={props.myInfos}           
-                screen={screen}
-                setScreen={screen => setScreen(screen)}
+                myInfos={props.myInfos}  
                 forum={props.forum}
                 owner={owner} 
                 getEnvelope={props.getEnvelope}
+                screen={screen}
+                setScreen={screen => setScreen(screen)}
                 handleDecrementScreen={props.handleDecrementScreen}
             />
         </View>
