@@ -40,6 +40,9 @@ function Options(props) {
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
+                            onPress={() => {
+                                props.handleScreenList("Rules")
+                            }}
                         >
                             <Icons 
                                 name="Bios" 
@@ -61,7 +64,6 @@ function Options(props) {
                             style={styles.optionButtons}
                             onPress={() => {
                                 props.handleScreenList("Mods")
-                                props.handleForum(props.forum) 
                             }}
                         >
                             <Icons 
@@ -79,20 +81,28 @@ function Options(props) {
                                 Mods
                             </Text>
                         </Pressable>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Remove" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300"
-                                fill="none" 
-                                style={iconStyles.icon1}
-                            />
-                            <Text style={styles.headerText}>Denunciar</Text>
-                        </Pressable>
+                        {
+                            props.owner === props.myInfos.id || 
+                            props.mods.map(mod => mod) === props.myInfos.id ? 
+                            <Pressable 
+                                android_ripple={{color: lightTheme.ligthGrey}}
+                                style={styles.optionButtons}
+                                onPress={() => {
+                                    props.handleScreenList("Flags")
+                                }}
+                            >
+                                <Icons 
+                                    name="Remove" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300"
+                                    fill="none" 
+                                    style={iconStyles.icon1}
+                                />
+                                <Text style={styles.headerText}>Denuncias</Text>
+                            </Pressable> : 
+                            null
+                        }
                         {
                             props.owner === props.myInfos.id ? 
                             <Pressable 
@@ -162,7 +172,7 @@ function Forum(props) {
         return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            setForum(data)                
+            setForum(data)              
             setPosts(data.posts.map((posts, index) =>
                 <PostCard 
                     key={index}
@@ -172,6 +182,10 @@ function Forum(props) {
                     title={posts.title}
                     bodyText={posts.bodyText}
                     name={posts.author}
+                    owner={data.owner}
+                    mods={data.mods.length === 0 ? null : data.mods}
+                    isItPost={true}
+                    mode="Normal"
                     forum={props.forum}
                     forumName={data.groupName}
                     rating={posts.upvotes}
@@ -179,6 +193,7 @@ function Forum(props) {
                     handleForum={props.handleForum}
                     handlePostList={props.handlePostList}
                     handleScreenList={props.handleScreenList}
+                    handleFlagObj={props.handleFlagObj}
                 />
             ))
             onTrytoGetUserMyForum()
@@ -334,14 +349,15 @@ function Forum(props) {
                         </View>
 
                         <Options 
-                            isModalVisible={isModalVisible}
-                            setModalVisible={prop => setModalVisible(prop)}
-                            deleteEnvelope={props.deleteEnvelope}
-                            handleScreenList={props.handleScreenList}
-                            handleForum={props.handleForum}
                             myInfos={props.myInfos}
                             owner={forum.owner}
+                            mods={forum.mods}
                             forum={props.forum}
+                            handleForum={props.handleForum}
+                            handleScreenList={props.handleScreenList}
+                            deleteEnvelope={props.deleteEnvelope}
+                            isModalVisible={isModalVisible}
+                            setModalVisible={prop => setModalVisible(prop)}                    
                         />
             
                         <View style={{
@@ -358,7 +374,7 @@ function Forum(props) {
                         token={props.token}                
                         screen={screen}
                         setScreen={screen => setScreen(screen)}
-                        forum={props.forum} 
+                        forum={props.forum}
                         handlePostList={props.handlePostList}
                         handleScreenList={props.handleScreenList}
                         handleDecrementScreen={props.handleDecrementScreen}

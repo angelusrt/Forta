@@ -1,10 +1,9 @@
 import React, {useState} from 'react'
-import _reactNative, {View, ScrollView, Text, Switch, TouchableOpacity, Pressable} from "react-native"
+import _reactNative, {View, ScrollView, Text, Pressable} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
-import Icons from "./../components/Icons"
 import InteligentButton from "../components/InteligentButton.js"
-import {iconStyles, lightTheme, styles} from "./../Styles.js"
+import {lightTheme, styles} from "./../Styles.js"
 
 function Settings(props) {
     const[screen, setScreen] = useState("Settings")
@@ -180,4 +179,4 @@ function Settings(props) {
     );
 }
 
-export default Settings;
+export default Settings

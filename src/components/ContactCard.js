@@ -38,6 +38,10 @@ function Options(props) {
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
+                            onPress={() => {
+                                props.handleScreenList("Rules")
+                                props.handleForum(props.forum) 
+                            }}
                         >
                             <Icons 
                                 name="Bios" 
@@ -77,20 +81,29 @@ function Options(props) {
                                 Mods
                             </Text>
                         </Pressable>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Remove" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300"
-                                fill="none" 
-                                style={iconStyles.icon1}
-                            />
-                            <Text style={styles.headerText}>Denunciar</Text>
-                        </Pressable>
+                        {
+                            props.owner === props.myInfos.id || 
+                            props.mods.map(mod => mod) === props.myInfos.id ? 
+                            <Pressable 
+                                android_ripple={{color: lightTheme.ligthGrey}}
+                                style={styles.optionButtons}
+                                onPress={() => {
+                                    props.handleScreenList("Flags")
+                                    props.handleForum(props.forum) 
+                                }}
+                            >
+                                <Icons 
+                                    name="Remove" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300"
+                                    fill="none" 
+                                    style={iconStyles.icon1}
+                                />
+                                <Text style={styles.headerText}>Denuncias</Text>
+                            </Pressable> : 
+                            null
+                        }
                         {
                             props.owner === props.myInfos.id ? 
                             <Pressable 
@@ -527,20 +540,21 @@ function ContactCard(props) {
             {
                 props.mode === "Forum" ?
                 <Options
-                    isModalVisible={isModalVisible}
-                    setModalVisible={prop => setModalVisible(prop)}
-                    deleteEnvelope={props.deleteEnvelope}
-                    handleScreenList={props.handleScreenList}
-                    handleForum={props.handleForum}
-                    forum={props.forum}
                     myInfos={props.myInfos}
                     owner={props.owner}
+                    mods={props.mods}
+                    forum={props.forum}
+                    handleForum={props.handleForum}
+                    handleScreenList={props.handleScreenList}
+                    deleteEnvelope={props.deleteEnvelope}
+                    isModalVisible={isModalVisible}
+                    setModalVisible={prop => setModalVisible(prop)}
                 /> :
                 <ChatOptions
+                    chat={props.chat}
                     isModalVisible={isModalVisible}
                     setModalVisible={prop => setModalVisible(prop)}
                     deleteEnvelope={props.deleteEnvelope}
-                    chat={props.chat}
                 /> 
             }
         </View>

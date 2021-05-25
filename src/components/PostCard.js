@@ -20,7 +20,7 @@ function Options(props) {
         .then(data => console.log(data))
         .catch(err => console.log(err))
     }
-
+    console.log("24 " + props.mods)
     return (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
             <Modal 
@@ -42,37 +42,90 @@ function Options(props) {
                         zIndex: 3,
                         ...styles.options
                     }}>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Remove" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300"
-                                fill="none" 
-                                style={iconStyles.icon1}
-                            />
-                            <Text style={styles.headerText}>Denunciar</Text>
-                        </Pressable>
                         {
-                            props.name === props.myInfos.id ? 
+                            props.mode2 !== "FlagsFlag" ? 
                             <Pressable 
                                 android_ripple={{color: lightTheme.ligthGrey}}
-                                onPress={() => props.mode === "Posts" ? deletePost() : deleteComents()}
                                 style={styles.optionButtons}
+                                onPress={() => {
+                                    props.handleScreenList("FlagsFlag")
+                                    props.handleFlagObj(props.flagObj)
+                                    props.handleForum(props.forum) 
+                                }}
                             >
                                 <Icons 
                                     name="Remove" 
                                     width={wp("10%")} 
                                     height={wp("10%")} 
-                                    viewBox="0 0 300 300" 
+                                    viewBox="0 0 300 300"
                                     fill="none" 
                                     style={iconStyles.icon1}
                                 />
-                                <Text style={styles.headerText}>Excluir</Text>
-                            </Pressable> : null
+                                <Text style={styles.headerText}>Denuncias</Text>
+                            </Pressable> :
+                            props.name === props.myInfos.id ?
+                            <Pressable 
+                                android_ripple={{color: lightTheme.ligthGrey}}
+                                style={styles.optionButtons}
+                                onPress={() => {
+                                    props.handleScreenList("FlagsFlag")
+                                    props.handleFlagObj(props.flagObj)
+                                    props.handleForum(props.forum) 
+                                }}
+                            >
+                                <Icons 
+                                    name="Remove" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300"
+                                    fill="none" 
+                                    style={iconStyles.icon1}
+                                />
+                                <Text style={styles.headerText}>Editar</Text>
+                            </Pressable> : 
+                            null
+                        }
+                        {
+                            props.mods !== null?
+                            (
+                                props.name === props.myInfos.id || 
+                                props.owner === props.myInfos.id || 
+                                props.mods.map(mod => mod) === props.myInfos.id ? 
+                                <Pressable 
+                                    android_ripple={{color: lightTheme.ligthGrey}}
+                                    onPress={() => props.mode === "Posts" ? deletePost() : deleteComents()}
+                                    style={styles.optionButtons}
+                                >
+                                    <Icons 
+                                        name="Remove" 
+                                        width={wp("10%")} 
+                                        height={wp("10%")} 
+                                        viewBox="0 0 300 300" 
+                                        fill="none" 
+                                        style={iconStyles.icon1}
+                                    />
+                                    <Text style={styles.headerText}>Excluir</Text>
+                                </Pressable> : null
+                            ) : 
+                            (
+                                props.name === props.myInfos.id || 
+                                props.owner === props.myInfos.id ? 
+                                <Pressable 
+                                    android_ripple={{color: lightTheme.ligthGrey}}
+                                    onPress={() => props.mode === "Posts" ? deletePost() : deleteComents()}
+                                    style={styles.optionButtons}
+                                >
+                                    <Icons 
+                                        name="Remove" 
+                                        width={wp("10%")} 
+                                        height={wp("10%")} 
+                                        viewBox="0 0 300 300" 
+                                        fill="none" 
+                                        style={iconStyles.icon1}
+                                    />
+                                    <Text style={styles.headerText}>Excluir</Text>
+                                </Pressable> : null
+                            )
                         }
                     </View>
                 </View>
@@ -86,20 +139,32 @@ function PostCard(props) {
     const[comment, setComment] = useState(false)
     const[share, setShare] = useState(false)
     const[isModalVisible, setModalVisible] = useState(false)
-
+    console.log("1 " + props.mods)
     return (
         <View>
             <Pressable 
                 onLongPress={() => setModalVisible(true)}
                 android_ripple={{color: lightTheme.ligthGrey}}
-                onPress={() => { if (props.title !== null) {
-                    props.handleScreenList("Post")
-                    props.handlePostList(props.post)
-                    props.handleForum(props.forum)
-                }}}
+                onPress={() => { 
+                    if (props.title !== null && props.mode === "Normal") {
+                        props.handleScreenList("Post")
+                        props.handlePostList(props.post)
+                        props.handleForum(props.forum)
+                    } else if(props.mode === "Flags") {
+                        props.handleScreenList("FlagsFlag")
+                        props.handleFlagObj({
+                            isItPost: props.isItPost,
+                            post: props.post,
+                            comentaries: props.isItPost ? "" : props.coments,
+                            owner: props.owner,
+                            mods: props.mods
+                        })
+                    }
+                }}
                 style={{borderRadius: 20, ...styles.postCard}}
             >
-                {props.title !== null ?
+                {   
+                    props.title !== null ?
                     <Text style={{
                         marginBottom: wp("1.25%"), 
                         ...styles.headerText
@@ -209,11 +274,24 @@ function PostCard(props) {
                 setModalVisible={prop => setModalVisible(prop)}
                 deleteEnvelope={props.deleteEnvelope}
                 mode={props.title === null ? "Coments" : "Posts"}
+                mode2={props.mode}
                 myInfos={props.myInfos}
                 name={props.name}
-                forum={props.forum}
-                post={props.post}
+                owner={props.owner}
+                mods={props.mods === undefined ? null : props.mods}
                 coments={props.title === null ? props.coments : null}
+                post={props.post}
+                forum={props.forum}
+                handleForum={props.handleForum}
+                handleScreenList={props.handleScreenList}
+                flagObj={{
+                    isItPost: props.isItPost,
+                    post: props.post,
+                    comentaries: props.isItPost ? "" : props.coments,
+                    owner: props.owner,
+                    mods: props.mods === undefined ? null : props.mods
+                }}
+                handleFlagObj={props.handleFlagObj}
             />
         </View>
     )

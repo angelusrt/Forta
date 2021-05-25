@@ -10,11 +10,15 @@ import Post from "./Screens/Post"
 import Forum from "./Screens/Forum"
 import Chat from "./Screens/Chat"
 import Mods from "./Screens/Mods"
+import Rules from './Screens/Rules'
+import Flags from "./Screens/Flags"
+import FlagsFlag from "./Screens/FlagsFlag"
 
 function Routes() {
     const[route, setRoute] = useState("Home")
     const[screenList, setScreenList] = useState(["Auth"])
     const[postList, setPostList] = useState([])
+    const[flagObj, setFlagObj] = useState({})
     const[forum, setForum] = useState("")
     const[chat, setChat] = useState("")
     const[token, setToken] = useState("")
@@ -101,6 +105,7 @@ function Routes() {
                     handleForum={forum => setForum(forum)}
                     handleScreenList={props => setScreenList(result => [...result, props])}
                     handleDecrementScreen={() => handleDecrementScreen()}
+                    handleFlagObj={flagObj => setFlagObj(flagObj)}
                 />
             break
         case "Forum": 
@@ -116,6 +121,7 @@ function Routes() {
                     handlePostList={props => setPostList(result => [...result, props])}
                     handleScreenList={props => setScreenList(result => [...result, props])}
                     handleDecrementScreen={() => handleDecrementScreen()} 
+                    handleFlagObj={flagObj => setFlagObj(flagObj)}
                 />
             break
         case "Chat":
@@ -133,9 +139,44 @@ function Routes() {
                 <Mods
                     token={token}
                     myInfos={myInfos}
+                    forum={forum}
                     getEnvelope={getEnvelope}
                     patchEnvelope={patchEnvelope}
+                    handleDecrementScreen={() => handleDecrementScreen()} 
+                />
+            break
+        case "Rules":
+            scrn = 
+                <Rules
+                    token={token}
+                    myInfos={myInfos}
                     forum={forum}
+                    getEnvelope={getEnvelope}
+                    handleDecrementScreen={() => handleDecrementScreen()} 
+                />
+            break
+        case "Flags":
+            scrn = 
+                <Flags
+                    token={token}
+                    myInfos={myInfos}
+                    forum={forum}
+                    handleFlagObj={flagObj => setFlagObj(flagObj)}
+                    getEnvelope={getEnvelope}
+                    deleteEnvelope={deleteEnvelope}
+                    handleScreenList={props => setScreenList(result => [...result, props])}
+                    handleDecrementScreen={() => handleDecrementScreen()} 
+                />
+            break
+        case "FlagsFlag":
+            scrn = 
+                <FlagsFlag
+                    token={token}
+                    myInfos={myInfos}
+                    forum={forum}
+                    flagObj={flagObj}
+                    getEnvelope={getEnvelope}
+                    deleteEnvelope={deleteEnvelope}
                     handleDecrementScreen={() => handleDecrementScreen()} 
                 />
             break
@@ -154,6 +195,7 @@ function Routes() {
                     handleRoute={route => setRoute(route)} 
                     handlePostList={props => setPostList(result => [...result, props])} 
                     handleScreenList={props => setScreenList(result => [...result, props])}
+                    handleFlagObj={flagObj => setFlagObj(flagObj)}
                 /> 
             break
     }

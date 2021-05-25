@@ -95,6 +95,12 @@ export const styles = StyleSheet.create({
     fontFamily: "Roboto_700Bold",
     fontSize: wp("4.5%")
   },
+  rulesText: {
+    fontFamily: "Roboto_400Regular",
+    fontSize: wp("4.5%"),
+    lineHeight: wp("10%"),
+    color: lightTheme.notSoDarkGrey
+  },
 
   //Inputs
   authInput: {
@@ -126,13 +132,25 @@ export const styles = StyleSheet.create({
   chatInput: {
     fontFamily: "Roboto_500Medium",
     paddingHorizontal: wp("2.5%"),
-    width: wp("65%"),
+    width: wp("66.75%"),
     marginRight: wp("1.25%"),
     borderRadius: 10,
     borderWidth: wp("0.5%"),
     borderColor: lightTheme.kindOfLightGrey,
     color: lightTheme.darkGrey, 
     backgroundColor: lightTheme.ligthGrey
+  },
+  rulesInput: {
+    paddingVertical: wp("2%"),
+    paddingHorizontal: wp("4%"),
+    marginTop: wp("1%"),
+    marginBottom: wp("2.5%"),
+    borderLeftWidth: wp("0.5%"),
+    fontFamily: "Roboto_400Regular",
+    fontSize: wp("4.5%"),
+    lineHeight: wp("10%"),
+    borderColor: lightTheme.kindOfLightGrey,
+    color: lightTheme.darkGrey
   },
 
   //Cards and containers
@@ -282,7 +300,6 @@ export const iconStyles = {
     stroke: lightTheme.green,
     strokeLinejoin: "round",
     strokeWidth:"15.9px",
-    marginRight: wp("1.25%"),
     transform: [{rotate: "180deg"}]
   },
   icon5: {
@@ -322,4 +339,11 @@ export const iconStyles = {
     strokeMiterlimit:"1.5",
     opacity: 0.75
   },
+  icon11: {
+    stroke: lightTheme.darkGrey,
+    strokeWidth:"33.1px",
+    strokeLinejoin: "round",
+    strokeMiterlimit:"1.5",
+    marginLeft: wp("1.25%")
+  }
 }

@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import {View, Text, ScrollView, TouchableOpacity, Pressable} from "react-native"
+import {View, Text, ScrollView} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import ContactCard from "./../components/ContactCard.js"
 import InteligentButton from "../components/InteligentButton.js"
-import {iconStyles, lightTheme, styles} from "./../Styles"
+import {lightTheme, styles} from "./../Styles"
 
 function Mods(props) {
     const[mods, setMods] = useState(null)

@@ -503,48 +503,71 @@ function SettingsOptionsCard(props) {
                     {headerText}
                 </Text>
             </View>
-            <View style={{bottom: wp("4%"),...styles.addCard}}>
-                {
-                    props.options !== "Delete" ? 
-                    <React.Fragment>
-                        <Text style={{
-                            marginTop: wp("2.5%"),
-                            ...styles.headerText4
-                        }}>
-                            {bodyText}
-                        </Text>
-                        <TextInput 
-                            onChangeText={ text => setText(text)}
-                            style={styles.addInput}
-                            secureTextEntry={props.options === "Password" ? true : false}
-                        />
-                    </React.Fragment> :
-                    null
-                }
+            {
+                props.options !== "Delete" ? 
+                <View style={{bottom: wp("4%"),...styles.addCard}}>
+                    <Text style={{
+                        marginTop: wp("2.5%"),
+                        ...styles.headerText4
+                    }}>
+                        {bodyText}
+                    </Text>
 
-                <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => verify()}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={iconStyles.icon4}
-                        />
-                    </TouchableOpacity>
+                    <TextInput 
+                        onChangeText={ text => setText(text)}
+                        style={styles.addInput}
+                        secureTextEntry={props.options === "Password" ? true : false}
+                    />
+
+                    <View style={{flexDirection: 'row'}}>
+                        <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => verify()}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon4}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View> :
+                <View style={{bottom: wp("4%"),...styles.iButton}}>
+                    <View style={{flexDirection: 'row'}}>
+                        <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => verify()}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon4}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            }
+            
         </React.Fragment>
     )
 }
@@ -643,6 +666,205 @@ function UserSearch(props) {
                     </TouchableOpacity>
                 </View>
             </View>
+        </React.Fragment>
+    )
+}
+
+function RulesUpdate(props) {
+    const[rules, setRules] = useState(props.rules)
+    
+    const onTryToPatch = async () => {
+        const patchEnvelope = {
+            method: "PATCH",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'auth-token': props.token
+            },
+            body: JSON.stringify({rules})
+        }
+
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/rules`, patchEnvelope)
+        .then(res => res.json())
+        .then(data => data === "Updated" ? props.setScreen("Rules") : null)
+        .catch(err => err)
+    }   
+
+    const verify = () => {
+        if (rules.length > 0){
+            onTryToPatch()
+        } else{
+            setRules("")
+        }
+    }
+
+    String.prototype.hexEncode = function(){
+        var hex, i;
+    
+        var result = "";
+        for (i=0; i<this.length; i++) {
+            hex = this.charCodeAt(i).toString(16);
+            result += ("000"+hex).slice(-4);
+        }
+    
+        return result
+    }
+    
+    function getIndicesOf(searchStr, str, caseSensitive) {
+        var searchStrLen = searchStr.length;
+        if (searchStrLen == 0) {
+            return [];
+        }
+        var startIndex = 0, index, indices = [];
+        if (!caseSensitive) {
+            str = str.toLowerCase();
+            searchStr = searchStr.toLowerCase();
+        }
+        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+            indices.push(index);
+            startIndex = index + searchStrLen;
+        }
+        return indices;
+    }
+
+    console.log(rules == null ? null : getIndicesOf("000a", rules.hexEncode()) != null ? getIndicesOf("000a", rules.hexEncode()).length : 1)
+    return (
+        <React.Fragment>
+            <View style={{flex: 1}}>
+                <Text style={{
+                    marginLeft: wp("7.5%"), 
+                    marginTop: wp("14%"),
+                    ...styles.headerText3
+                }}>
+                    Edite as regras 
+                </Text>
+            </View>
+
+            <View style={{bottom: wp("4%"),...styles.addCard}}>
+                <Text style={{
+                    marginTop: wp("2.5%"),
+                    ...styles.headerText4
+                }}>
+                    Regras
+                </Text>
+                
+                <TextInput 
+                    defaultValue={rules}
+                    onChangeText={ text => setRules(text)}
+                    multiline={true}
+                    maxLength={1024}
+                    numberOfLines={
+                        rules == null ? 
+                        null : 
+                        getIndicesOf("000a", rules.hexEncode()).length != 0 ? 
+                        getIndicesOf("000a", rules.hexEncode()).length + 1 : 
+                        1
+                    }
+                    style={styles.rulesInput}
+                />
+                
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity onPress={() => props.setScreen("Rules")}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => verify()}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={iconStyles.icon4}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </React.Fragment>
+    )
+}
+
+function FlagsFlagAddCard(props) {
+    const[text, setText] = useState("")
+    
+    const onTryToFlag = async () => {
+        const postEnvelope = {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'auth-token': props.token
+            },
+            body: JSON.stringify({
+                isItPost: props.flagObj.isItPost,
+                post: props.flagObj.post,
+                comentaries: props.flagObj.isItPost ? "" : props.flagObj.comentaries,
+                message: text
+            })
+        }
+        
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`,postEnvelope)
+        .then(res => res.json())
+        .then(data => props.setScreen("FlagsFlag"))
+        .catch(err => err)
+    }   
+
+    const verify = () => text.length > 10 ? onTryToFlag() : setText("")
+    
+    return (
+        <React.Fragment>
+            <View style={{flex: 1}}>
+                <Text style={{
+                    marginLeft: wp("7.5%"), 
+                    marginTop: wp("14%"),
+                    ...styles.headerText3
+                }}>
+                    Adicionar denuncia
+                </Text>
+            </View>
+
+            <View style={{bottom: wp("4%"),...styles.addCard}}>
+                <Text style={{
+                    marginTop: wp("2.5%"),
+                    ...styles.headerText4
+                }}>
+                    Denuncia
+                </Text>
+
+                <TextInput 
+                    onChangeText={ text => setText(text)}
+                    style={styles.addInput}
+                />
+
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity onPress={() => props.setScreen("FlagsFlag")}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => verify()}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={iconStyles.icon4}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View> 
         </React.Fragment>
     )
 }
@@ -812,10 +1034,7 @@ function InteligentButton(props) {
                             height={wp("10%")} 
                             viewBox="0 0 300 300" 
                             fill="none" 
-                            style={
-                                props.myInfos.id === props.owner ?
-                                iconStyles.icon1 : iconStyles.icon9
-                            }
+                            style={iconStyles.icon9}
                         />
                     </TouchableOpacity>
                     {   
@@ -827,7 +1046,7 @@ function InteligentButton(props) {
                                 height={wp("10%")} 
                                 viewBox="0 0 625 625" 
                                 fill="none" 
-                                style={iconStyles.icon2}
+                                style={iconStyles.icon11}
                             />
                         </TouchableOpacity> :
                         null
@@ -840,6 +1059,45 @@ function InteligentButton(props) {
                     token={props.token}
                     forum={props.forum}
                     description="mod"
+                    getEnvelope={props.getEnvelope}
+                    setScreen={screen => props.setScreen(screen)}
+                />
+            break 
+        case "Rules":
+            buttonIcons =
+                <React.Fragment>
+                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={iconStyles.icon9}
+                        />
+                    </TouchableOpacity>
+                    {   
+                        props.myInfos.id === props.owner ?
+                        <TouchableOpacity onPress={() => props.setScreen("RulesUpdate")}>
+                            <Icons 
+                                name="Add" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={iconStyles.icon11}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    }
+                </React.Fragment>
+            break
+        case "RulesUpdate":
+            buttonIcons = 
+                <RulesUpdate 
+                    token={props.token}
+                    rules={props.rules}
+                    forum={props.forum}
                     getEnvelope={props.getEnvelope}
                     setScreen={screen => props.setScreen(screen)}
                 />
@@ -943,7 +1201,43 @@ function InteligentButton(props) {
                     deleteEnvelope={props.deleteEnvelope}
                 />
             break
+        case "FlagsFlag":  
+            buttonIcons =
+                <React.Fragment>
+                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={iconStyles.icon1}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => props.setScreen("FlagsFlagAdd")}>
+                        <Icons 
+                            name="Add" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 625 625" 
+                            fill="none" 
+                            style={iconStyles.icon2}
+                        />
+                    </TouchableOpacity>
+                </React.Fragment>
+            break
+        case "FlagsFlagAdd": 
+            buttonIcons =
+                <FlagsFlagAddCard
+                    token={props.token}
+                    forum={props.forum}
+                    screen={props.screen}
+                    setScreen={props.setScreen}
+                    flagObj={props.flagObj}
+                />
+            break
         case "Settings":
+        case "Flags":
         default:
             buttonIcons =
                 <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
@@ -965,7 +1259,8 @@ function InteligentButton(props) {
                 props.screen === "PostAdd" || props.screen === "ForumAdd" || 
                 props.screen === "ComentaryAdd" || props.screen === "ForumSearch" ||
                 props.screen === "UserSearch" || props.screen === "ModsSearch" ||
-                props.screen === "SettingsOptions" ?
+                props.screen === "SettingsOptions" || props.screen === "RulesUpdate" ||
+                props.screen === "FlagsFlagAdd" ?
                 <Animated.View style={{
                     position: "absolute",
                     height: hp("100%"),

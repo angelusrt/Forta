@@ -185,18 +185,24 @@ function Home(props){
             return forumInfo.posts.map( (post, idP) => 
                 <PostCard 
                     key={idF + "_" + idP}
+                    token={props.token}
                     myInfos={props.myInfos}
                     deleteEnvelope={props.deleteEnvelope}
                     title={post.title}
                     bodyText={post.bodyText}
                     name={post.author}
+                    isItPost={true}
+                    mode="Normal"
                     forum={forumInfo._id}
                     forumName={forumInfo.groupName}
                     rating={post.upvotes}
                     post={post._id}
+                    owner={forumInfo.owner}
+                    mods={forumInfo.mods.length === 0 ? null : forumInfo.mods}
                     handlePostList={props.handlePostList}
                     handleForum={props.handleForum}
                     handleScreenList={props.handleScreenList}
+                    handleFlagObj={props.handleFlagObj}
                 />
             )
         })).then(data => {
@@ -246,6 +252,7 @@ function Forums(props) {
                     title={forumInfo.groupName}
                     subtitle={`${forumInfo.followers.length} seguidores`}
                     owner={forumInfo.owner}
+                    mods={forumInfo.mods}
                     mode="Forum"
                     favorite={false}
                     forum={forumInfo._id}
@@ -439,6 +446,7 @@ function Tab(props) {
                             handlePostList={props.handlePostList} 
                             handleScreenList={props.handleScreenList}
                             handleForum={props.handleForum}
+                            handleFlagObj={props.handleFlagObj}
                         />
                     }/>
                     <tab.Screen name="Forums" children={() => 

@@ -40,6 +40,9 @@ function Options(props) {
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
+                            onPress={() => {
+                                props.handleScreenList("FlagsFlag")
+                            }}
                         >
                             <Icons 
                                 name="Remove" 
@@ -49,7 +52,7 @@ function Options(props) {
                                 fill="none" 
                                 style={iconStyles.icon1}
                             />
-                            <Text style={styles.headerText}>Denunciar</Text>
+                            <Text style={styles.headerText}>Denuncias</Text>
                         </Pressable>
                         {
                             props.name === props.myInfos.id ? 
@@ -120,8 +123,8 @@ function Post(props) {
         return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, props.getEnvelope)
         .then(res => res.json())
         .then(data =>{            
-            setPost(data)
-            setComentaries(data.comentaries !== null ? data.comentaries.map((coments, index) => 
+            setPost(data.post)
+            setComentaries(data.comentaries !== null ? data.post.comentaries.map((coments, index) => 
                 <PostCard 
                     key={index}
                     token={props.token}
@@ -130,13 +133,18 @@ function Post(props) {
                     title={null}
                     bodyText={coments.bodyText}
                     name={coments.author}
+                    owner={data.owner}
+                    mods={data.mods.length === 0 ? null : data.mods}
                     rating={coments.upvotes}
                     post={props.post}
                     coments={coments._id}
+                    isItPost={false}
+                    mode="Normal"
                     forum={coments.forum}
                     handleForum={props.handleForum}
                     handlePostList={props.handlePostList}
                     handleScreenList={props.handleScreenList}
+                    handleFlagObj={props.handleFlagObj}
                 />
             ): null)
             setResolved(true)
@@ -240,6 +248,7 @@ function Post(props) {
                             forum={props.forum}
                             post={props.post}
                             name={post.author}
+                            handleScreenList={props.handleScreenList}
                         />
 
                         <View style={{
