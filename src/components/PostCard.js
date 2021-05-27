@@ -20,7 +20,23 @@ function Options(props) {
         .then(data => console.log(data))
         .catch(err => console.log(err))
     }
-    console.log("24 " + props.mods)
+
+    const deleteFlag = async () => {
+        props.isItPost ? 
+        (
+            await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.isItPost}/${props.post}/0/0`, props.deleteEnvelope)
+            .then(res => res.json())
+            .then(data => props.handleDecrementScreen())
+            .catch(err => console.log(err))
+        ) : 
+        (
+            await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.isItPost}/${props.post}/${props.comentaries}/0`, props.deleteEnvelope)
+            .then(res => res.json())
+            .then(data => props.handleDecrementScreen())
+            .catch(err => console.log(err))
+        )
+    }
+
     return (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
             <Modal 
@@ -49,7 +65,13 @@ function Options(props) {
                                 style={styles.optionButtons}
                                 onPress={() => {
                                     props.handleScreenList("FlagsFlag")
-                                    props.handleFlagObj(props.flagObj)
+                                    props.handleFlagObj({
+                                        isItPost: props.isItPost,
+                                        post: props.post,
+                                        comentaries: props.isItPost ? " " : props.comentaries,
+                                        owner: props.owner,
+                                        mods: props.mods
+                                    })
                                     props.handleForum(props.forum) 
                                 }}
                             >
@@ -68,9 +90,8 @@ function Options(props) {
                                 android_ripple={{color: lightTheme.ligthGrey}}
                                 style={styles.optionButtons}
                                 onPress={() => {
-                                    props.handleScreenList("FlagsFlag")
-                                    props.handleFlagObj(props.flagObj)
-                                    props.handleForum(props.forum) 
+                                    props.setScreen("FlagsFlagUpdate")
+                                    props.setMessage(props.bodyText)
                                 }}
                             >
                                 <Icons 
@@ -86,14 +107,21 @@ function Options(props) {
                             null
                         }
                         {
-                            props.mods !== null?
+                            props.mods != null?
                             (
                                 props.name === props.myInfos.id || 
                                 props.owner === props.myInfos.id || 
                                 props.mods.map(mod => mod) === props.myInfos.id ? 
                                 <Pressable 
                                     android_ripple={{color: lightTheme.ligthGrey}}
-                                    onPress={() => props.mode === "Posts" ? deletePost() : deleteComents()}
+                                    onPress={() => (
+                                        props.mode2 !== "FlagsFlag" ? 
+                                        (
+                                            props.mode === "Posts" ? deletePost() : 
+                                            deleteComents()
+                                        ) :
+                                        deleteFlag()
+                                    )}
                                     style={styles.optionButtons}
                                 >
                                     <Icons 
@@ -112,7 +140,14 @@ function Options(props) {
                                 props.owner === props.myInfos.id ? 
                                 <Pressable 
                                     android_ripple={{color: lightTheme.ligthGrey}}
-                                    onPress={() => props.mode === "Posts" ? deletePost() : deleteComents()}
+                                    onPress={() => (
+                                        props.mode2 !== "FlagsFlag" ? 
+                                        (
+                                            props.mode === "Posts" ? deletePost() : 
+                                            deleteComents()
+                                        ) :
+                                        deleteFlag()
+                                    )}
                                     style={styles.optionButtons}
                                 >
                                     <Icons 
@@ -139,7 +174,7 @@ function PostCard(props) {
     const[comment, setComment] = useState(false)
     const[share, setShare] = useState(false)
     const[isModalVisible, setModalVisible] = useState(false)
-    console.log("1 " + props.mods)
+
     return (
         <View>
             <Pressable 
@@ -151,7 +186,6 @@ function PostCard(props) {
                         props.handlePostList(props.post)
                         props.handleForum(props.forum)
                     } else if(props.mode === "Flags") {
-                        props.handleScreenList("FlagsFlag")
                         props.handleFlagObj({
                             isItPost: props.isItPost,
                             post: props.post,
@@ -159,7 +193,8 @@ function PostCard(props) {
                             owner: props.owner,
                             mods: props.mods
                         })
-                    }
+                        props.handleScreenList("FlagsFlag")
+                    } 
                 }}
                 style={{borderRadius: 20, ...styles.postCard}}
             >
@@ -270,6 +305,8 @@ function PostCard(props) {
                 </View> 
             </Pressable>
             <Options 
+                token={props.token != undefined ? props.token : null}
+                bodyText={props.bodyText}
                 isModalVisible={isModalVisible}
                 setModalVisible={prop => setModalVisible(prop)}
                 deleteEnvelope={props.deleteEnvelope}
@@ -277,20 +314,19 @@ function PostCard(props) {
                 mode2={props.mode}
                 myInfos={props.myInfos}
                 name={props.name}
-                owner={props.owner}
+                owner={props.owner === undefined ? null : props.owner}
                 mods={props.mods === undefined ? null : props.mods}
-                coments={props.title === null ? props.coments : null}
+                coments={props.title !== null ? props.coments : null}
                 post={props.post}
                 forum={props.forum}
                 handleForum={props.handleForum}
                 handleScreenList={props.handleScreenList}
-                flagObj={{
-                    isItPost: props.isItPost,
-                    post: props.post,
-                    comentaries: props.isItPost ? "" : props.coments,
-                    owner: props.owner,
-                    mods: props.mods === undefined ? null : props.mods
-                }}
+                setScreen={props.setScreen == undefined ? null : props.setScreen}
+                setMessage={props.setMessage == undefined ? null : props.setMessage}
+                handleDecrementScreen={props.handleDecrementScreen === undefined ? null : props.handleDecrementScreen}
+                isItPost={props.isItPost}
+                post={props.post}
+                comentaries={props.isItPost ? "" : props.coments}
                 handleFlagObj={props.handleFlagObj}
             />
         </View>

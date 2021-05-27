@@ -208,7 +208,7 @@ function PostAddCard(props) {
     const[bodyText, setBodyText] = useState("")
 
     const onTryToPost = async () => {
-        const httpEnvelopePost = {
+        const postEnvelope = {
             method: "POST",
             headers: {
                 Accept: 'application/json',
@@ -218,12 +218,9 @@ function PostAddCard(props) {
             body: JSON.stringify({title,bodyText})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts`, httpEnvelopePost)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts`, postEnvelope)
         .then(res => res.json())
-        .then(data => {
-            props.handleScreenList("Post")
-            props.handlePostList(data)
-        })
+        .then(data => props.setScreen("Forum"))
         .catch(err => err)
     }   
 
@@ -298,7 +295,7 @@ function ComentaryAddCard(props) {
     const[bodyText, setBodyText] = useState("")
 
     const onTryToPost = async () => {
-        const httpEnvelopePost = {
+        const postEnvelope = {
             method: "POST",
             headers: {
                 Accept: 'application/json',
@@ -308,12 +305,9 @@ function ComentaryAddCard(props) {
             body: JSON.stringify({bodyText})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, httpEnvelopePost)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, postEnvelope)
         .then(res => res.json())
-        .then(data => {
-            props.handleScreenList("Post")
-            props.handlePostList(data)
-        })
+        .then(data => props.setScreen("Post"))
         .catch(err => err)
     }   
 
@@ -727,7 +721,6 @@ function RulesUpdate(props) {
         return indices;
     }
 
-    console.log(rules == null ? null : getIndicesOf("000a", rules.hexEncode()) != null ? getIndicesOf("000a", rules.hexEncode()).length : 1)
     return (
         <React.Fragment>
             <View style={{flex: 1}}>
@@ -840,6 +833,124 @@ function FlagsFlagAddCard(props) {
                 <TextInput 
                     onChangeText={ text => setText(text)}
                     style={styles.addInput}
+                />
+
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity onPress={() => props.setScreen("FlagsFlag")}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => verify()}>    
+                        <Icons 
+                            name="Arrow" 
+                            width={wp("10%")} 
+                            height={wp("10%")} 
+                            viewBox="0 0 300 300" 
+                            fill="none" 
+                            style={iconStyles.icon4}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View> 
+        </React.Fragment>
+    )
+}
+
+function FlagsFlagUpdateCard(props) {
+    const[text, setText] = useState(props.message)
+    
+    const onTryToFlag = async () => {
+        const patchEnvelope = {
+            method: "PATCH",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'auth-token': props.token
+            },
+            body: JSON.stringify({
+                isItPost: props.flagObj.isItPost,
+                post: props.flagObj.post,
+                comentaries: props.flagObj.isItPost ? "" : props.flagObj.comentaries,
+                message: text
+            })
+        }
+        
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`,patchEnvelope)
+        .then(res => res.json())
+        .then(data => props.setScreen("FlagsFlag"))
+        .catch(err => err)
+    }   
+
+    String.prototype.hexEncode = function(){
+        var hex, i;
+    
+        var result = "";
+        for (i=0; i<this.length; i++) {
+            hex = this.charCodeAt(i).toString(16);
+            result += ("000"+hex).slice(-4);
+        }
+    
+        return result
+    }
+    
+    function getIndicesOf(searchStr, str, caseSensitive) {
+        var searchStrLen = searchStr.length;
+        if (searchStrLen == 0) {
+            return [];
+        }
+        var startIndex = 0, index, indices = [];
+        if (!caseSensitive) {
+            str = str.toLowerCase();
+            searchStr = searchStr.toLowerCase();
+        }
+        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+            indices.push(index);
+            startIndex = index + searchStrLen;
+        }
+        return indices;
+    }
+
+    const verify = () => text.length > 10 ? onTryToFlag() : setText("")
+    
+    return (
+        <React.Fragment>
+            <View style={{flex: 1}}>
+                <Text style={{
+                    marginLeft: wp("7.5%"), 
+                    marginTop: wp("14%"),
+                    ...styles.headerText3
+                }}>
+                    Adicionar denuncia
+                </Text>
+            </View>
+
+            <View style={{bottom: wp("4%"),...styles.addCard}}>
+                <Text style={{
+                    marginTop: wp("2.5%"),
+                    ...styles.headerText4
+                }}>
+                    Denuncia
+                </Text>
+
+                <TextInput 
+                    defaultValue={text}
+                    onChangeText={ text => setText(text)}
+                    multiline={true}
+                    maxLength={1024}
+                    numberOfLines={
+                        text == null ? 
+                        null : 
+                        getIndicesOf("000a", text.hexEncode()).length != 0 ? 
+                        getIndicesOf("000a", text.hexEncode()).length + 1 : 
+                        1
+                    }
+                    style={styles.rulesInput}
                 />
 
                 <View style={{flexDirection: 'row'}}>
@@ -1107,9 +1218,7 @@ function InteligentButton(props) {
                 <PostAddCard 
                     token={props.token}
                     forum={props.forum} 
-                    setScreen={screen => props.setScreen(screen)}   
-                    handleScreenList={ screen => props.handleScreenList(screen)}
-                    handlePostList={ post => props.handlePostList(post)} 
+                    setScreen={screen => props.setScreen(screen)}
                 />
             break
         case "Post":    
@@ -1144,8 +1253,6 @@ function InteligentButton(props) {
                     forum={props.forum}
                     post={props.post} 
                     setScreen={screen => props.setScreen(screen)}   
-                    handleScreenList={screen => props.handleScreenList(screen)}
-                    handlePostList={post => props.handlePostList(post)} 
                 />
             break
         case "UserSearch":
@@ -1236,6 +1343,17 @@ function InteligentButton(props) {
                     flagObj={props.flagObj}
                 />
             break
+        case "FlagsFlagUpdate": 
+            buttonIcons =
+                <FlagsFlagUpdateCard
+                    token={props.token}
+                    forum={props.forum}
+                    screen={props.screen}
+                    setScreen={props.setScreen}
+                    flagObj={props.flagObj}
+                    message={props.message}
+                />
+            break
         case "Settings":
         case "Flags":
         default:
@@ -1260,7 +1378,7 @@ function InteligentButton(props) {
                 props.screen === "ComentaryAdd" || props.screen === "ForumSearch" ||
                 props.screen === "UserSearch" || props.screen === "ModsSearch" ||
                 props.screen === "SettingsOptions" || props.screen === "RulesUpdate" ||
-                props.screen === "FlagsFlagAdd" ?
+                props.screen === "FlagsFlagAdd" || props.screen === "FlagsFlagUpdate" ?
                 <Animated.View style={{
                     position: "absolute",
                     height: hp("100%"),

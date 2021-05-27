@@ -7,16 +7,13 @@ import PostCard from "../components/PostCard";
 import {lightTheme, styles} from "./../Styles"
 
 function Flags(props) {
-    const[owner, setOwner] = useState("")
-    const[mods, setMods] = useState([""])
     const[cards, setCards] = useState(null)
 
     const onTryToGetPostsAndComentaries = async (isItPost, post, comentaries = "", index) => {
         if(isItPost){
             await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${post}`, props.getEnvelope)
             .then(res => res.json())
-            .then(data => {
-                console.log(data)
+            .then(data => { 
                 if(data != null) {
                     setCards( state => (
                         state, 
@@ -24,23 +21,25 @@ function Flags(props) {
                             key={index}
                             token={props.token}
                             myInfos={props.myInfos}
-                            title={data.title}
-                            bodyText={data.bodyText}
-                            name={data.author}
-                            owner={owner}
-                            mods={mods}
+                            title={data.post.title}
+                            bodyText={data.post.bodyText}
+                            name={data.post.author}
+                            owner={data.owner}
+                            mods={data.mods}
                             mode="Flags"
                             isItPost={true}
-                            forum={data.forum}
+                            forum={data.post.forum}
                             post={post}
                             coments={comentaries}
-                            rating={data.upvotes}
+                            rating={data.post.upvotes}
                             handleFlagObj={props.handleFlagObj}
                             handleScreenList={props.handleScreenList}
+                            handleForum={props.handleForum}
                             deleteEnvelope={props.deleteEnvelope}
+                            handleDecrementScreen={props.handleDecrementScreen} 
                         />
                     ))
-                }  
+                }
             })
             .catch(err => err)
         } else {
@@ -49,26 +48,26 @@ function Flags(props) {
             .then(data => {
                 if(data != null) {
                     setCards( state => (
-                        state, 
+                        state,
                         <PostCard
                             key={index}
                             token={props.token}
                             myInfos={props.myInfos}
                             title={null}
-                            bodyText={data.bodyText}
-                            name={data.author}
-                            owner={owner}
-                            mods={mods}
+                            bodyText={data.post.bodyText}
+                            name={data.post.author}
+                            owner={data.owner}
+                            mods={data.mods}
                             mode="Flags"
-                            isItPost={true}
-                            forum={data.forum}
+                            isItPost={false}
+                            forum={data.post.forum}
                             post={post}
                             coments={comentaries}
-                            rating={data.upvotes}
-                            flagObj={{isItPost,post,comentaries}}
-                            handleFlagObj={props.setFlagObj}
+                            rating={data.post.upvotes}
+                            handleFlagObj={props.handleFlagObj}
                             handleScreenList={props.handleScreenList}
-                        />
+                            deleteEnvelope={props.deleteEnvelope}
+                        /> 
                     ))
                 } 
             })
@@ -80,9 +79,7 @@ function Flags(props) {
         await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            setOwner(data.owner)
-            setMods(data.mods)
-            console.log(data)
+            console.log("0 " + data) 
             if(data.flags[0] != null){
                 data.flags.map((obj, index) => {
                     onTryToGetPostsAndComentaries(

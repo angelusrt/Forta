@@ -187,22 +187,28 @@ function Home(props){
                     key={idF + "_" + idP}
                     token={props.token}
                     myInfos={props.myInfos}
-                    deleteEnvelope={props.deleteEnvelope}
+
                     title={post.title}
                     bodyText={post.bodyText}
                     name={post.author}
-                    isItPost={true}
-                    mode="Normal"
-                    forum={forumInfo._id}
                     forumName={forumInfo.groupName}
                     rating={post.upvotes}
+
+                    mode="Normal"
+
+                    isItPost={true}
                     post={post._id}
+                    forum={forumInfo._id}
+                    
                     owner={forumInfo.owner}
                     mods={forumInfo.mods.length === 0 ? null : forumInfo.mods}
+                    
                     handlePostList={props.handlePostList}
                     handleForum={props.handleForum}
                     handleScreenList={props.handleScreenList}
                     handleFlagObj={props.handleFlagObj}
+
+                    deleteEnvelope={props.deleteEnvelope}
                 />
             )
         })).then(data => {

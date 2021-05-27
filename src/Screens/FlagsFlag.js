@@ -9,18 +9,13 @@ import {lightTheme, styles} from "./../Styles"
 function FlagsFlag(props) {
     const[cards, setCards] = useState(null)
     const[screen, setScreen] = useState("FlagsFlag")
+    const[message, setMessage] = useState("")
 
-    const onTryToGetFlags = async () => {
-        let link 
+    const onTryToGetFlags = async () => { 
         props.flagObj.isItPost ?
-        link = `http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/` :
-        link = `http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/${props.flagObj.comentaries}`
-        
-        console.log(props.flagObj)
-        await fetch(link, props.getEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             if(data != null) {
                 setCards(
                     data.flags.map((flag, index) =>(
@@ -28,15 +23,57 @@ function FlagsFlag(props) {
                             key={index}
                             token={props.token}
                             myInfos={props.myInfos}
+
                             title={null}
                             bodyText={flag.message}
                             name={flag.sender}
+                            rating={0}
+
                             owner={props.flagObj.owner}
                             mods={props.flagObj.mods}
-                            mode="FlagsFlag"
+
+                            isItPost={true}
+                            post={props.flagObj.post}
                             forum={props.forum}
-                            rating={0}
+
+                            mode="FlagsFlag"
+                            setMessage={message => setMessage(message)}
+                            setScreen={screen => setScreen(screen)}
+                            handleDecrementScreen={props.handleDecrementScreen}
                             deleteEnvelope={props.deleteEnvelope}
+                        />
+                    ))
+                )
+            }  
+        })
+        .catch(err => err) : 
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/${props.flagObj.comentaries}`, props.getEnvelope)
+        .then(res => res.json())
+        .then(data => {
+            if(data != null) {
+                setCards(
+                    data.flags.map((flag, index) =>(
+                        <PostCard
+                            key={index}
+                            token={props.token}
+                            myInfos={props.myInfos}
+
+                            title={null}
+                            bodyText={flag.message}
+                            name={flag.sender}
+                            rating={0}
+
+                            owner={props.flagObj.owner}
+                            mods={props.flagObj.mods}
+
+                            isItPost={false}
+                            post={props.flagObj.post}
+                            coments={props.flagObj.comentaries}
+                            forum={props.forum}
+
+                            mode="FlagsFlag"
+                            setScreen={screen => setScreen(screen)}
+                            handleDecrementScreen={props.handleDecrementScreen}
                         />
                     ))
                 )
@@ -71,6 +108,7 @@ function FlagsFlag(props) {
                 token={props.token}
                 myInfos={props.myInfos}
                 forum={props.forum}
+                message={message}
                 screen={screen}
                 setScreen={screen => setScreen(screen)}
                 flagObj={props.flagObj}

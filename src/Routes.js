@@ -161,6 +161,7 @@ function Routes() {
                     token={token}
                     myInfos={myInfos}
                     forum={forum}
+                    handleForum={forum => setForum(forum)}
                     handleFlagObj={flagObj => setFlagObj(flagObj)}
                     getEnvelope={getEnvelope}
                     deleteEnvelope={deleteEnvelope}

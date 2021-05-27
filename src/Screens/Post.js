@@ -124,7 +124,7 @@ function Post(props) {
         .then(res => res.json())
         .then(data =>{            
             setPost(data.post)
-            setComentaries(data.comentaries !== null ? data.post.comentaries.map((coments, index) => 
+            setComentaries(data.post.comentaries !== null ? data.post.comentaries.map((coments, index) => 
                 <PostCard 
                     key={index}
                     token={props.token}
