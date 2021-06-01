@@ -1,17 +1,17 @@
 import React, {useState, useEffect} from 'react'
 import * as _reactNative from "react-native"
-import {View, ScrollView, Animated, Easing} from "react-native"
+import {View, ScrollView} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs"
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 var _reactNativeTabView = require("react-native-tab-view")
 
-import Icons from "./../components/Icons"
+import Refresh from "../components/Refresh"
 import PostCard from "./../components/PostCard.js"
 import ContactCard from "./../components/ContactCard.js"
 import InteligentButton from "../components/InteligentButton.js"
-import {lightTheme, styles, iconStyles} from "./../Styles.js"
+import {lightTheme, styles} from "./../Styles.js"
 
 function TabBarTop(props) {
     const {
@@ -31,7 +31,7 @@ function TabBarTop(props) {
         ...rest
     } = props
     
-    useEffect(() => props.handleRoute(state.routeNames[state.index]))
+    useEffect(() => props.setRoute(state.routeNames[state.index]))
 
     return React.createElement(_reactNativeTabView.TabBar, _extends({}, rest, {
         navigationState: state,
@@ -126,89 +126,70 @@ function TabBarTop(props) {
     }))
 }  
 
-function Refresh(){
-    const[animRot, setAnimRot] = useState(new Animated.Value(0))
-
-    const spin = animRot.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '360deg']
-    })
-
-    useEffect(() => {
-        Animated.loop(Animated.timing(animRot,{
-            toValue: 1,
-            duration: 450,
-            easing: Easing.linear,
-            useNativeDriver: true
-        })).start()
-    },[animRot])
-
-    return(
-        <Animated.View style={{transform: [{ rotate: spin }], flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <Icons 
-                name="Refresh" 
-                width={wp("20%")} 
-                height={wp("20%")} 
-                viewBox="0 0 625 625" 
-                fill="none" 
-                style={iconStyles.icon10}
-            />
-        </Animated.View>
-    )
-}
-
 function Home(props){
-    const[forums, setForums] = useState([])
-    const[posts, setPosts] = useState([])
+    //Shows react element only resolved is true
     const[resolved, setResolved] = useState(false)
+    
+    //A list of forum ids
+    const[forums, setForums] = useState([])
+    
+    //Stores all posts components
+    const[posts, setPosts] = useState([])
 
-    const onTryToGetMyForums = async () => {
+    //Updates onGet
+    const[update, setUpdate] = useState(false)
+    
+    //Gets the forums that you follow
+    const onGetMyForums = async () => {
         return await fetch("http://192.168.0.111:3000/api/user/myForums", props.getEnvelope)
         .then(res => res.json())
         .then(data => setForums(data))
         .catch(err => console.log(err))
     }
-    
-    const onTryToGetForum = async forum => { 
+
+    //Gets posts 
+    const onGet = async forum => { 
         return await fetch(`http://192.168.0.111:3000/api/forums/${forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
     }
     
-    useEffect(() => {onTryToGetMyForums()}, [])
+    //Gets Forums ids
+    useEffect(() => {onGetMyForums()}, [update])
 
+    //Creates post ui
     useEffect(() => {
+        //Function that maps through ids 
         const loadData = async () => { Promise.all( forums.map(async (forum, idF) => {
-            let forumInfo = await onTryToGetForum(forum)
+            //Gets infos
+            let forumInfo = await onGet(forum)
             
-            return forumInfo.posts.map( (post, idP) => 
+            //Returns all post cards
+            return forumInfo.posts.map((post, idP) => 
                 <PostCard 
-                    key={idF + "_" + idP}
                     token={props.token}
                     myInfos={props.myInfos}
+                    deleteEnvelope={props.deleteEnvelope}
 
+                    key={idF + idP}
                     title={post.title}
                     bodyText={post.bodyText}
                     name={post.author}
                     forumName={forumInfo.groupName}
                     rating={post.upvotes}
-
-                    mode="Normal"
-
-                    isItPost={true}
-                    post={post._id}
                     forum={forumInfo._id}
-                    
+                    post={post._id}
+                    isItPost={true}
+                    mode="Normal"
                     owner={forumInfo.owner}
-                    mods={forumInfo.mods.length === 0 ? null : forumInfo.mods}
+                    mods={forumInfo.mods}
                     
-                    handlePostList={props.handlePostList}
-                    handleForum={props.handleForum}
-                    handleScreenList={props.handleScreenList}
-                    handleFlagObj={props.handleFlagObj}
-
-                    deleteEnvelope={props.deleteEnvelope}
+                    setScreen={props.setScreen}
+                    setForum={props.setForum}
+                    setPost={props.setPost}
+                    setFlagObj={props.setFlagObj}
+                    onFunction={() => setUpdate(!update)}
                 />
             )
         })).then(data => {
@@ -226,44 +207,59 @@ function Home(props){
 }
 
 function Forums(props) {
-    const[forums, setForums] = useState([])
-    const[forum, setForum] = useState()
+    //Shows react element only resolved is true
     const[resolved, setResolved] = useState(false)
-
-    const onTryToGetMyForums = async () => {
+    
+    //A list of forum ids
+    const[forums, setForums] = useState([])
+    
+    //Stores all forums components
+    const[forum, setForum] = useState()
+    
+    //Updates onGet
+    const[update, setUpdate] = useState(false)
+    
+    //Function that gets all my forums ids
+    const onGetMyForums = async () => {
         return await fetch("http://192.168.0.111:3000/api/user/myForums", props.getEnvelope)
         .then(res => res.json())
         .then(data => setForums(data))
         .catch(err => console.log(err))
     }
     
-    const onTryToGetForum = async (forum) => { 
+    //Function that gets forum infos
+    const onGet = async (forum) => { 
         return await fetch(`http://192.168.0.111:3000/api/forums/${forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
     }
     
-    useEffect(() => {onTryToGetMyForums()}, [])
+    //Updates my forums ids
+    useEffect(() => {onGetMyForums()}, [update])
 
+    //Updates forums components
     useEffect(() => {
         const loadData = async () => {Promise.all(forums.map(async (forum, index) => {
-            let forumInfo = await onTryToGetForum(forum)
-
+            let forumInfo = await onGet(forum)
+            
             return (
                 <ContactCard
-                    key={index}
                     myInfos={props.myInfos}
                     deleteEnvelope={props.deleteEnvelope}
+
+                    key={index}
                     title={forumInfo.groupName}
                     subtitle={`${forumInfo.followers.length} seguidores`}
                     owner={forumInfo.owner}
                     mods={forumInfo.mods}
-                    mode="Forum"
                     favorite={false}
                     forum={forumInfo._id}
-                    handleForum={props.handleForum}
-                    handleScreenList={props.handleScreenList}
+                    mode="Forum"
+
+                    setScreen={props.setScreen}
+                    setForum={props.setForum}
+                    onFunction={() => setUpdate(!update)}
                 />
             )
         })).then(data => {
@@ -281,41 +277,60 @@ function Forums(props) {
 }
 
 function Chats(props) {
-    const[chats, setChats] = useState([])
-    const[chat, setChat] = useState()
+    //Shows react element only resolved is true
     const[resolved, setResolved] = useState(false)
 
-    const onTryToGetMyChats = async () => {
+    //A list of chats ids
+    const[chats, setChats] = useState([])
+
+    //Stores all chats components
+    const[chat, setChat] = useState()
+
+    //Function that gets all my chats ids
+    const onGetMyChats = async () => {
         return await fetch( "http://192.168.0.111:3000/api/user/myChat", props.getEnvelope)
         .then(res => res.json())
         .then(data => setChats(data))
         .catch(err => err)
     }
     
-    const onTryToGetChat = async (chat) => { 
+    //Function that gets chat infos
+    const onGet = async (chat) => { 
         return await fetch( `http://192.168.0.111:3000/api/chats/${chat}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
     }
     
-    useEffect(() => {onTryToGetMyChats()}, [])
+    //Updates my chats ids
+    useEffect(() => {onGetMyChats()}, [])
 
+    //Updates chats components
     useEffect(() => {
         const loadData = async () => { Promise.all(chats.map(async (chat, index) => {
-            let chatInfo = await onTryToGetChat(chat)
+            let chatInfo = await onGet(chat)
     
             return (
                 <ContactCard
-                    key={index}
                     deleteEnvelope={props.deleteEnvelope}
-                    title={chatInfo.members.filter(mem => mem.member !== props.myInfos.id)[0].member}
-                    subtitle={chatInfo.messages.length !== 0 ? chatInfo.messages[chatInfo.messages.length - 1].message : "<nada ainda!>"}
+                    
+                    key={index}
                     mode="Chat"
+                    title={
+                        chatInfo.members.filter(mem => 
+                            mem.member !== props.myInfos.id
+                        )[0].member
+                    }
+                    subtitle={
+                        chatInfo.messages.length !== 0 ? 
+                        chatInfo.messages[chatInfo.messages.length - 1].message : 
+                        "<nada ainda!>"
+                    }
                     favorite={false}
                     chat={chatInfo._id}
-                    handleChat={props.handleChat}
-                    handleScreenList={props.handleScreenList}
+                    
+                    setChat={props.setChat}
+                    setScreen={props.setScreen}
                 />
             )
         })).then(data => {
@@ -333,35 +348,50 @@ function Chats(props) {
 }
 
 function Invites(props) {
-    const[invites, setInvites] = useState([])
-    const[invite, setInvite] = useState()
+    //Shows react element only resolved is true
     const[resolved, setResolved] = useState(false)
 
-    const onTryToGetMyInvites = async () => {
+    //A list of invites ids
+    const[invites, setInvites] = useState([])
+    
+    //Stores all invite components
+    const[invite, setInvite] = useState()
+
+    //Updates onGetMyInvites
+    const[update, setUpdate] = useState(false)
+
+    //Function that gets all my invites ids
+    const onGetMyInvites = async () => {
         return await fetch("http://192.168.0.111:3000/api/user/myInvites", props.getEnvelope)
         .then(res => res.json())
         .then(data => setInvites(data))
         .catch(err => err)
     }
     
-    const onTryToGetInvite = async (invite) => { 
+    //Function that gets invite infos
+    const onGet = async (invite) => { 
         return await fetch(`http://192.168.0.111:3000/api/invites/${invite}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
     }
     
-    useEffect(() => {onTryToGetMyInvites()}, [])
+    //Updates my invites ids
+    useEffect(() => {onGetMyInvites()}, [update, props.update])
 
+    //Updates invites components
     useEffect(() => {
         const loadData = async () => {Promise.all(invites.map(async (invite, index) => {
-            let inviteInfo = await onTryToGetInvite(invite)
+            let inviteInfo = await onGet(invite)
             
             return (
                 <ContactCard
-                    key={index}
+                    token={props.token}
                     patchEnvelope={props.patchEnvelope}
                     deleteEnvelope={props.deleteEnvelope}
+                    
+                    key={index}
+                    mode="Invite"
                     imagePlaceholder={
                         <View style={{
                             width: wp("10%"),
@@ -380,7 +410,6 @@ function Invites(props) {
                         inviteInfo.description === 'group' ? "Convidou-lhe a um grupo" :
                         "Erro"
                     }
-                    mode="Invite"
                     description={inviteInfo.description}
                     isSender={
                         inviteInfo.sender === props.myInfos.id ? true : false
@@ -388,7 +417,8 @@ function Invites(props) {
                     receiver={inviteInfo.receiver}
                     path={inviteInfo.path}
                     invite={inviteInfo._id}
-                    token={props.token}
+                    
+                    onFunction={() => setUpdate(!update)}
                 />
             )
         })).then(data => {
@@ -406,16 +436,24 @@ function Invites(props) {
 }
 
 function Tab(props) {
-    const[screen, setScreen] = useState(null)
+    //Creates a component that navigates beetween tabs
     const tab = createMaterialTopTabNavigator()
-    let handleRoute = prop => props.handleRoute(prop)
+
+    //Sets further screens 
+    const[scrn, setScrn] = useState(null)
+    
+    //Updates 
+    const[update, setUpdate] = useState(false)
+
+    //Function that sets what tab is in
+    const setRoute = prop => props.setRoute(prop)
     
     return (
         <React.Fragment>
             <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
                 <tab.Navigator  
                     initialRouteName={props.route}
-                    tabBar={props => <TabBarTop handleRoute={route => handleRoute(route)} {...props} />}
+                    tabBar={props => <TabBarTop setRoute={route => setRoute(route)} {...props} />}
                     tabBarOptions={{
                         renderIndicator: () => null,
                         activeTintColor: lightTheme.darkGrey,
@@ -449,10 +487,11 @@ function Tab(props) {
                             myInfos={props.myInfos}
                             getEnvelope={props.getEnvelope}
                             deleteEnvelope={props.deleteEnvelope}
-                            handlePostList={props.handlePostList} 
-                            handleScreenList={props.handleScreenList}
-                            handleForum={props.handleForum}
-                            handleFlagObj={props.handleFlagObj}
+                            
+                            setScreen={props.setScreen}
+                            setForum={props.setForum}
+                            setPost={props.setPost} 
+                            setFlagObj={props.setFlagObj}
                         />
                     }/>
                     <tab.Screen name="Forums" children={() => 
@@ -461,8 +500,9 @@ function Tab(props) {
                             myInfos={props.myInfos}
                             getEnvelope={props.getEnvelope}
                             deleteEnvelope={props.deleteEnvelope}
-                            handleForum={props.handleForum} 
-                            handleScreenList={props.handleScreenList}
+
+                            setScreen={props.setScreen}
+                            setForum={props.setForum} 
                         />
                     }/>
                     <tab.Screen name="Chats" children={() => 
@@ -471,14 +511,16 @@ function Tab(props) {
                             myInfos={props.myInfos}
                             getEnvelope={props.getEnvelope}
                             deleteEnvelope={props.deleteEnvelope}
-                            handleChat={props.handleChat} 
-                            handleScreenList={props.handleScreenList}
+
+                            setScreen={props.setScreen}
+                            setChat={props.setChat} 
                         />
                     }/>
                     <tab.Screen name="Invites" children={() => 
                         <Invites  
                             token={props.token}
                             myInfos={props.myInfos}
+                            update={update}
                             getEnvelope={props.getEnvelope}
                             patchEnvelope={props.patchEnvelope}
                             deleteEnvelope={props.deleteEnvelope}
@@ -491,13 +533,17 @@ function Tab(props) {
                 myInfos={props.myInfos}
                 getEnvelope={props.getEnvelope}
                 deleteEnvelope={props.deleteEnvelope}
+
                 screen={
-                    screen === "ForumAdd" || screen === "ForumSearch" || 
-                    screen === "UserSearch" ? screen : props.route
+                    scrn === "ForumAdd" || scrn === "ForumSearch" || 
+                    scrn === "UserSearch" ? scrn : props.route
                 }
-                setScreen={screen => setScreen(screen)}
-                handleForum={props.handleForum}
-                handleScreenList={props.handleScreenList} 
+                
+                setScreen={props.setScreen} 
+                setForum={props.setForum}
+
+                setScrn={screen => setScrn(screen)}
+                onFunction={() => setUpdate(!update)}
             />
         </React.Fragment>
     )

@@ -7,82 +7,88 @@ import PostCard from "../components/PostCard";
 import {lightTheme, styles} from "./../Styles"
 
 function FlagsFlag(props) {
+    //Controls further screens
+    const[scrn, setScrn] = useState("FlagsFlag")
+
+    //Stores card components
     const[cards, setCards] = useState(null)
-    const[screen, setScreen] = useState("FlagsFlag")
+    
+    //Edit message of flag
     const[message, setMessage] = useState("")
 
-    const onTryToGetFlags = async () => { 
+    //Gets flags of a post or comment
+    const onGet = async () => { 
         props.flagObj.isItPost ?
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/`, props.getEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/`, 
+        props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            if(data != null) {
+            if(data != null) 
                 setCards(
                     data.flags.map((flag, index) =>(
                         <PostCard
-                            key={index}
                             token={props.token}
                             myInfos={props.myInfos}
-
-                            title={null}
-                            bodyText={flag.message}
-                            name={flag.sender}
-                            rating={0}
-
+                            post={props.flagObj.post}
+                            forum={props.forum}
                             owner={props.flagObj.owner}
                             mods={props.flagObj.mods}
 
-                            isItPost={true}
-                            post={props.flagObj.post}
-                            forum={props.forum}
-
+                            key={index}
                             mode="FlagsFlag"
-                            setMessage={message => setMessage(message)}
-                            setScreen={screen => setScreen(screen)}
-                            handleDecrementScreen={props.handleDecrementScreen}
+                            isItPost={true}
+                            bodyText={flag.message}
+                            name={flag.sender}
+                            rating={0}
+                            
+                            
+
+                            setPrevScreen={props.setPrevScreen}
                             deleteEnvelope={props.deleteEnvelope}
+
+                            setScreen={scrn => setScrn(scrn)}
+                            setMessage={message => setMessage(message)}
                         />
                     ))
                 )
-            }  
         })
         .catch(err => err) : 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/${props.flagObj.comentaries}`, props.getEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/${props.flagObj.comentaries}`, 
+        props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            if(data != null) {
+            if(data != null) 
                 setCards(
                     data.flags.map((flag, index) =>(
                         <PostCard
-                            key={index}
                             token={props.token}
                             myInfos={props.myInfos}
+                            post={props.flagObj.post}
+                            comments={props.flagObj.comentaries}
+                            forum={props.forum}
+                            owner={props.flagObj.owner}
+                            mods={props.flagObj.mods}
 
-                            title={null}
+                            key={index}
+                            mode="FlagsFlag"
+                            isItPost={false}
                             bodyText={flag.message}
                             name={flag.sender}
                             rating={0}
 
-                            owner={props.flagObj.owner}
-                            mods={props.flagObj.mods}
+                            setPrevScreen={props.setPrevScreen}
 
-                            isItPost={false}
-                            post={props.flagObj.post}
-                            coments={props.flagObj.comentaries}
-                            forum={props.forum}
-
-                            mode="FlagsFlag"
-                            setScreen={screen => setScreen(screen)}
-                            handleDecrementScreen={props.handleDecrementScreen}
+                            setScreen={scrn => setScrn(scrn)}
+                            setMessage={message => setMessage(message)}
                         />
                     ))
                 )
-            }  
         })
         .catch(err => err)
     }
 
-    useEffect(() => {onTryToGetFlags()},[])
+    //Gets flags of a post or comment
+    useEffect(() => {onGet()},[])
 
     return (
         <View style={{
@@ -99,7 +105,7 @@ function FlagsFlag(props) {
                     Denuncias
                 </Text> 
                 
-                <ScrollView contentContainerStyle={{marginTop: wp("2.5%")}}>
+                <ScrollView contentContainerStyle={{paddingBottom: 200, marginTop: wp("2.5%")}}>
                     {cards}
                 </ScrollView>
             </View>
@@ -107,12 +113,15 @@ function FlagsFlag(props) {
             <InteligentButton 
                 token={props.token}
                 myInfos={props.myInfos}
-                forum={props.forum}
-                message={message}
-                screen={screen}
-                setScreen={screen => setScreen(screen)}
                 flagObj={props.flagObj}
-                handleDecrementScreen={props.handleDecrementScreen}
+                forum={props.forum}
+
+                screen={scrn}
+                message={message}
+                
+                setPrevScreen={props.setPrevScreen}
+
+                setScrn={scrn => setScrn(scrn)}
             />
         </View>
     )

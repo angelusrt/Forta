@@ -15,15 +15,24 @@ import Flags from "./Screens/Flags"
 import FlagsFlag from "./Screens/FlagsFlag"
 
 function Routes() {
-    const[route, setRoute] = useState("Home")
-    const[screenList, setScreenList] = useState(["Auth"])
-    const[postList, setPostList] = useState([])
-    const[flagObj, setFlagObj] = useState({})
-    const[forum, setForum] = useState("")
-    const[chat, setChat] = useState("")
+    //The token of the user section
     const[token, setToken] = useState("")
-    const[myInfos, setMyInfos] = useState("")
-    const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight
+
+    //They are objects, who contains user data
+    const[myInfos, setMyInfos] = useState({})
+    const[flagObj, setFlagObj] = useState({})
+
+    //These controls the menu/screen you are in
+    const[route, setRoute] = useState("Home")
+    const[screen, setScreen] = useState(["Auth"])
+    let scrn
+
+    //They carry the ids, mostly used in fetch api
+    const[forum, setForum] = useState("")
+    const[post, setPost] = useState([])
+    const[chat, setChat] = useState("")
+    
+    //These are the envelopes used in the fetch api, already containing user section token 
     const getEnvelope = {
         method: "GET",
         headers: {
@@ -55,28 +64,32 @@ function Routes() {
         }
     }
 
-    const handleDecrementScreen = () => setScreenList(prev => {
+    //This gets the heigth of your topbar 
+    const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight
+
+    //Functions that gets to the anterior screen/post
+    const setPrevScreen = () => setScreen(prev => {
+        const next = [...prev]
+        next.pop()
+        return next
+    })
+    const setPrevPost = () => setPost(prev => {
         const next = [...prev]
         next.pop()
         return next
     })
 
-    const handleDecrementPost = () => setPostList(prev => {
-        const next = [...prev]
-        next.pop()
-        return next
-    })
-
-    let scrn
-    switch (screenList[screenList.length - 1]) {
+    //Current screen
+    switch (screen[screen.length - 1]) {
         case "Auth": 
             scrn = 
                 <Auth
                     token={token}
-                    setToken={token => setToken(token)}
                     myInfos={myInfos}
+
+                    setToken={token => setToken(token)}
                     setMyInfos={myInfos => setMyInfos(myInfos)}
-                    handleToken={() => setScreenList(["Tab"])}
+                    setScreen={() => setScreen(["Tab"])}
                 /> 
             break
         case "Settings":
@@ -84,11 +97,12 @@ function Routes() {
                 <Settings
                     token={token}
                     myInfos={myInfos}
-                    setMyInfos={myInfos => setMyInfos(myInfos)}
-                    handleScreenList={props => setScreenList([props])}
-                    handleDecrementScreen={() => handleDecrementScreen()}
                     getEnvelope={getEnvelope}
                     deleteEnvelope={deleteEnvelope}
+
+                    setMyInfos={myInfos => setMyInfos(myInfos)}
+                    setScreen={props => setScreen([props])}
+                    setPrevScreen={setPrevScreen}
                 />
             break
         case "Post":
@@ -96,16 +110,17 @@ function Routes() {
                 <Post 
                     token={token}
                     myInfos={myInfos}
+                    forum={forum}
+                    post={post[post.length - 1]}
                     getEnvelope={getEnvelope}
                     deleteEnvelope={deleteEnvelope}
-                    post={postList[postList.length - 1]}
-                    handleDecrementPost={() => handleDecrementPost()}
-                    handlePostList={props => setPostList(result => [...result, props])}  
-                    forum={forum} 
-                    handleForum={forum => setForum(forum)}
-                    handleScreenList={props => setScreenList(result => [...result, props])}
-                    handleDecrementScreen={() => handleDecrementScreen()}
-                    handleFlagObj={flagObj => setFlagObj(flagObj)}
+
+                    setScreen={props => setScreen(result => [...result, props])}
+                    setPrevScreen={() => setPrevScreen()}
+                    setForum={forum => setForum(forum)}
+                    setPost={props => setPost(result => [...result, props])}
+                    setPrevPost={() => setPrevPost()}
+                    setFlagObj={flagObj => setFlagObj(flagObj)}
                 />
             break
         case "Forum": 
@@ -113,15 +128,16 @@ function Routes() {
                 <Forum
                     token={token}
                     myInfos={myInfos}
+                    forum={forum}
                     getEnvelope={getEnvelope}
                     patchEnvelope={patchEnvelope}
                     deleteEnvelope={deleteEnvelope}
-                    forum={forum} 
-                    handleForum={forum => setForum(forum)}
-                    handlePostList={props => setPostList(result => [...result, props])}
-                    handleScreenList={props => setScreenList(result => [...result, props])}
-                    handleDecrementScreen={() => handleDecrementScreen()} 
-                    handleFlagObj={flagObj => setFlagObj(flagObj)}
+                     
+                    setScreen={props => setScreen(result => [...result, props])}
+                    setPrevScreen={() => setPrevScreen()}
+                    setForum={forum => setForum(forum)}
+                    setPost={props => setPost(result => [...result, props])} 
+                    setFlagObj={flagObj => setFlagObj(flagObj)}
                 />
             break
         case "Chat":
@@ -129,9 +145,10 @@ function Routes() {
                 <Chat
                     token={token}
                     myInfos={myInfos}
-                    getEnvelope={getEnvelope}
                     chat={chat}
-                    handleDecrementScreen={() => handleDecrementScreen()} 
+                    getEnvelope={getEnvelope}
+                    
+                    setPrevScreen={() => setPrevScreen()} 
                 />
             break
         case "Mods":
@@ -142,7 +159,8 @@ function Routes() {
                     forum={forum}
                     getEnvelope={getEnvelope}
                     patchEnvelope={patchEnvelope}
-                    handleDecrementScreen={() => handleDecrementScreen()} 
+                    
+                    setPrevScreen={() => setPrevScreen()} 
                 />
             break
         case "Rules":
@@ -152,7 +170,8 @@ function Routes() {
                     myInfos={myInfos}
                     forum={forum}
                     getEnvelope={getEnvelope}
-                    handleDecrementScreen={() => handleDecrementScreen()} 
+                    
+                    setPrevScreen={() => setPrevScreen()} 
                 />
             break
         case "Flags":
@@ -161,12 +180,13 @@ function Routes() {
                     token={token}
                     myInfos={myInfos}
                     forum={forum}
-                    handleForum={forum => setForum(forum)}
-                    handleFlagObj={flagObj => setFlagObj(flagObj)}
                     getEnvelope={getEnvelope}
                     deleteEnvelope={deleteEnvelope}
-                    handleScreenList={props => setScreenList(result => [...result, props])}
-                    handleDecrementScreen={() => handleDecrementScreen()} 
+
+                    setScreen={props => setScreen(result => [...result, props])}
+                    setPrevScreen={() => setPrevScreen()}
+                    setForum={forum => setForum(forum)}
+                    setFlagObj={flagObj => setFlagObj(flagObj)} 
                 />
             break
         case "FlagsFlag":
@@ -174,11 +194,12 @@ function Routes() {
                 <FlagsFlag
                     token={token}
                     myInfos={myInfos}
-                    forum={forum}
                     flagObj={flagObj}
+                    forum={forum}
                     getEnvelope={getEnvelope}
                     deleteEnvelope={deleteEnvelope}
-                    handleDecrementScreen={() => handleDecrementScreen()} 
+
+                    setPrevScreen={() => setPrevScreen()} 
                 />
             break
         default:
@@ -186,17 +207,17 @@ function Routes() {
                 <Tab
                     token={token}
                     myInfos={myInfos}
+                    route={route}
                     getEnvelope={getEnvelope}
                     patchEnvelope={patchEnvelope}
                     deleteEnvelope={deleteEnvelope}
-                    handleForum={forum => setForum(forum)}
-                    handleChat={chat => setChat(chat)}
-                    route={route} 
+
+                    setScreen={props => setScreen(result => [...result, props])}
+                    setForum={forum => setForum(forum)}
+                    setChat={chat => setChat(chat)}
+                    setPost={props => setPost(result => [...result, props])} 
                     setRoute={route => setRoute(route)}
-                    handleRoute={route => setRoute(route)} 
-                    handlePostList={props => setPostList(result => [...result, props])} 
-                    handleScreenList={props => setScreenList(result => [...result, props])}
-                    handleFlagObj={flagObj => setFlagObj(flagObj)}
+                    setFlagObj={flagObj => setFlagObj(flagObj)}
                 /> 
             break
     }

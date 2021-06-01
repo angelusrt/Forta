@@ -7,30 +7,32 @@ import Icons from "../components/Icons"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Login(props) {
+    //Email and password setted by input 
     const[email, setEmail] = useState("")
     const[password, setPassword] = useState("")
 
-    const onTryToLog = async () => {
-        const httpEnvelopePost = {
+    //Method that logs and handle screen 
+    const onLog = async () => {
+        //Envelopes used in fetch api
+        const postEnvelope = {
             method: "POST",
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                email,
-                password
-            })
+            body: JSON.stringify({email, password})
         }
-        
-        let httpEnvelopeGet = {}
+        let getEnvelope
 
-        await fetch("http://192.168.0.111:3000/api/user/login", httpEnvelopePost)
+        //Gets token 
+        await fetch("http://192.168.0.111:3000/api/user/login", postEnvelope)
         .then(res => JSON.parse(JSON.stringify(res)).headers.map["auth-token"])
         .then(data => {
+            //Sets token required to go to tab
             props.setToken(data)
     
-            httpEnvelopeGet = {
+            //Sets envelope needed to fetch myInfo
+            getEnvelope = {
                 method: "GET",
                 headers: {
                     Accept: 'application/json',
@@ -41,12 +43,14 @@ function Login(props) {
         })
         .catch(err => console.log(err))
 
-        await fetch("http://192.168.0.111:3000/api/user/infos", httpEnvelopeGet)
+        //Gets myInfo 
+        await fetch("http://192.168.0.111:3000/api/user/infos", getEnvelope)
         .then(res => res.json())
         .then(data => props.setMyInfos(data))
         .catch(err => console.log(err))
 
-        props.handleToken()
+        //Goes to tab, where things happens
+        props.setScreen()
     }
     
     return(
@@ -72,7 +76,7 @@ function Login(props) {
                 </TouchableOpacity>
 
                 <View style={{marginTop: wp("5%"), ...styles.bottomWrapper}}>
-                    <TouchableOpacity onPress={() => onTryToLog()} style={styles.authGreenButton}>
+                    <TouchableOpacity onPress={() => onLog()} style={styles.authGreenButton}>
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -89,11 +93,13 @@ function Login(props) {
 }
 
 function Register(props) {
+    //If params matches, it goes to User 
     const verify = () => {
-        if (props.password === props.password2 && 
+        if (
+            props.password === props.password2 && 
             props.password.length >= 8 && 
             props.email.length >= 8
-        ){
+        ) {
             props.navigation.navigate("User")
         } else {
             props.setEmail("")
@@ -154,8 +160,10 @@ function Register(props) {
 }
 
 function User(props) {
-    const onTryToLog = async () => {
-        const httpEnvelopePost = {
+    //Method that logs and handle screen
+    const onLog = async () => {
+        //Envelopes used in fetch api
+        const postEnvelope = {
             method: "POST",
             headers: {
                 Accept: 'application/json',
@@ -168,14 +176,17 @@ function User(props) {
                 bios: props.bios
             })
         }
-        let httpEnvelopeGet = {}
+        let getEnvelope
 
-        await fetch("http://192.168.0.111:3000/api/user/register", httpEnvelopePost)
+        //Register and gets token
+        await fetch("http://192.168.0.111:3000/api/user/register", postEnvelope)
         .then(res => res.json())
         .then(data => {
+            //Sets token required to go to tab
             props.setToken(data)
 
-            httpEnvelopeGet = {
+            //Sets envelope needed to fetch myInfo
+            getEnvelope = {
                 method: "GET",
                 headers: {
                     Accept: 'application/json',
@@ -184,21 +195,25 @@ function User(props) {
                 }
             }
         })
-        .catch(err => err)
+        .catch(err => console.log(err))
 
-        await fetch("http://192.168.0.111:3000/api/user/infos", httpEnvelopeGet)
+        //Gets my info
+        await fetch("http://192.168.0.111:3000/api/user/infos", getEnvelope)
         .then(res => res.json())
         .then(data => props.setMyInfos(data))
         .catch(err => console.log(err))
 
-        props.handleToken()
+        //Goes to tab, where things happens
+        props.setScreen()
     }   
 
+    //If params matches logs, or else it'll clean variables
     const verify = () => {
-        if (props.username.length <= 16 && props.bios.length <= 16 &&
+        if (
+            props.username.length <= 16 && props.bios.length <= 16 &&
             props.username !== "<Username>" && props.bios !== "<Bios>"
         ) {
-            onTryToLog()
+            onLog()
         } else {
             props.setUsername("<Username>")
             props.setBios("<Bios>")
@@ -218,6 +233,7 @@ function User(props) {
                     borderRadius: 5,
                     backgroundColor: lightTheme.notSoLightGrey
                 }}/>
+
                 <View style={{
                     width: wp("95%"),
                     padding: wp("5%"),
@@ -245,6 +261,7 @@ function User(props) {
                         }}>
                             {props.username}
                         </Text>
+                        
                         <Text style={styles.authSubheader}>{props.bios}</Text>
                     </View>
                 </View>
@@ -305,61 +322,72 @@ function User(props) {
 }
 
 function Auth(props) {
+    //Creates a component that navigates beetween screens 
+    const Stack = createStackNavigator()
+
+    //Email and password used in Register and User
     const[email, setEmail] = useState("")
     const[password, setPassword] = useState("")
     const[password2, setPassword2] = useState("")
+    
+    //Username and bios used in User
     const[username, setUsername] = useState(`<Username>`)
     const[bios, setBios] = useState(`<Bios>`)
-
-    const Stack = createStackNavigator()
 
     return (
         <Stack.Navigator initialRouteName="Login">
             <Stack.Screen name="Login" options={{header: () => null}}>
-                {prop => 
+                { 
+                    prop => 
                     <Login
                         {...prop} 
                         token={props.token}
-                        setToken={token => props.setToken(token)}
                         myInfos={props.myInfos}
-                        setMyInfos={myInfos => props.setMyInfos(myInfos)}
-                        handleToken={() => props.handleToken()}
+
+                        setToken={props.setToken}
+                        setMyInfos={props.setMyInfos}
+                        setScreen={props.setScreen}
                     />
                 }
             </Stack.Screen>
             
             <Stack.Screen name="Register" options={{header: () => null}}>
-                {prop => 
+                {
+                    prop => 
                     <Register
                         {...prop}
                         email={email} 
-                        setEmail={email => setEmail(email)}
                         password={password} 
+                        password2={password2}
+                        
+                        setEmail={email => setEmail(email)}
                         setPassword={password => setPassword(password)}
-                        password2={password2} 
                         setPassword2={password => setPassword2(password)}
-                        setToken={token => props.setToken(token)}
-                        handleToken={() => props.handleToken()}
                     />
                 }
             </Stack.Screen>
+            
             <Stack.Screen name="User" options={{header: () => null}}>
-                {prop => 
+                {
+                    prop => 
                     <User
                         {...prop} 
-                        email={email} 
-                        setEmail={email => setEmail(email)}
-                        password={password} 
-                        setPassword={password => setPassword(password)}
-                        username={username} 
-                        setUsername={username => setUsername(username)}
-                        bios={bios} 
-                        setBios={bios => setBios(bios)}
                         token={props.token}
-                        setToken={token => props.setToken(token)}
                         myInfos={props.myInfos}
-                        setMyInfos={myInfos => props.setMyInfos(myInfos)}
-                        handleToken={() => props.handleToken()}
+
+                        email={email} 
+                        password={password}
+                        username={username}
+                        bios={bios}
+
+                        setToken={props.setToken}
+                        setMyInfos={props.setMyInfos}
+                        setScreen={props.setScreen}
+
+                        setEmail={email => setEmail(email)}
+                        setPassword={password => setPassword(password)}
+                        setUsername={username => setUsername(username)}
+                        setBios={bios => setBios(bios)}
                     />
                 } 
             </Stack.Screen>

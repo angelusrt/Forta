@@ -1,19 +1,22 @@
 import React, {useState, useEffect} from 'react'
-import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable, Animated, Easing} from "react-native"
+import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable} from "react-native"
 import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
+import Refresh from "../components/Refresh"
 import Icons from "./../components/Icons"
 import PostCard from "./../components/PostCard"
 import InteligentButton from "../components/InteligentButton.js"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
 
 function Options(props) {
+    //Deletes post
     const deletePost = async() => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, props.deleteEnvelope)
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => console.log(err))
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, 
+        props.deleteEnvelope)
+        .then(res => res.json())
+        .then(data => props.setPrevScreen())
+        .catch(err => console.log(err))
     }
 
     return (
@@ -40,9 +43,7 @@ function Options(props) {
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
-                            onPress={() => {
-                                props.handleScreenList("FlagsFlag")
-                            }}
+                            onPress={() => props.setScreen("FlagsFlag")}
                         >
                             <Icons 
                                 name="Remove" 
@@ -70,7 +71,8 @@ function Options(props) {
                                     style={iconStyles.icon1}
                                 />
                                 <Text style={styles.headerText}>Excluir</Text>
-                            </Pressable> : null
+                            </Pressable> : 
+                            null
                         }
                     </View>
                 </View>
@@ -79,87 +81,78 @@ function Options(props) {
     )
 }
 
-function Refresh(){
-    const[animRot, setAnimRot] = useState(new Animated.Value(0))
-
-    const spin = animRot.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '360deg']
-    })
-
-    useEffect(() => {
-        Animated.loop(Animated.timing(animRot,{
-            toValue: 1,
-            duration: 450,
-            easing: Easing.linear,
-            useNativeDriver: true
-        })).start()
-    },[animRot])
-
-    return(
-        <Animated.View style={{transform: [{ rotate: spin }], flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <Icons 
-                name="Refresh" 
-                width={wp("20%")} 
-                height={wp("20%")} 
-                viewBox="0 0 625 625" 
-                fill="none" 
-                style={iconStyles.icon10}
-            />
-        </Animated.View>
-    )
-}
-
 function Post(props) {
-    const[post, setPost] = useState()
-    const[comentaries, setComentaries] = useState([])
-    const[likeActive, setLikeActive] = useState(false)
-    const[screen, setScreen] = useState("Post")
+    //Shows react element only resolved is true
     const[resolved, setResolved] = useState(false)
+
+    //Sets popup on or off
     const[isModalVisible, setModalVisible] = useState(false)
+
+    //Sets further screens
+    const[scrn, setScrn] = useState("Post")
+
+    //Stores post components
+    const[post, setPost] = useState()
+
+    //Stores comments components
+    const[comments, setComments] = useState([])
+
+    //Updates onGet
+    const[update, setUpdate] = useState(false)
+
+    //like state
+    const[likeActive, setLikeActive] = useState(false)
+
+    //Global width metric
     const metric = wp("5%")
     
-    const onTryToGetPost = async () => { 
-        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, props.getEnvelope)
+    //Gets comments
+    const onGet = async () => { 
+        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, 
+        props.getEnvelope)
         .then(res => res.json())
         .then(data =>{            
             setPost(data.post)
-            setComentaries(data.post.comentaries !== null ? data.post.comentaries.map((coments, index) => 
-                <PostCard 
-                    key={index}
-                    token={props.token}
-                    myInfos={props.myInfos}
-                    deleteEnvelope={props.deleteEnvelope}
-                    title={null}
-                    bodyText={coments.bodyText}
-                    name={coments.author}
-                    owner={data.owner}
-                    mods={data.mods.length === 0 ? null : data.mods}
-                    rating={coments.upvotes}
-                    post={props.post}
-                    coments={coments._id}
-                    isItPost={false}
-                    mode="Normal"
-                    forum={coments.forum}
-                    handleForum={props.handleForum}
-                    handlePostList={props.handlePostList}
-                    handleScreenList={props.handleScreenList}
-                    handleFlagObj={props.handleFlagObj}
-                />
-            ): null)
+            setComments(
+                data.post.comentaries !== null ? 
+                data.post.comentaries.map((coments, index) => 
+                    <PostCard 
+                        token={props.token}
+                        myInfos={props.myInfos}
+                        post={props.post}
+                        deleteEnvelope={props.deleteEnvelope}
+                        
+                        key={index}
+                        bodyText={coments.bodyText}
+                        name={coments.author}
+                        owner={data.owner}
+                        mods={data.mods}
+                        rating={coments.upvotes}
+                        isItPost={false}
+                        forum={coments.forum}
+                        comments={coments._id}
+                        mode="Normal"
+
+                        setScreen={props.setScreen}
+                        setForum={props.setForum}
+                        setPost={props.setPost}
+                        setFlagObj={props.setFlagObj}
+                        onFunction={() => setUpdate(!update)}
+                    />
+                ): null)
             setResolved(true)
         })
         .catch(err => console.log(err))
     }
 
-    useEffect(() => {onTryToGetPost()},[])
+    //Updates get comments 
+    useEffect(() => {onGet()},[update])
 
     return (
         <View style={{flex: 1, justifyContent: "center", backgroundColor: lightTheme.ligthGrey}}>
             { resolved ? 
                 <React.Fragment>
                     <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-                        
                         <View style={{
                             flex: 1, 
                             top: 0,
@@ -240,15 +233,19 @@ function Post(props) {
                         </View>
                         
                         <Options 
-                            isModalVisible={isModalVisible}
-                            setModalVisible={prop => setModalVisible(prop)}
-                            deleteEnvelope={props.deleteEnvelope}
                             token={props.token}
                             myInfos={props.myInfos}
                             forum={props.forum}
                             post={props.post}
                             name={post.author}
-                            handleScreenList={props.handleScreenList}
+                            deleteEnvelope={props.deleteEnvelope}
+
+                            isModalVisible={isModalVisible}
+                            
+                            setScreen={props.setScreen}
+                            setPrevScreen={props.setPrevScreen}
+
+                            setModalVisible={prop => setModalVisible(prop)}
                         />
 
                         <View style={{
@@ -257,19 +254,24 @@ function Post(props) {
                             paddingTop: metric/2,
                             top: wp("0")
                         }}>
-                            {comentaries}
+                            {comments}
                         </View>
                     </ScrollView>
+
                     <InteligentButton 
                         token={props.token}
-                        screen={screen}
-                        setScreen={screen => setScreen(screen)}
+                        screen={scrn}
+                        
                         forum={props.forum}
                         post={props.post}
-                        handlePostList={props.handlePostList}
-                        handleScreenList={props.handleScreenList}
-                        handleDecrementPost={props.handleDecrementPost} 
-                        handleDecrementScreen={props.handleDecrementScreen} 
+                        
+                        setScreen={props.setScreen}
+                        setPrevScreen={props.setPrevScreen}
+                        setPost={props.setPost}
+                        setPrevPost={props.setPrevPost} 
+
+                        setScrn={scrn => setScrn(scrn)}
+                        onFunction={onGet}
                     />
                 </React.Fragment> :
                 <Refresh/>

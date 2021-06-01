@@ -7,15 +7,21 @@ import InteligentButton from "../components/InteligentButton.js"
 import {lightTheme, styles} from "./../Styles"
 
 function Mods(props) {
+    //Controls further screens
+    const[scrn, setScrn] = useState("Mods")
+    
+    //Stores all mods components
     const[mods, setMods] = useState(null)
+    
+    //Owner of the forum
     const[owner, setOwner] = useState("")
-    const[screen, setScreen] = useState("Mods")
-
-    const onTryToGetMods = async () => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, props.getEnvelope)
+    
+    //Gets mods
+    const onGet = async () => {
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, 
+        props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             setOwner(data.owner)
             setMods(
                 data.mods[0] != null ? data.mods.map((mods, index) => { return (
@@ -36,7 +42,8 @@ function Mods(props) {
         .catch(err => err)
     }   
 
-    useEffect(() => {onTryToGetMods()},[])
+    //Updates mods
+    useEffect(() => {onGet()},[])
 
     return (
         <View style={{
@@ -66,11 +73,14 @@ function Mods(props) {
                 token={props.token}     
                 myInfos={props.myInfos}  
                 forum={props.forum}
-                owner={owner} 
                 getEnvelope={props.getEnvelope}
-                screen={screen}
-                setScreen={screen => setScreen(screen)}
-                handleDecrementScreen={props.handleDecrementScreen}
+                
+                screen={scrn}
+                owner={owner} 
+
+                setScrn={scrn => setScrn(scrn)}
+                
+                setPrevScreen={props.setPrevScreen}
             />
         </View>
     )

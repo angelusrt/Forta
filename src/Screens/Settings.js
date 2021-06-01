@@ -6,8 +6,11 @@ import InteligentButton from "../components/InteligentButton.js"
 import {lightTheme, styles} from "./../Styles.js"
 
 function Settings(props) {
-    const[screen, setScreen] = useState("Settings")
+    //Controls witch screen will be desplayed
+    const[scrn, setScrn] = useState("Settings")
     const[options, setOptions] = useState("")
+
+    //Global width metric
     const metric = wp("5%")
 
     return (
@@ -15,7 +18,7 @@ function Settings(props) {
             <ScrollView contentContainerStyle={{width: "100%"}}>
                 <View style={{
                     width: "100%",
-                    height: wp("35%"),
+                    height: metric * 7,
                     backgroundColor: lightTheme.notSoLightGrey,
                     borderRadius: 5, 
                     borderTopLeftRadius: 0,
@@ -23,8 +26,8 @@ function Settings(props) {
                 }}/>
 
                 <View style={{
-                    marginHorizontal: wp("2.5%"),
-                    top: wp("-10%"),
+                    marginHorizontal: metric/2,
+                    top: -(metric * 2),
                 }}>
                     <View 
                         style={{
@@ -52,12 +55,13 @@ function Settings(props) {
                             <Text numberOfLines={1} style={{
                                 fontFamily: 'Poppins_700Bold',
                                 color: lightTheme.darkGrey,
-                                fontSize: wp("7%"),
+                                fontSize: metric/5 * 7,
                                 marginTop: -metric/2,
                                 marginBottom: -metric/4    
                             }}>
                                 {props.myInfos.username}
                             </Text>
+
                             <Text numberOfLines={1} style={styles.bodyText2}>
                                 {props.myInfos.bios}
                             </Text>
@@ -81,7 +85,7 @@ function Settings(props) {
                             }}
                             onPress={() => {
                                 setOptions("Name")
-                                setScreen("SettingsOptions")
+                                setScrn("SettingsOptions")
                             }}
                         >
                             <Text style={styles.headerText}>Mudar Nome</Text>
@@ -98,7 +102,7 @@ function Settings(props) {
                             }}
                             onPress={() => {
                                 setOptions("Bios")
-                                setScreen("SettingsOptions")
+                                setScrn("SettingsOptions")
                             }}
                         >
                             <Text style={styles.headerText}>Mudar Bios</Text>
@@ -115,7 +119,7 @@ function Settings(props) {
                             }}
                             onPress={() => {
                                 setOptions("Email")
-                                setScreen("SettingsOptions")
+                                setScrn("SettingsOptions")
                             }}
                         >
                             <Text style={styles.headerText}>Mudar Email</Text>
@@ -132,7 +136,7 @@ function Settings(props) {
                             }}
                             onPress={() => {
                                 setOptions("Password")
-                                setScreen("SettingsOptions")
+                                setScrn("SettingsOptions")
                             }}
                         >
                             <Text style={styles.headerText}>Mudar Senha</Text>
@@ -156,27 +160,35 @@ function Settings(props) {
                             }}
                             onPress={() => {
                                 setOptions("Delete")
-                                setScreen("SettingsOptions")
+                                setScrn("SettingsOptions")
                             }}
                         >
-                            <Text style={{color: lightTheme.red, ...styles.headerCardText}}>Deletar Conta</Text>
+                            <Text style={{
+                                color: lightTheme.red, 
+                                ...styles.headerCardText
+                            }}>
+                                Deletar Conta
+                            </Text>
                         </Pressable>
                     </View>
                 </View>
             </ScrollView>
             <InteligentButton 
                 token={props.token}
-                options={options}
-                setMyInfos={props.setMyInfos}
-                screen={screen}
-                setScreen={screen => setScreen(screen)}
-                handleScreenList={props.handleScreenList}
-                handleDecrementScreen={props.handleDecrementScreen} 
                 getEnvelope={props.getEnvelope}
                 deleteEnvelope={props.deleteEnvelope}
+
+                screen={scrn}
+                options={options}
+
+                setMyInfos={props.setMyInfos}
+                setScreen={props.setScreen}
+                setPrevScreen={props.setPrevScreen}
+
+                setScrn={screen => setScrn(screen)}
             />
         </View>
-    );
+    )
 }
 
 export default Settings

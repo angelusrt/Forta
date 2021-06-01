@@ -6,12 +6,19 @@ import InteligentButton from "../components/InteligentButton.js"
 import {lightTheme, styles} from "./../Styles"
 
 function Rules(props) {
+    //Controls further screens
+    const[scrn, setScrn] = useState("Rules")
+    
+    //Stores rules 
     const[rules, setRules] = useState("")
+    
+    //Owner of the forum
     const[owner, setOwner] = useState("")
-    const[screen, setScreen] = useState("Rules")
-
-    const onTryToGetRules = async () => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/rules`, props.getEnvelope)
+    
+    //Gets rules
+    const onGet = async () => {
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/rules`, 
+        props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setOwner(data.owner)
@@ -20,7 +27,8 @@ function Rules(props) {
         .catch(err => err)
     }   
 
-    useEffect(() => {onTryToGetRules()},[])
+    //Updates rules
+    useEffect(() => {onGet()},[])
 
     return (
         <View style={{
@@ -52,13 +60,16 @@ function Rules(props) {
             <InteligentButton 
                 token={props.token}     
                 myInfos={props.myInfos} 
-                rules={rules} 
                 forum={props.forum}
-                owner={owner} 
                 getEnvelope={props.getEnvelope}
-                screen={screen}
-                setScreen={screen => setScreen(screen)}
-                handleDecrementScreen={props.handleDecrementScreen}
+
+                rules={rules} 
+                owner={owner} 
+                screen={scrn}
+                
+                setPrevScreen={props.setPrevScreen}
+            
+                setScrn={scrn => setScrn(scrn)}
             />
         </View>
     )

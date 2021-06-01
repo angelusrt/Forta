@@ -7,29 +7,35 @@ import ContactCard from './ContactCard.js'
 import Icons from "./Icons"
 
 function ForumSearch(props) {
+    //Forum name that'll be searched
     const[groupName, setGroupName] = useState("")
+    
+    //Variable that stores forums component
     const[forums, setForums] = useState(null)
 
-    const onTryToGet = async () => {
+    //Function that sets forums found
+    const onGet = async () => {
         await fetch(`http://192.168.0.111:3000/api/forums/find/${groupName}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             setForums(
                 data[0] !== null ? data.map((forumInfo, index) => { return (
                     <ContactCard
-                        key={index}
                         token={props.token}
                         myInfos={props.myInfos}
                         deleteEnvelope={props.deleteEnvelope}
+                        
+                        key={index}
                         title={forumInfo.groupName}
                         subtitle={`${forumInfo.followers.length} seguidores`}
                         owner={forumInfo.owner}
-                        mode="Forum"
+                        mods={forumInfo.mods}
                         favorite={false}
                         forum={forumInfo._id}
-                        handleForum={props.handleForum}
-                        handleScreenList={props.handleScreenList}
+                        mode="Forum"
+                        
+                        setScreen={props.setScreen}
+                        setForum={props.setForum}
                     />
                 )}) : null
             )
@@ -37,13 +43,8 @@ function ForumSearch(props) {
         .catch(err => err)
     }   
 
-    const verify = () => {
-        if (groupName.length > 0){
-            onTryToGet()
-        } else {
-            setGroupName("")
-        }
-    }
+    //If param matches, fulfills search
+    const verify = () => groupName.length > 0 ? onGet() : setGroupName("")
     
     return (
         <React.Fragment>
@@ -56,11 +57,17 @@ function ForumSearch(props) {
                     Forums encontrados
                 </Text>
                 {   
-                    forums !== null ? 
-                    <ScrollView contentContainerStyle={{marginTop: wp("2.5%")}}>
+                    forums != null ? 
+                    <ScrollView contentContainerStyle={{
+                        paddingBottom: 200, 
+                        marginTop: wp("2.5%")
+                    }}>
                         {forums}
                     </ScrollView> :
-                    <Text style={{marginLeft: wp("7.5%"), ...styles.bodyText4}}>
+                    <Text style={{
+                        marginLeft: wp("7.5%"), 
+                        ...styles.bodyText4
+                    }}>
                         Nenhum foi encontrado
                     </Text>
                 }
@@ -78,7 +85,7 @@ function ForumSearch(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("Forums")}>    
+                    <TouchableOpacity onPress={() => props.setScrn("Forums")}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -105,12 +112,14 @@ function ForumSearch(props) {
 }
 
 function ForumAddCard(props) {
+    //Forums infos 
     const[groupName, setGroupName] = useState("")
     const[bios, setBios] = useState("")
     const[tags, setTags] = useState([])
 
-    const onTryToPost = async () => {
-        const httpEnvelopePost = {
+    //Function that posts forum 
+    const onPost = async () => {
+        const postEnvelope = {
             method: "POST",
             headers: {
                 Accept: 'application/json',
@@ -120,18 +129,24 @@ function ForumAddCard(props) {
             body: JSON.stringify({groupName,bios,tags})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/forums/`, httpEnvelopePost)
+        await fetch(`http://192.168.0.111:3000/api/forums/`, postEnvelope)
         .then(res => res.json())
         .then(data => {
-            props.handleForum(data)
-            props.handleScreenList("Forum")
+            props.setScreen("Forum")
+            props.setForum(data)
         })
         .catch(err => err)
     }   
 
+    //If params matches, fulfills search
     const verify = () => {
-        if (groupName.length > 0 && bios.length > 0 && tags.length > 0 && tags.length <= 4){
-            onTryToPost()
+        if (
+            groupName.length > 0 && 
+            bios.length > 0 && 
+            tags.length > 0 && 
+            tags.length <= 4
+        ) {
+            onPost()
         } else {
             setGroupName("")
             setBios("")
@@ -177,7 +192,7 @@ function ForumAddCard(props) {
                 />  
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("Forums")}>    
+                    <TouchableOpacity onPress={() => props.setScrn("Forums")}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -187,7 +202,7 @@ function ForumAddCard(props) {
                             style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => verify()}>    
+                    <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -204,10 +219,12 @@ function ForumAddCard(props) {
 }
 
 function PostAddCard(props) {
+    //Post Info
     const[title, setTitle] = useState("")
     const[bodyText, setBodyText] = useState("")
 
-    const onTryToPost = async () => {
+    //Function that posts post 
+    const onPost = async () => {
         const postEnvelope = {
             method: "POST",
             headers: {
@@ -220,13 +237,17 @@ function PostAddCard(props) {
 
         await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts`, postEnvelope)
         .then(res => res.json())
-        .then(data => props.setScreen("Forum"))
+        .then(data => {
+            props.setScrn("Forum")
+            props.onFunction()
+        })
         .catch(err => err)
     }   
 
+    //If params matches, fulfills search
     const verify = () => {
         if (title.length > 0 && bodyText.length > 0){
-            onTryToPost()
+            onPost()
         } else{
             setTitle("")
             setBodyText("")
@@ -265,7 +286,7 @@ function PostAddCard(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("Forum")}>    
+                    <TouchableOpacity onPress={() => props.setScrn("Forum")}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -291,10 +312,12 @@ function PostAddCard(props) {
     )
 }
 
-function ComentaryAddCard(props) {
+function CommentaryAddCard(props) {
+    //Commentary info
     const[bodyText, setBodyText] = useState("")
 
-    const onTryToPost = async () => {
+    //Function that posts post 
+    const onPost = async () => {
         const postEnvelope = {
             method: "POST",
             headers: {
@@ -305,20 +328,18 @@ function ComentaryAddCard(props) {
             body: JSON.stringify({bodyText})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, postEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, 
+        postEnvelope)
         .then(res => res.json())
-        .then(data => props.setScreen("Post"))
+        .then(data => {
+            props.setScrn("Post")
+            props.onFunction()
+        })
         .catch(err => err)
     }   
 
-    const verify = () => {
-        if (bodyText.length > 0){
-            onTryToPost()
-        } else{
-            setTitle("")
-            setBodyText("")
-        }
-    }
+    //If params matches, fulfills search
+    const verify = () => bodyText.length > 0 ? onPost() : setBodyText("")
 
     return (
         <React.Fragment>
@@ -346,7 +367,7 @@ function ComentaryAddCard(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("Post")}>    
+                    <TouchableOpacity onPress={() => props.setScrn("Post")}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -356,7 +377,7 @@ function ComentaryAddCard(props) {
                             style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => verify()}>    
+                    <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -373,17 +394,25 @@ function ComentaryAddCard(props) {
 }
 
 function SettingsOptionsCard(props) {
+    //Header and Title that will be dynamically displayed
     const[headerText, setHeaderText] = useState("")
-    const[bodyText, setBodyText] = useState("")
+    const[titleText, setTitleText] = useState("")
+
+    //Text that will be fetched
     const[text, setText] = useState("")
+
+    //Link that will be dynamically assigned
     const[link, setLink] = useState("")
+
+    //Envelope that will be dynamically assigned
     const[patchEnvelope, setPatchEnvelope] = useState({})
 
+    //A method that dynamically assign variable values depending on "props.options"
     const switchOperation = () => {
         switch (props.options) {
             case "Name":
                 setHeaderText("Novo nome")
-                setBodyText("Nome")
+                setTitleText("Nome")
                 setLink("http://192.168.0.111:3000/api/user/username")
                 setPatchEnvelope({
                     method: "PATCH",
@@ -397,7 +426,7 @@ function SettingsOptionsCard(props) {
                 break
             case "Bios":
                 setHeaderText("Novo bios")
-                setBodyText("Bios")
+                setTitleText("Bios")
                 setLink("http://192.168.0.111:3000/api/user/bios")
                 setPatchEnvelope({
                     method: "PATCH",
@@ -411,7 +440,7 @@ function SettingsOptionsCard(props) {
                 break
             case "Email":
                 setHeaderText("Novo email")
-                setBodyText("Email")
+                setTitleText("Email")
                 setLink("http://192.168.0.111:3000/api/user/email")
                 setPatchEnvelope({
                     method: "PATCH",
@@ -425,7 +454,7 @@ function SettingsOptionsCard(props) {
                 break
             case "Password":
                 setHeaderText("Nova senha")
-                setBodyText("Senha")
+                setTitleText("Senha")
                 setLink("http://192.168.0.111:3000/api/user/password")
                 setPatchEnvelope({
                     method: "PATCH",
@@ -448,44 +477,49 @@ function SettingsOptionsCard(props) {
         }
     }
 
-    useEffect(() => {switchOperation()},[text])
-
-    const onTryToPatch = async () => {
+    //Patches new information and goes on 
+    const onPatch = async () => {
         await fetch(link, props.options === "Delete"? props.deleteEnvelope : patchEnvelope)
         .then(res => res.json())
         .then(data => {
-            data === "Updated" ? getNewInfos() : 
-            data === "Removed" ? handleScreenList("Auth") : 
+            data === "Updated" ? onGetNewInfos() : 
+            data === "Removed" ? props.setScreen("Auth") : 
             null
         })
         .catch(err => err)
     }   
 
-    const getNewInfos = async () => {
+    //Gets new information retrieved before
+    const onGetNewInfos = async () => {
         await fetch("http://192.168.0.111:3000/api/user/infos", props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            if (data != null){
+            if (data != null) {
                 props.setMyInfos(data)
-                props.setScreen("Settings")
+                props.setScrn("Settings")
             }
         })
         .catch(err => err)
     }
 
+    //Verifies params, if matches the "onPatch" method runs, if not it cleans variables
     const verify = () => {
-        if (props.options === "Delete" || 
+        if (
+            props.options === "Delete" || 
             ((props.options === "Name" || props.options === "Bios") && text.length > 0) || 
             (props.options === "Email" && text.length >= 7) || 
             (props.options === "Password" && text.length >= 8)
-        ){
-            onTryToPatch()
+        ) {
+            onPatch()
         } else {
             setText("")
             setLink("")
         }
     }
     
+    //Calls switchOperation evry time text changes
+    useEffect(() => {switchOperation()},[text])
+
     return (
         <React.Fragment>
             <View style={{flex: 1}}>
@@ -504,17 +538,17 @@ function SettingsOptionsCard(props) {
                         marginTop: wp("2.5%"),
                         ...styles.headerText4
                     }}>
-                        {bodyText}
+                        {titleText}
                     </Text>
 
                     <TextInput 
-                        onChangeText={ text => setText(text)}
+                        onChangeText={text => setText(text)}
                         style={styles.addInput}
                         secureTextEntry={props.options === "Password" ? true : false}
                     />
 
                     <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
+                        <TouchableOpacity onPress={() => props.setScrn("Settings")}>    
                             <Icons 
                                 name="Arrow" 
                                 width={wp("10%")} 
@@ -524,7 +558,7 @@ function SettingsOptionsCard(props) {
                                 style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => verify()}>    
+                        <TouchableOpacity onPress={verify}>    
                             <Icons 
                                 name="Arrow" 
                                 width={wp("10%")} 
@@ -538,7 +572,7 @@ function SettingsOptionsCard(props) {
                 </View> :
                 <View style={{bottom: wp("4%"),...styles.iButton}}>
                     <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
+                        <TouchableOpacity onPress={() => props.setScrn("Settings")}>    
                             <Icons 
                                 name="Arrow" 
                                 width={wp("10%")} 
@@ -548,7 +582,7 @@ function SettingsOptionsCard(props) {
                                 style={iconStyles.icon1}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => verify()}>    
+                        <TouchableOpacity onPress={verify}>    
                             <Icons 
                                 name="Arrow" 
                                 width={wp("10%")} 
@@ -561,31 +595,34 @@ function SettingsOptionsCard(props) {
                     </View>
                 </View>
             }
-            
         </React.Fragment>
     )
 }
 
 function UserSearch(props) {
+    //Username searched
     const[username, setUsername] = useState("")
+    
+    //Stores users components
     const[users, setUsers] = useState(null)
 
-    const onTryToGet = async () => {
+    //Function that searches users 
+    const onGet = async () => {
         await fetch(`http://192.168.0.111:3000/api/chats/find/${username}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             setUsers(
                 data[0] !== null ? data.map((users, index) => { return (
                     <ContactCard
+                        token={props.token}
+                        forum={props.description === "mod" ? props.forum : null}
+                        description={props.description}
+                        
                         key={index}
                         title={users.username}
                         subtitle={users.bios}
-                        mode="User"
-                        description={props.description}
-                        forum={props.description === "mod" ? props.forum : null}
                         user={users.id}
-                        token={props.token}
+                        mode="User"
                     />
                 )}) : null
             )
@@ -593,13 +630,8 @@ function UserSearch(props) {
         .catch(err => err)
     }   
 
-    const verify = () => {
-        if (username.length > 0){
-            onTryToGet()
-        } else {
-            setUsername("")
-        }
-    }
+    //If param matches, fulfills search
+    const verify = () => username.length > 0 ? onGet() : setUsername("")
     
     return (
         <React.Fragment>
@@ -613,7 +645,10 @@ function UserSearch(props) {
                 </Text>
                 {   
                     users !== null ? 
-                    <ScrollView contentContainerStyle={{marginTop: wp("2.5%")}}>
+                    <ScrollView contentContainerStyle={{
+                        paddingBottom: 200, 
+                        marginTop: wp("2.5%")
+                    }}>
                         {users}
                     </ScrollView> :
                     <Text style={{marginLeft: wp("7.5%"), ...styles.bodyText4}}>
@@ -635,9 +670,12 @@ function UserSearch(props) {
 
                 <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity onPress={() => {
-                        props.description === "chat" ?
-                        props.setScreen("Chats") :
-                        props.setScreen("Mods")
+                        if (props.description === "chat") {
+                            props.setScrn("Chats")
+                            props.onFunction()
+                        } else {
+                            props.setScrn("Mods")
+                        }
                     }}>    
                         <Icons 
                             name="Arrow" 
@@ -648,7 +686,7 @@ function UserSearch(props) {
                             style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => verify()}>    
+                    <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -665,9 +703,11 @@ function UserSearch(props) {
 }
 
 function RulesUpdate(props) {
+    //Stores old rules that'll be updated
     const[rules, setRules] = useState(props.rules)
     
-    const onTryToPatch = async () => {
+    //Function that updates rules 
+    const onPatch = async () => {
         const patchEnvelope = {
             method: "PATCH",
             headers: {
@@ -680,45 +720,45 @@ function RulesUpdate(props) {
 
         await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/rules`, patchEnvelope)
         .then(res => res.json())
-        .then(data => data === "Updated" ? props.setScreen("Rules") : null)
+        .then(data => data === "Updated" ? props.setScrn("Rules") : null)
         .catch(err => err)
     }   
-
-    const verify = () => {
-        if (rules.length > 0){
-            onTryToPatch()
-        } else{
-            setRules("")
-        }
-    }
-
-    String.prototype.hexEncode = function(){
-        var hex, i;
     
-        var result = "";
-        for (i=0; i<this.length; i++) {
-            hex = this.charCodeAt(i).toString(16);
-            result += ("000"+hex).slice(-4);
-        }
-    
-        return result
-    }
-    
-    function getIndicesOf(searchStr, str, caseSensitive) {
-        var searchStrLen = searchStr.length;
+    //Finds all specific chars in a string
+    const getIndicesOf = (searchStr, str, caseSensitive) => {
+        var searchStrLen = searchStr.length
         if (searchStrLen == 0) {
-            return [];
+            return []
         }
-        var startIndex = 0, index, indices = [];
+
+        var startIndex = 0, index, indices = []
         if (!caseSensitive) {
-            str = str.toLowerCase();
-            searchStr = searchStr.toLowerCase();
+            str = str.toLowerCase()
+            searchStr = searchStr.toLowerCase()
         }
+        
         while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-            indices.push(index);
-            startIndex = index + searchStrLen;
+            indices.push(index)
+            startIndex = index + searchStrLen
         }
-        return indices;
+
+        return indices
+    }
+
+    //If param matches, fulfills update
+    const verify = () => rules.length > 0 ? onPatch() : setRules("")
+
+    //Converts traditional text to hex code
+    String.prototype.hexEncode = function(){
+        var hex, i
+    
+        var result = ""
+        for (i = 0; i < this.length; i++) {
+            hex = this.charCodeAt(i).toString(16)
+            result += ("000" + hex).slice(-4)
+        }
+
+        return result
     }
 
     return (
@@ -757,7 +797,7 @@ function RulesUpdate(props) {
                 />
                 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("Rules")}>    
+                    <TouchableOpacity onPress={() => props.setScrn("Rules")}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -767,7 +807,7 @@ function RulesUpdate(props) {
                             style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => verify()}>    
+                    <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -784,9 +824,11 @@ function RulesUpdate(props) {
 }
 
 function FlagsFlagAddCard(props) {
+    //Flag message
     const[text, setText] = useState("")
     
-    const onTryToFlag = async () => {
+    //Function that posts flag 
+    const onFlag = async () => {
         const postEnvelope = {
             method: "POST",
             headers: {
@@ -804,11 +846,12 @@ function FlagsFlagAddCard(props) {
         
         await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`,postEnvelope)
         .then(res => res.json())
-        .then(data => props.setScreen("FlagsFlag"))
+        .then(data => props.setScrn("FlagsFlag"))
         .catch(err => err)
     }   
 
-    const verify = () => text.length > 10 ? onTryToFlag() : setText("")
+    //If param matches, fulfills post
+    const verify = () => text.length > 10 ? onFlag() : setText("")
     
     return (
         <React.Fragment>
@@ -836,7 +879,7 @@ function FlagsFlagAddCard(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("FlagsFlag")}>    
+                    <TouchableOpacity onPress={() => props.setScrn("FlagsFlag")}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -846,7 +889,7 @@ function FlagsFlagAddCard(props) {
                             style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => verify()}>    
+                    <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -863,9 +906,11 @@ function FlagsFlagAddCard(props) {
 }
 
 function FlagsFlagUpdateCard(props) {
+    //Flag message
     const[text, setText] = useState(props.message)
     
-    const onTryToFlag = async () => {
+    //Function that updates flag 
+    const onFlag = async () => {
         const patchEnvelope = {
             method: "PATCH",
             headers: {
@@ -883,40 +928,46 @@ function FlagsFlagUpdateCard(props) {
         
         await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`,patchEnvelope)
         .then(res => res.json())
-        .then(data => props.setScreen("FlagsFlag"))
+        .then(data => props.setScrn("FlagsFlag"))
         .catch(err => err)
     }   
 
-    String.prototype.hexEncode = function(){
-        var hex, i;
+    //Finds all specific chars in a string
+    function getIndicesOf(searchStr, str, caseSensitive) {
+        var searchStrLen = searchStr.length
+        if (searchStrLen == 0) {
+            return []
+        }
+
+        var startIndex = 0, index, indices = []
+        if (!caseSensitive) {
+            str = str.toLowerCase()
+            searchStr = searchStr.toLowerCase()
+        }
+
+        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+            indices.push(index)
+            startIndex = index + searchStrLen
+        }
+        
+        return indices
+    }
+
+    //If param matches, fulfills update
+    const verify = () => text.length > 10 ? onFlag() : setText("")
+
+    //Converts traditional text to hex code
+    String.prototype.hexEncode = function() {
+        var hex, i
     
-        var result = "";
-        for (i=0; i<this.length; i++) {
-            hex = this.charCodeAt(i).toString(16);
-            result += ("000"+hex).slice(-4);
+        var result = ""
+        for (i = 0; i < this.length; i++) {
+            hex = this.charCodeAt(i).toString(16)
+            result += ("000" + hex).slice(-4)
         }
     
         return result
     }
-    
-    function getIndicesOf(searchStr, str, caseSensitive) {
-        var searchStrLen = searchStr.length;
-        if (searchStrLen == 0) {
-            return [];
-        }
-        var startIndex = 0, index, indices = [];
-        if (!caseSensitive) {
-            str = str.toLowerCase();
-            searchStr = searchStr.toLowerCase();
-        }
-        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-            indices.push(index);
-            startIndex = index + searchStrLen;
-        }
-        return indices;
-    }
-
-    const verify = () => text.length > 10 ? onTryToFlag() : setText("")
     
     return (
         <React.Fragment>
@@ -954,7 +1005,7 @@ function FlagsFlagUpdateCard(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScreen("FlagsFlag")}>    
+                    <TouchableOpacity onPress={() => props.setScrn("FlagsFlag")}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -964,7 +1015,7 @@ function FlagsFlagUpdateCard(props) {
                             style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => verify()}>    
+                    <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -989,13 +1040,16 @@ function usePrevious(value) {
 }
 
 function InteligentButton(props) {
+    //Fade animation variables
     const fadeAnim = useRef(new Animated.Value(0)).current
     const prevScreen = usePrevious(props.screen)
     const[active, setActive] = useState(false)
 
+    //Animation update
     useEffect(() => {
         fadeAnim.setValue(0)
         setActive(true)
+        
         if(active === true){
             Animated.timing(
                 fadeAnim,
@@ -1006,17 +1060,19 @@ function InteligentButton(props) {
                 }
             ).start()
         }
+
         if(fadeAnim === 1){
             setActive(false)
         }
     }, [fadeAnim, prevScreen])
 
+    //Sets how the button will be
     let buttonIcons
     switch (props.screen) {
         case "Forums":
             buttonIcons = 
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.setScreen("ForumSearch")}>
+                    <TouchableOpacity onPress={() => props.setScrn("ForumSearch")}>
                         <Icons 
                             name="Lupe" 
                             width={wp("10%")} 
@@ -1026,7 +1082,7 @@ function InteligentButton(props) {
                             style={iconStyles.icon1}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.setScreen("ForumAdd")}>
+                    <TouchableOpacity onPress={() => props.setScrn("ForumAdd")}>
                         <Icons 
                             name="Add" 
                             width={wp("10%")} 
@@ -1036,7 +1092,7 @@ function InteligentButton(props) {
                             style={iconStyles.icon2}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.handleScreenList("Settings")}>    
+                    <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
                         <Icons 
                             name="Options" 
                             width={wp("3.3%")} 
@@ -1052,7 +1108,7 @@ function InteligentButton(props) {
         case "Invites":
             buttonIcons = 
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.handleScreenList("Settings")}>    
+                    <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
                         <Icons 
                             name="Options" 
                             width={wp("3.3%")} 
@@ -1067,7 +1123,7 @@ function InteligentButton(props) {
         case "Chats":
             buttonIcons = 
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.setScreen("UserSearch")}>
+                    <TouchableOpacity onPress={() => props.setScrn("UserSearch")}>
                         <Icons 
                             name="Lupe" 
                             width={wp("10%")} 
@@ -1077,7 +1133,7 @@ function InteligentButton(props) {
                             style={iconStyles.icon1}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.handleScreenList("Settings")}>    
+                    <TouchableOpacity onPress={() => props.setScreen("Settings")}>    
                         <Icons 
                             name="Options" 
                             width={wp("3.3%")} 
@@ -1092,28 +1148,31 @@ function InteligentButton(props) {
         case "ForumSearch":
             buttonIcons = 
                 <ForumSearch 
+                    token={props.token}
+                    myInfos={props.myInfos}    
                     getEnvelope={props.getEnvelope}
                     deleteEnvelope={props.deleteEnvelope}
-                    myInfos={props.myInfos}
-                    token={props.token}
-                    setScreen={screen => props.setScreen(screen)}
-                    handleScreenList={ screen => props.handleScreenList(screen)}
-                    handleForum={props.handleForum} 
+                    
+                    setScreen={props.setScreen}
+                    setScrn={props.setScrn}
+                    setForum={props.setForum} 
                 />
             break
         case "ForumAdd":
             buttonIcons = 
                 <ForumAddCard 
                     token={props.token}
-                    setScreen={screen => props.setScreen(screen)}   
-                    handleScreenList={ screen => props.handleScreenList(screen)}
-                    handleForum={props.handleForum} 
+
+                    setScreen={props.setScreen}
+                    setScrn={props.setScrn}   
+                    setForum={props.setForum} 
+                    onFunction={props.onFunction}
                 />
             break    
         case "Forum":
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                    <TouchableOpacity onPress={props.setPrevScreen}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -1123,7 +1182,7 @@ function InteligentButton(props) {
                             style={iconStyles.icon1}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.setScreen("PostAdd")}>
+                    <TouchableOpacity onPress={() => props.setScrn("PostAdd")}>
                         <Icons 
                             name="Add" 
                             width={wp("10%")} 
@@ -1138,7 +1197,7 @@ function InteligentButton(props) {
         case "Mods":
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                    <TouchableOpacity onPress={props.setPrevScreen}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -1150,7 +1209,7 @@ function InteligentButton(props) {
                     </TouchableOpacity>
                     {   
                         props.myInfos.id === props.owner ?
-                        <TouchableOpacity onPress={() => props.setScreen("ModsSearch")}>
+                        <TouchableOpacity onPress={() => props.setScrn("ModsSearch")}>
                             <Icons 
                                 name="Add" 
                                 width={wp("10%")} 
@@ -1169,15 +1228,17 @@ function InteligentButton(props) {
                 <UserSearch 
                     token={props.token}
                     forum={props.forum}
-                    description="mod"
                     getEnvelope={props.getEnvelope}
-                    setScreen={screen => props.setScreen(screen)}
+
+                    description="mod"
+                    
+                    setScrn={props.setScrn}
                 />
             break 
         case "Rules":
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                    <TouchableOpacity onPress={props.setPrevScreen}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -1189,7 +1250,7 @@ function InteligentButton(props) {
                     </TouchableOpacity>
                     {   
                         props.myInfos.id === props.owner ?
-                        <TouchableOpacity onPress={() => props.setScreen("RulesUpdate")}>
+                        <TouchableOpacity onPress={() => props.setScrn("RulesUpdate")}>
                             <Icons 
                                 name="Add" 
                                 width={wp("10%")} 
@@ -1207,10 +1268,11 @@ function InteligentButton(props) {
             buttonIcons = 
                 <RulesUpdate 
                     token={props.token}
-                    rules={props.rules}
                     forum={props.forum}
+                    rules={props.rules}
                     getEnvelope={props.getEnvelope}
-                    setScreen={screen => props.setScreen(screen)}
+
+                    setScrn={props.setScrn}
                 />
             break 
         case "PostAdd": 
@@ -1218,13 +1280,15 @@ function InteligentButton(props) {
                 <PostAddCard 
                     token={props.token}
                     forum={props.forum} 
-                    setScreen={screen => props.setScreen(screen)}
+                    
+                    setScrn={props.setScrn}
+                    onFunction={props.onFunction}
                 />
             break
         case "Post":    
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                    <TouchableOpacity onPress={props.setPrevScreen}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -1234,7 +1298,7 @@ function InteligentButton(props) {
                             style={iconStyles.icon1}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.setScreen("ComentaryAdd")}>
+                    <TouchableOpacity onPress={() => props.setScrn("CommentaryAdd")}>
                         <Icons 
                             name="Add" 
                             width={wp("10%")} 
@@ -1246,28 +1310,33 @@ function InteligentButton(props) {
                     </TouchableOpacity>
                 </React.Fragment>
             break
-        case "ComentaryAdd":
+        case "CommentaryAdd":
             buttonIcons = 
-                <ComentaryAddCard
+                <CommentaryAddCard
                     token={props.token}
                     forum={props.forum}
                     post={props.post} 
-                    setScreen={screen => props.setScreen(screen)}   
+
+                    setScrn={props.setScrn}   
+                    onFunction={props.onFunction}
                 />
             break
         case "UserSearch":
             buttonIcons = 
                 <UserSearch 
-                    getEnvelope={props.getEnvelope}
-                    setScreen={screen => props.setScreen(screen)}
-                    description="chat"
                     token={props.token}
+                    getEnvelope={props.getEnvelope}
+        
+                    description="chat"
+                    
+                    setScrn={props.setScrn}
+                    onFunction={props.onFunction}
                 />
             break    
         case "Chat":
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                    <TouchableOpacity onPress={props.setPrevScreen}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -1280,10 +1349,10 @@ function InteligentButton(props) {
                    <TextInput 
 				   		onChangeText={text => props.setMessage(text)} 
                         value={props.message}
-						onSubmitEditing={() => props.verify()} 
+						onSubmitEditing={props.verify} 
 						style={styles.chatInput}
 					/>
-                    <TouchableOpacity onPress={() => props.verify()}>    
+                    <TouchableOpacity onPress={props.verify}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -1299,19 +1368,20 @@ function InteligentButton(props) {
             buttonIcons =
                 <SettingsOptionsCard
                     token={props.token}
-                    options={props.options}
-                    setMyInfos={props.setMyInfos}
                     screen={props.screen}
-                    setScreen={props.setScreen}
-                    handleScreenList={props.handleScreenList}
+                    options={props.options}
                     getEnvelope={props.getEnvelope}
                     deleteEnvelope={props.deleteEnvelope}
+
+                    setScreen={props.setScreen}
+                    setScrn={props.setScrn}
+                    setMyInfos={props.setMyInfos}
                 />
             break
         case "FlagsFlag":  
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                    <TouchableOpacity onPress={props.setPrevScreen}>    
                         <Icons 
                             name="Arrow" 
                             width={wp("10%")} 
@@ -1321,7 +1391,7 @@ function InteligentButton(props) {
                             style={iconStyles.icon1}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.setScreen("FlagsFlagAdd")}>
+                    <TouchableOpacity onPress={() => props.setScrn("FlagsFlagAdd")}>
                         <Icons 
                             name="Add" 
                             width={wp("10%")} 
@@ -1337,28 +1407,30 @@ function InteligentButton(props) {
             buttonIcons =
                 <FlagsFlagAddCard
                     token={props.token}
-                    forum={props.forum}
                     screen={props.screen}
-                    setScreen={props.setScreen}
+                    forum={props.forum}
                     flagObj={props.flagObj}
+
+                    setScrn={props.setScrn}
                 />
             break
         case "FlagsFlagUpdate": 
             buttonIcons =
                 <FlagsFlagUpdateCard
                     token={props.token}
-                    forum={props.forum}
                     screen={props.screen}
-                    setScreen={props.setScreen}
+                    forum={props.forum}
                     flagObj={props.flagObj}
                     message={props.message}
+
+                    setScrn={props.setScrn}
                 />
             break
         case "Settings":
         case "Flags":
         default:
             buttonIcons =
-                <TouchableOpacity onPress={() => props.handleDecrementScreen()}>    
+                <TouchableOpacity onPress={props.setPrevScreen}>    
                     <Icons 
                         name="Arrow" 
                         width={wp("10%")} 
@@ -1375,7 +1447,7 @@ function InteligentButton(props) {
         <React.Fragment>
             { 
                 props.screen === "PostAdd" || props.screen === "ForumAdd" || 
-                props.screen === "ComentaryAdd" || props.screen === "ForumSearch" ||
+                props.screen === "CommentaryAdd" || props.screen === "ForumSearch" ||
                 props.screen === "UserSearch" || props.screen === "ModsSearch" ||
                 props.screen === "SettingsOptions" || props.screen === "RulesUpdate" ||
                 props.screen === "FlagsFlagAdd" || props.screen === "FlagsFlagUpdate" ?

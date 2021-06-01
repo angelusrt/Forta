@@ -1,49 +1,28 @@
 import React, {useState, useEffect} from 'react'
-import _reactNative, {View, ScrollView, Text, TouchableOpacity, Animated, Easing} from "react-native"
+import _reactNative, {View, ScrollView, Text} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
-import Icons from "./../components/Icons"
+import Refresh from "../components/Refresh"
 import InteligentButton from "../components/InteligentButton.js"
-import {iconStyles, lightTheme, styles} from "./../Styles.js"
-
-function Refresh(){
-    const[animRot, setAnimRot] = useState(new Animated.Value(0))
-
-    const spin = animRot.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '360deg']
-    })
-
-    useEffect(() => {
-        Animated.loop(Animated.timing(animRot,{
-            toValue: 1,
-            duration: 450,
-            easing: Easing.linear,
-            useNativeDriver: true
-        })).start()
-    },[animRot])
-
-    return(
-        <Animated.View style={{transform: [{ rotate: spin }], flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <Icons 
-                name="Refresh" 
-                width={wp("20%")} 
-                height={wp("20%")} 
-                viewBox="0 0 625 625" 
-                fill="none" 
-                style={iconStyles.icon10}
-            />
-        </Animated.View>
-    )
-}
+import {lightTheme, styles} from "./../Styles.js"
 
 function Chat(props) {
-    const[chat, setChat] = useState({})
-    const[messages, setMessages] = useState([])
-    const[message, setMessage] = useState("")
+    //Shows react element only resolved is true
     const[resolved, setResolved] = useState(false)
+
+    //Stores chat infos
+    const[chat, setChat] = useState({})
+
+    //Stores messages components
+    const[messages, setMessages] = useState([])
+    
+    //Stores message that'll be sent
+    const[message, setMessage] = useState("")
+    
+    //Global width metric
     const metric = wp("5%")
 
+    //Gets messages
     const getChat = async () => {
         await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}`, props.getEnvelope)
         .then(res => res.json())
@@ -77,9 +56,8 @@ function Chat(props) {
         .catch(err => console.log(err))
     }
 
-    useEffect(() => {getChat()},[])
-    
-    const onTryToPost = async () => {
+    //Posts message
+    const onPost = async () => {
         const httpEnvelopePost = {
             method: "POST",
             headers: {
@@ -96,9 +74,13 @@ function Chat(props) {
         .catch(err => err)
     
         setMessage("")
-    }   
+    }
 
-    const verify = async () => message.length > 0 ? onTryToPost() : setMessage("")
+    //If param matches, fulfills post
+    const verify = async () => message.length > 0 ? onPost() : setMessage("")
+
+    //Updates get chat
+    useEffect(() => {getChat()},[])
 
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>
@@ -134,11 +116,14 @@ function Chat(props) {
                     </ScrollView>
                     <InteligentButton 
                         token={props.token}
+                        
                         message={message}
-                        setMessage={message => setMessage(message)}
-                        verify={() => verify()}
-                        handleDecrementScreen={props.handleDecrementScreen}
                         screen="Chat"
+                        
+                        setPrevScreen={props.setPrevScreen}
+                        
+                        setMessage={message => setMessage(message)}
+                        verify={verify}
                     />
                 </React.Fragment> :
                 <Refresh/>

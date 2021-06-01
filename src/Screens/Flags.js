@@ -7,94 +7,97 @@ import PostCard from "../components/PostCard";
 import {lightTheme, styles} from "./../Styles"
 
 function Flags(props) {
-    const[cards, setCards] = useState(null)
+    //Stores all cards components
+    const[cards, setCards] = useState([])
 
-    const onTryToGetPostsAndComentaries = async (isItPost, post, comentaries = "", index) => {
-        if(isItPost){
-            await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${post}`, props.getEnvelope)
-            .then(res => res.json())
-            .then(data => { 
-                if(data != null) {
-                    setCards( state => (
-                        state, 
-                        <PostCard
-                            key={index}
-                            token={props.token}
-                            myInfos={props.myInfos}
-                            title={data.post.title}
-                            bodyText={data.post.bodyText}
-                            name={data.post.author}
-                            owner={data.owner}
-                            mods={data.mods}
-                            mode="Flags"
-                            isItPost={true}
-                            forum={data.post.forum}
-                            post={post}
-                            coments={comentaries}
-                            rating={data.post.upvotes}
-                            handleFlagObj={props.handleFlagObj}
-                            handleScreenList={props.handleScreenList}
-                            handleForum={props.handleForum}
-                            deleteEnvelope={props.deleteEnvelope}
-                            handleDecrementScreen={props.handleDecrementScreen} 
-                        />
-                    ))
-                }
-            })
-            .catch(err => err)
-        } else {
-            await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${post}/comentaries/${comentaries}`, props.getEnvelope)
-            .then(res => res.json())
-            .then(data => {
-                if(data != null) {
-                    setCards( state => (
-                        state,
-                        <PostCard
-                            key={index}
-                            token={props.token}
-                            myInfos={props.myInfos}
-                            title={null}
-                            bodyText={data.post.bodyText}
-                            name={data.post.author}
-                            owner={data.owner}
-                            mods={data.mods}
-                            mode="Flags"
-                            isItPost={false}
-                            forum={data.post.forum}
-                            post={post}
-                            coments={comentaries}
-                            rating={data.post.upvotes}
-                            handleFlagObj={props.handleFlagObj}
-                            handleScreenList={props.handleScreenList}
-                            deleteEnvelope={props.deleteEnvelope}
-                        /> 
-                    ))
-                } 
-            })
-            .catch(err => err)
-        }
-    }
+    const onGetPostsAndComments = async (isItPost, post, comments = "", index) => {
+        isItPost ?
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${post}`, 
+        props.getEnvelope)
+        .then(res => res.json())
+        .then(data => { 
+            if(data != null) 
+                setCards( state => [state, 
+                    <PostCard
+                        token={props.token}
+                        myInfos={props.myInfos}
+                        deleteEnvelope={props.deleteEnvelope}
 
-    const onTryToGetFlags = async () => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`, props.getEnvelope)
+                        key={index}
+                        mode="Flags"
+                        isItPost={true}
+                        title={data.post.title}
+                        bodyText={data.post.bodyText}
+                        name={data.post.author}
+                        owner={data.owner}
+                        mods={data.mods}
+                        forum={data.post.forum}
+                        post={post}
+                        comments={comments}
+                        rating={data.post.upvotes}
+                        
+                        setScreen={props.setScreen}
+                        setPrevScreen={props.setPrevScreen}
+                        setForum={props.setForum}
+                        setFlagObj={props.setFlagObj} 
+                    />
+                ])
+        })
+        .catch(err => err) :
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${post}/comentaries/${comments}`, 
+        props.getEnvelope)
         .then(res => res.json())
         .then(data => {
-            console.log("0 " + data) 
-            if(data.flags[0] != null){
+            if(data != null) 
+                setCards( state => [
+                    state,
+                    <PostCard
+                        token={props.token}
+                        myInfos={props.myInfos}
+                        deleteEnvelope={props.deleteEnvelope}
+
+                        key={index}
+                        mode="Flags"
+                        isItPost={false}
+                        bodyText={data.comentary.bodyText}
+                        name={data.comentary.author}
+                        owner={data.owner}
+                        mods={data.mods}
+                        forum={data.comentary.forum}
+                        post={post}
+                        comments={comments}
+                        rating={data.comentary.upvotes}
+                        
+                        setScreen={props.setScreen}
+                        setForum={props.setForum}
+                        setFlagObj={props.setFlagObj}
+                    /> 
+                ])
+        })
+        .catch(err => err)
+    }
+
+    //On get posts and comments flagged
+    const onGet = async () => {
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`, 
+        props.getEnvelope)
+        .then(res => res.json())
+        .then(data => { 
+            if(data.flags[0] != null) 
                 data.flags.map((obj, index) => {
-                    onTryToGetPostsAndComentaries(
+                    onGetPostsAndComments(
                         obj.isItPost, 
                         obj.post, 
                         obj.comentaries,
                         index
                     )
                 })
-            }
         })
         .catch(err => err)
     }   
 
-    useEffect(() => {onTryToGetFlags()},[])
+    //Updates cards
+    useEffect(() => {onGet()},[])
 
     return (
         <View style={{
@@ -111,14 +114,16 @@ function Flags(props) {
                     Posts denunciados
                 </Text> 
                 
-                <ScrollView contentContainerStyle={{marginTop: wp("2.5%")}}>
-                    {cards}
+                <ScrollView contentContainerStyle={{paddingBottom: 200, marginTop: wp("2.5%")}}>
+                    <React.Fragment>
+                        {cards.map(card => card)}
+                    </React.Fragment>
                 </ScrollView>
             </View>
 
             <InteligentButton 
                 screen={"Flags"}
-                handleDecrementScreen={props.handleDecrementScreen}
+                setPrevScreen={props.setPrevScreen}
             />
         </View>
     )

@@ -7,10 +7,12 @@ import Icons from "./../components/Icons"
 import {iconStyles, lightTheme, styles} from "./../Styles"
 
 function Options(props) {
-    const deleteForum = async() => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, props.deleteEnvelope)
+    //Deletes forum
+    const onDelete = async() => {
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, 
+        props.deleteEnvelope)
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => props.onFunction())
         .catch(err => console.log(err))
     }
 
@@ -39,8 +41,8 @@ function Options(props) {
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
                             onPress={() => {
-                                props.handleScreenList("Rules")
-                                props.handleForum(props.forum) 
+                                props.setScreen("Rules")
+                                props.setForum(props.forum) 
                             }}
                         >
                             <Icons 
@@ -62,8 +64,8 @@ function Options(props) {
                             android_ripple={{color: lightTheme.ligthGrey}}
                             style={styles.optionButtons}
                             onPress={() => {
-                                props.handleScreenList("Mods")
-                                props.handleForum(props.forum) 
+                                props.setScreen("Mods")
+                                props.setForum(props.forum) 
                             }}
                         >
                             <Icons 
@@ -88,8 +90,8 @@ function Options(props) {
                                 android_ripple={{color: lightTheme.ligthGrey}}
                                 style={styles.optionButtons}
                                 onPress={() => {
-                                    props.handleScreenList("Flags")
-                                    props.handleForum(props.forum) 
+                                    props.setScreen("Flags")
+                                    props.setForum(props.forum) 
                                 }}
                             >
                                 <Icons 
@@ -108,7 +110,7 @@ function Options(props) {
                             props.owner === props.myInfos.id ? 
                             <Pressable 
                                 android_ripple={{color: lightTheme.ligthGrey}}
-                                onPress={() => deleteForum()}
+                                onPress={onDelete}
                                 style={styles.optionButtons}
                             >
                                 <Icons 
@@ -130,8 +132,10 @@ function Options(props) {
 }
 
 function ChatOptions(props) {
-    const deleteChat = async() => {
-        await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}`, props.deleteEnvelope)
+    //Deletes chat
+    const onDelete = async() => {
+        await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}`, 
+        props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
@@ -160,7 +164,7 @@ function ChatOptions(props) {
                     }}>
                         <Pressable 
                             android_ripple={{color: lightTheme.ligthGrey}}
-                            onPress={() => deleteChat()}
+                            onPress={() => onDelete()}
                             style={styles.optionButtons}
                         >
                             <Icons 
@@ -181,11 +185,12 @@ function ChatOptions(props) {
 }
 
 function ForumAndChatButtons(props) {
-    const[favoriteActive, setFavoriteActive] = useState(props.favorite === 0 ? false: true)
+    //favorite setter
+    const[favorite, setFavorite] = useState(props.favorite)
 
     return(
         <React.Fragment>
-            <TouchableOpacity onPress={() => setFavoriteActive(!favoriteActive)}>
+            <TouchableOpacity onPress={() => setFavorite(!favorite)}>
                 <Icons 
                     name="Star" 
                     width={wp("10%")} 
@@ -193,7 +198,7 @@ function ForumAndChatButtons(props) {
                     viewBox="0 0 625 625" 
                     fill="none" 
                     style={{
-                        stroke: favoriteActive?lightTheme.yellow:lightTheme.darkGrey,
+                        stroke: favorite?lightTheme.yellow:lightTheme.darkGrey,
                         strokeWidth:"33.1px",
                         strokeLinejoin: "round",
                         strokeMiterlimit:"1.5"
@@ -205,7 +210,10 @@ function ForumAndChatButtons(props) {
 }
 
 function ModButtons(props) {
+    //Deny setter
     const[deny, setDeny] = useState(false)
+
+    //Envelope used to delete mod
     const deleteEnvelope = {
         method: "DELETE",
         headers: {
@@ -219,10 +227,12 @@ function ModButtons(props) {
         body: JSON.stringify({mods: [{mod: props.user}]})
     }
 
-    const removeMod = async () => {
+    //Removes mod
+    const onRemove = async () => {
         setDeny(true)
 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/mods`, deleteEnvelope)
+        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/mods`, 
+        deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
@@ -232,7 +242,7 @@ function ModButtons(props) {
         <React.Fragment>
             {
                 props.myInfos.id === props.owner && props.stats ? 
-                <TouchableOpacity onPress={() => !deny ? removeMod() : null}>
+                <TouchableOpacity onPress={() => !deny ? onRemove() : null}>
                     <Icons 
                         name="Remove" 
                         width={wp("10%")} 
@@ -254,9 +264,11 @@ function ModButtons(props) {
 }
 
 function InviteUserButtons(props) {
+    //Accept setter
     const[accept, setAccept] = useState(false)
     
-    const invite = async () => {
+    //Sends invite
+    const onPost = async () => {
         setAccept(true)
 
         if(props.description === "chat"){
@@ -291,22 +303,17 @@ function InviteUserButtons(props) {
                 },
                 body: JSON.stringify({mods: [{mod: props.user}]})
             }
-            console.log(patchEnvelope)
+            
             await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/mods`, patchEnvelope)
             .then(res => res.json())
             .then(data => console.log(data))
             .catch(err => console.log(err))
-
         } 
-        // else {
-
-        // }
-        
     }
 
     return(
         <React.Fragment>
-            <TouchableOpacity onPress={() => !accept ? invite() : null}>
+            <TouchableOpacity onPress={() => !accept ? onPost() : null}>
                 <Icons 
                     name="Invite" 
                     width={wp("10%")} 
@@ -327,46 +334,53 @@ function InviteUserButtons(props) {
 }
 
 function InviteButtons(props) {
+    //Accept and deny setters
     const[accept, setAccept] = useState(false)
     const[deny, setDeny] = useState(false)
-    
-    const clearInvite = async () => {
-        await fetch(`http://192.168.0.111:3000/api/invites/${props.invite}`, props.deleteEnvelope)
+
+    //Deletes invite
+    const onRemoveInvite = async () => {
+        await fetch(`http://192.168.0.111:3000/api/invites/${props.invite}`, 
+        props.deleteEnvelope)
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => props.onFunction())
         .catch(err => console.log(err))
     }
 
-    const update = async () => {
+    //Accepts invite
+    const onUpdate = async () => {
         setAccept(true)
         
-        if(props.description === "chat"){
-            await fetch(`http://192.168.0.111:3000/api/chats/${props.path}`, props.patchEnvelope)
+        if (props.description === "chat") {
+            await fetch(`http://192.168.0.111:3000/api/chats/${props.path}`, 
+            props.patchEnvelope)
             .then(res => res.json())
-            .then(data => data === "Updated" ? clearInvite() : null)
+            .then(data => data === "Updated" ? onRemoveInvite() : null)
             .catch(err => console.log(err))
-        
-        } else if(props.description === "mod"){
-            await fetch(`http://192.168.0.111:3000/api/forums/${props.path}/mods`, props.patchEnvelope)
+        } else if (props.description === "mod") {
+            await fetch(`http://192.168.0.111:3000/api/forums/${props.path}/mods`, 
+            props.patchEnvelope)
             .then(res => res.json())
-            .then(data => data === "Updated" ? clearInvite() : null)
+            .then(data => data === "Updated" ? onRemoveInvite() : null)
             .catch(err => console.log(err))
-        
         } else {
-            await fetch(`http://192.168.0.111:3000/api/groups/${props.path}/pendent`, props.patchEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/groups/${props.path}/pendent`, 
+            props.patchEnvelope)
             .then(res => res.json())
-            .then(data => data === "Updated" ? clearInvite() : null)
+            .then(data => data === "Updated" ? onRemoveInvite() : null)
             .catch(err => console.log(err))
         }
     }
 
-    const clear = async () => {
+    //Denies invite
+    const onRemove = async () => {
         setDeny(true)
 
         if(props.description === "chat"){
-            await fetch(`http://192.168.0.111:3000/api/chats/${props.path}`, props.deleteEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/chats/${props.path}`, 
+            props.deleteEnvelope)
             .then(res => res.json())
-            .then(data => data === "Removed" ? clearInvite() : null)
+            .then(data => data === "Removed" ? onRemoveInvite() : null)
             .catch(err => console.log(err))
         
         } else if(props.description === "mod"){
@@ -382,16 +396,18 @@ function InviteButtons(props) {
                 },
                 body: JSON.stringify({mods: [{mod: props.receiver}]})
             }
-            console.log(deleteEnvelope)
-            await fetch(`http://192.168.0.111:3000/api/forums/${props.path}/mods`, deleteEnvelope)
+            
+            await fetch(`http://192.168.0.111:3000/api/forums/${props.path}/mods`, 
+            deleteEnvelope)
             .then(res => res.json())
-            .then(data => data === "Removed" ? clearInvite() : null)
-            //.catch(err => console.log(err))
+            .then(data => data === "Removed" ? onRemoveInvite() : null)
+            .catch(err => console.log(err))
         
         } else {
-            await fetch(`http://192.168.0.111:3000/api/groups/${props.path}/pendent`, props.deleteEnvelope)
+            await fetch(`http://192.168.0.111:3000/api/groups/${props.path}/pendent`, 
+            props.deleteEnvelope)
             .then(res => res.json())
-            .then(data => data === "Removed" ? clearInvite() : null)
+            .then(data => data === "Removed" ? onRemoveInvite() : null)
             .catch(err => console.log(err))
         }
     }
@@ -400,7 +416,7 @@ function InviteButtons(props) {
         <React.Fragment>
             {
                 props.isSender ? 
-                <TouchableOpacity onPress={() => !deny ? clear() : null}>
+                <TouchableOpacity onPress={() => !deny ? onRemove() : null}>
                     <Icons 
                         name="Remove" 
                         width={wp("10%")} 
@@ -416,7 +432,7 @@ function InviteButtons(props) {
                     />
                 </TouchableOpacity> :
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => !accept && !deny ? update() : null}>
+                    <TouchableOpacity onPress={() => !accept && !deny ? onUpdate() : null}>
                         <Icons 
                             name="Accept" 
                             width={wp("10%")} 
@@ -431,7 +447,7 @@ function InviteButtons(props) {
                             }
                         }/>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => !accept && !deny ? clear() : null}>
+                    <TouchableOpacity onPress={() => !accept && !deny ? onRemove() : null}>
                         <Icons 
                             name="Remove" 
                             width={wp("10%")} 
@@ -453,8 +469,57 @@ function InviteButtons(props) {
 }
 
 function ContactCard(props) {
+    //Sets popup on or off
     const[isModalVisible, setModalVisible] = useState(false)
     
+    //Jumps to the aproppriate InviteButtons if matches case
+    let buttons
+    switch (props.mode) {
+        case "Invite":
+            buttons = (
+                <InviteButtons 
+                    token={props.token}
+                    invite={props.invite}
+                    path={props.path}
+                    isSender={props.isSender}
+                    receiver={props.receiver}
+                    description={props.description}
+                    patchEnvelope={props.patchEnvelope}
+                    deleteEnvelope={props.deleteEnvelope}
+
+                    onFunction={props.onFunction}
+                />
+            )        
+            break
+        case "Mod":
+            buttons = (
+                <ModButtons
+                    token={props.token}
+                    myInfos={props.myInfos}
+                    user={props.user}
+                    owner={props.owner}
+                    stats={props.stats}
+                />
+            )
+            break
+        case "User":
+            buttons = (
+                <InviteUserButtons
+                    token={props.token}
+                    user={props.user}
+                    forum={props.forum}
+                    description={props.description}
+                /> 
+            )
+            break
+        default: 
+            buttons = (
+                <ForumAndChatButtons 
+                    favorite={props.favorite}
+                />
+            )
+            break
+    }
     return (
         <View>
             <Pressable 
@@ -464,11 +529,13 @@ function ContactCard(props) {
                 }} 
                 android_ripple={{color: lightTheme.ligthGrey}}
                 onPress={() => {
-                    props.mode === "Chat" || props.mode === "Forum" ? 
-                    props.handleScreenList(props.mode) : null
-                    props.mode === "Forum" ? props.handleForum(props.forum) :
-                    props.mode === "Chat" ? props.handleChat(props.chat) :
-                    null 
+                    if (props.mode === "Chat") {
+                        props.setScreen(props.mode)    
+                        props.setChat(props.chat)
+                    } else if (props.mode === "Forum") {
+                        props.setScreen(props.mode)    
+                        props.setForum(props.forum)
+                    }
                 }}
                 style={{
                     borderRadius: 20, 
@@ -504,37 +571,7 @@ function ContactCard(props) {
                 </View>
                 
                 <View style={styles.rightButtonsWrapper}>
-                    {   
-                        props.mode === "Invite" ?
-                        <InviteButtons 
-                            patchEnvelope={props.patchEnvelope}
-                            deleteEnvelope={props.deleteEnvelope}
-                            token={props.token}
-                            isSender={props.isSender}
-                            invite={props.invite} 
-                            description={props.description}
-                            path={props.path}
-                            receiver={props.receiver}
-                        /> :
-                        props.mode === "Mod" ? 
-                        <ModButtons
-                            myInfos={props.myInfos}
-                            owner={props.owner}
-                            user={props.user}
-                            token={props.token}
-                            stats={props.stats}
-                        /> :
-                        props.mode !== "User" ?
-                        <ForumAndChatButtons 
-                            favorite={props.favorite}
-                        /> :
-                        <InviteUserButtons
-                            user={props.user}
-                            token={props.token}
-                            description={props.description}
-                            forum={props.forum}
-                        /> 
-                    }
+                    {buttons}
                 </View>
             </Pressable>
             {
@@ -544,17 +581,23 @@ function ContactCard(props) {
                     owner={props.owner}
                     mods={props.mods}
                     forum={props.forum}
-                    handleForum={props.handleForum}
-                    handleScreenList={props.handleScreenList}
                     deleteEnvelope={props.deleteEnvelope}
+                    
                     isModalVisible={isModalVisible}
+                    
+                    setScreen={props.setScreen}
+                    setForum={props.setForum}
+                    onFunction={props.onFunction}
+
                     setModalVisible={prop => setModalVisible(prop)}
                 /> :
                 <ChatOptions
                     chat={props.chat}
-                    isModalVisible={isModalVisible}
-                    setModalVisible={prop => setModalVisible(prop)}
                     deleteEnvelope={props.deleteEnvelope}
+
+                    isModalVisible={isModalVisible}
+                    
+                    setModalVisible={prop => setModalVisible(prop)}
                 /> 
             }
         </View>
