@@ -12,13 +12,14 @@ function Flags(props) {
 
     const onGetPostsAndComments = async (isItPost, post, comments = "", index) => {
         isItPost ?
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${post}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/posts/${post}`, 
         props.getEnvelope)
         .then(res => res.json())
         .then(data => { 
             if(data != null) 
                 setCards( state => [state, 
                     <PostCard
+                        site={props.site}
                         token={props.token}
                         myInfos={props.myInfos}
                         deleteEnvelope={props.deleteEnvelope}
@@ -44,7 +45,7 @@ function Flags(props) {
                 ])
         })
         .catch(err => err) :
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${post}/comentaries/${comments}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/posts/${post}/comentaries/${comments}`, 
         props.getEnvelope)
         .then(res => res.json())
         .then(data => {
@@ -52,6 +53,7 @@ function Flags(props) {
                 setCards( state => [
                     state,
                     <PostCard
+                        site={props.site}
                         token={props.token}
                         myInfos={props.myInfos}
                         deleteEnvelope={props.deleteEnvelope}
@@ -79,7 +81,7 @@ function Flags(props) {
 
     //On get posts and comments flagged
     const onGet = async () => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/flags`, 
         props.getEnvelope)
         .then(res => res.json())
         .then(data => { 

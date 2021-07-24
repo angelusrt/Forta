@@ -12,7 +12,7 @@ import {iconStyles, lightTheme, styles} from "./../Styles.js"
 function Options(props) {
     //Deletes forum
     const deleteForum = async() => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
@@ -153,12 +153,13 @@ function Forum(props) {
 
     //Gets Forum
     const onGet = async () => { 
-        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, props.getEnvelope)
+        return await fetch(`${props.site}/api/forums/${props.forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setForum(data)              
             setPosts(data.posts.map((posts, index) =>
-                <PostCard 
+                <PostCard
+                    site={props.site} 
                     token={props.token}
                     myInfos={props.myInfos}
                     deleteEnvelope={props.deleteEnvelope}
@@ -191,7 +192,7 @@ function Forum(props) {
 
     //Sets follow state
     const onGetMyForum = async () => {
-        return await fetch(`http://192.168.0.111:3000/api/user/myForums`, props.getEnvelope)
+        return await fetch(`${props.site}/api/user/myForums`, props.getEnvelope)
         .then(res => res.json())
         .then(data => setFollow(data.indexOf(props.forum) !== -1 ? true : false))
         .catch(err => console.log(err))
@@ -199,7 +200,7 @@ function Forum(props) {
     
     //Follows forum
     const onFollow = async () => {
-        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/follow`, props.patchEnvelope)
+        return await fetch(`${props.site}/api/forums/${props.forum}/follow`, props.patchEnvelope)
         .then(res => res.json())
         .then(data => data === "Followed" ? onGet() : null)
         .catch(err => console.log(err))
@@ -207,7 +208,7 @@ function Forum(props) {
 
     //Unfollows forum
     const onUnfollow = async () => {
-        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/follow`, props.deleteEnvelope)
+        return await fetch(`${props.site}/api/forums/${props.forum}/follow`, props.deleteEnvelope)
         .then(res => res.json())
         .then(data => data === "Removed" ? onGet() : null)
         .catch(err => console.log(err))
@@ -369,6 +370,7 @@ function Forum(props) {
                         </View>
                     </ScrollView>
                     <InteligentButton 
+                        site={props.site}
                         token={props.token}
                         forum={props.forum}
                         

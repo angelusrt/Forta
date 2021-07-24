@@ -15,12 +15,13 @@ function ForumSearch(props) {
 
     //Function that sets forums found
     const onGet = async () => {
-        await fetch(`http://192.168.0.111:3000/api/forums/find/${groupName}`, props.getEnvelope)
+        await fetch(`${props.site}/api/forums/find/${groupName}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setForums(
                 data[0] !== null ? data.map((forumInfo, index) => { return (
                     <ContactCard
+                        site={props.site}
                         token={props.token}
                         myInfos={props.myInfos}
                         deleteEnvelope={props.deleteEnvelope}
@@ -129,7 +130,7 @@ function ForumAddCard(props) {
             body: JSON.stringify({groupName,bios,tags})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/forums/`, postEnvelope)
+        await fetch(`${props.site}/api/forums/`, postEnvelope)
         .then(res => res.json())
         .then(data => {
             props.setScreen("Forum")
@@ -235,7 +236,7 @@ function PostAddCard(props) {
             body: JSON.stringify({title,bodyText})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts`, postEnvelope)
+        await fetch(`${props.site}/api/forums/${props.forum}/posts`, postEnvelope)
         .then(res => res.json())
         .then(data => {
             props.setScrn("Forum")
@@ -328,7 +329,7 @@ function CommentaryAddCard(props) {
             body: JSON.stringify({bodyText})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/posts/${props.post}`, 
         postEnvelope)
         .then(res => res.json())
         .then(data => {
@@ -413,7 +414,7 @@ function SettingsOptionsCard(props) {
             case "Name":
                 setHeaderText("Novo nome")
                 setTitleText("Nome")
-                setLink("http://192.168.0.111:3000/api/user/username")
+                setLink(`${props.site}/api/user/username`)
                 setPatchEnvelope({
                     method: "PATCH",
                     headers: {
@@ -427,7 +428,7 @@ function SettingsOptionsCard(props) {
             case "Bios":
                 setHeaderText("Novo bios")
                 setTitleText("Bios")
-                setLink("http://192.168.0.111:3000/api/user/bios")
+                setLink(`${props.site}/api/user/bios`)
                 setPatchEnvelope({
                     method: "PATCH",
                     headers: {
@@ -441,7 +442,7 @@ function SettingsOptionsCard(props) {
             case "Email":
                 setHeaderText("Novo email")
                 setTitleText("Email")
-                setLink("http://192.168.0.111:3000/api/user/email")
+                setLink(`${props.site}/api/user/email`)
                 setPatchEnvelope({
                     method: "PATCH",
                     headers: {
@@ -455,7 +456,7 @@ function SettingsOptionsCard(props) {
             case "Password":
                 setHeaderText("Nova senha")
                 setTitleText("Senha")
-                setLink("http://192.168.0.111:3000/api/user/password")
+                setLink(`${props.site}/api/user/password`)
                 setPatchEnvelope({
                     method: "PATCH",
                     headers: {
@@ -468,7 +469,7 @@ function SettingsOptionsCard(props) {
                 break
             case "Delete":
                 setHeaderText("Deletar conta")
-                setLink("http://192.168.0.111:3000/api/user/user")
+                setLink(`${props.site}/api/user/user`)
                 break
             default: 
                 setText("")
@@ -491,7 +492,7 @@ function SettingsOptionsCard(props) {
 
     //Gets new information retrieved before
     const onGetNewInfos = async () => {
-        await fetch("http://192.168.0.111:3000/api/user/infos", props.getEnvelope)
+        await fetch(`${props.site}/api/user/infos`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             if (data != null) {
@@ -608,12 +609,13 @@ function UserSearch(props) {
 
     //Function that searches users 
     const onGet = async () => {
-        await fetch(`http://192.168.0.111:3000/api/chats/find/${username}`, props.getEnvelope)
+        await fetch(`${props.site}/api/chats/find/${username}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setUsers(
                 data[0] !== null ? data.map((users, index) => { return (
                     <ContactCard
+                        site={props.site}
                         token={props.token}
                         forum={props.description === "mod" ? props.forum : null}
                         description={props.description}
@@ -718,7 +720,7 @@ function RulesUpdate(props) {
             body: JSON.stringify({rules})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/rules`, patchEnvelope)
+        await fetch(`${props.site}/api/forums/${props.forum}/rules`, patchEnvelope)
         .then(res => res.json())
         .then(data => data === "Updated" ? props.setScrn("Rules") : null)
         .catch(err => err)
@@ -844,9 +846,12 @@ function FlagsFlagAddCard(props) {
             })
         }
         
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`,postEnvelope)
+        await fetch(`${props.site}/api/forums/${props.forum}/flags`,postEnvelope)
         .then(res => res.json())
-        .then(data => props.setScrn("FlagsFlag"))
+        .then(data => {
+            props.setScrn("FlagsFlag")
+            props.setUpdate()
+        })
         .catch(err => err)
     }   
 
@@ -926,9 +931,12 @@ function FlagsFlagUpdateCard(props) {
             })
         }
         
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags`,patchEnvelope)
+        await fetch(`${props.site}/api/forums/${props.forum}/flags`,patchEnvelope)
         .then(res => res.json())
-        .then(data => props.setScrn("FlagsFlag"))
+        .then(data => {
+            props.setScrn("FlagsFlag")
+            props.setUpdate()
+        })
         .catch(err => err)
     }   
 
@@ -1148,6 +1156,7 @@ function InteligentButton(props) {
         case "ForumSearch":
             buttonIcons = 
                 <ForumSearch 
+                    site={props.site}
                     token={props.token}
                     myInfos={props.myInfos}    
                     getEnvelope={props.getEnvelope}
@@ -1161,6 +1170,7 @@ function InteligentButton(props) {
         case "ForumAdd":
             buttonIcons = 
                 <ForumAddCard 
+                    site={props.site}
                     token={props.token}
 
                     setScreen={props.setScreen}
@@ -1226,6 +1236,7 @@ function InteligentButton(props) {
         case "ModsSearch":
             buttonIcons = 
                 <UserSearch 
+                    site={props.site}
                     token={props.token}
                     forum={props.forum}
                     getEnvelope={props.getEnvelope}
@@ -1267,6 +1278,7 @@ function InteligentButton(props) {
         case "RulesUpdate":
             buttonIcons = 
                 <RulesUpdate 
+                    site={props.site}
                     token={props.token}
                     forum={props.forum}
                     rules={props.rules}
@@ -1278,6 +1290,7 @@ function InteligentButton(props) {
         case "PostAdd": 
             buttonIcons = 
                 <PostAddCard 
+                    site={props.site}
                     token={props.token}
                     forum={props.forum} 
                     
@@ -1313,6 +1326,7 @@ function InteligentButton(props) {
         case "CommentaryAdd":
             buttonIcons = 
                 <CommentaryAddCard
+                    site={props.site}
                     token={props.token}
                     forum={props.forum}
                     post={props.post} 
@@ -1324,6 +1338,7 @@ function InteligentButton(props) {
         case "UserSearch":
             buttonIcons = 
                 <UserSearch 
+                    site={props.site}
                     token={props.token}
                     getEnvelope={props.getEnvelope}
         
@@ -1367,6 +1382,7 @@ function InteligentButton(props) {
         case "SettingsOptions": 
             buttonIcons =
                 <SettingsOptionsCard
+                    site={props.site}
                     token={props.token}
                     screen={props.screen}
                     options={props.options}
@@ -1406,12 +1422,14 @@ function InteligentButton(props) {
         case "FlagsFlagAdd": 
             buttonIcons =
                 <FlagsFlagAddCard
+                    site={props.site}
                     token={props.token}
                     screen={props.screen}
                     forum={props.forum}
                     flagObj={props.flagObj}
 
                     setScrn={props.setScrn}
+                    setUpdate={props.setUpdate}
                 />
             break
         case "FlagsFlagUpdate": 
@@ -1424,6 +1442,7 @@ function InteligentButton(props) {
                     message={props.message}
 
                     setScrn={props.setScrn}
+                    setUpdate={props.setUpdate}
                 />
             break
         case "Settings":

@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {View, Text, TouchableOpacity, Pressable} from "react-native"
 import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
+import {Shadow} from "react-native-shadow-2"
 
 import Icons from "./../components/Icons"
 import {lightTheme, styles, iconStyles} from "./../Styles"
@@ -9,7 +10,7 @@ import {lightTheme, styles, iconStyles} from "./../Styles"
 function Options(props) {
     //Deletes Post
     const onDeletePost = async() => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/posts/${props.post}`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => {
@@ -21,7 +22,7 @@ function Options(props) {
 
     //Deletes comments
     const onDeleteComments = async() => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}/comentaries/${props.comments}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/posts/${props.post}/comentaries/${props.comments}`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => {
@@ -34,12 +35,12 @@ function Options(props) {
     //Deletes flag
     const onDeleteFlag = async () => {
         props.isItPost ? 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.isItPost}/${props.post}/0/0`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/flags/${props.isItPost}/${props.post}/0/0`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => props.setPrevScreen())
         .catch(err => console.log(err)) :
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.isItPost}/${props.post}/${props.comments}/0`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/flags/${props.isItPost}/${props.post}/${props.comments}/0`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => props.setPrevScreen())
@@ -272,138 +273,163 @@ function PostCard(props) {
     }
 
     return (
-        <View>
+        <Shadow
+            distance={4}
+            startColor={'#00000004'}
+            radius={20}
+            offset={[0,4]}
+            viewStyle={{
+                width:"95%",
+                borderRadius: 20, 
+                backgroundColor: lightTheme.white,
+                marginBottom: wp("2.5%")
+            }}
+            containerViewStyle={{
+                width: "100%",
+                marginHorizontal: wp("2.5%")
+            }}
+            paintInside
+        >
             <Pressable 
                 onLongPress={() => setModalVisible(true)}
                 android_ripple={{color: lightTheme.ligthGrey}}
                 onPress={pressCondition}
-                style={{borderRadius: 20, ...styles.postCard}}
+                style={{padding: wp("5%")}}
             >
-                {   
-                    props.title !== undefined &&
-                    <Text style={{
-                        marginBottom: wp("1.25%"), 
-                        ...styles.headerText
-                    }}>
-                        {props.title}
-                    </Text>
-                }
-                <Text style={{marginBottom: wp("2.5%"), ...styles.bodyText}}>
-                    {props.bodyText}
-                </Text>
-
                 <View style={{
-                    marginBottom: wp("5%"), 
+                    marginBottom: props.mode !== "FlagsFlag" ? wp("1.25%") : 0, 
                     overflow: 'hidden',
                     ...styles.bottomWrapper
                 }}>
-                    <Text 
-                        style={{
-                            marginRight: wp("1.25%"),
-                            ...styles.headerText2
-                        }} 
-                        numberOfLines={1}
-                    >
-                        {props.name}
-                    </Text>
-
-                    <Text 
-                        style={styles.bodyText2} 
-                        numberOfLines={1}
-                    >
-                        {`at ${props.forumName || props.forum}`}
-                    </Text>
+                    {
+                        props.mode !== "FlagsFlag" ?
+                        <Text 
+                            style={styles.headerText2} 
+                            numberOfLines={1}
+                        >
+                            {`${props.name} at ${props.forumName || props.forum}`}
+                        </Text> :
+                        <Text 
+                            style={styles.headerText2} 
+                            numberOfLines={1}
+                        >
+                            {props.name}
+                        </Text>
+                    }
                 </View>
 
-                <View style={styles.bottomWrapper}>
-                    <TouchableOpacity 
-                        onPress={() => setLike(!like)}
-                        style={{
-                            paddingRight: wp("5%"), 
-                            marginLeft: -wp("1.5%"), 
-                            ...styles.bottomWrapper
-                        }}
-                    >
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{
-                                stroke: like ? lightTheme.green : 
-                                lightTheme.notSoDarkGrey,
-                                strokeLinejoin: "round",
-                                strokeWidth:"15.9px",
-                                transform: [{ rotate: "90deg" }]
-                            }}
-                        />
-                        <Text style={{
-                            color: lightTheme.notSoDarkGrey, 
-                            marginBottom: wp("0.625%"), 
-                            ...styles.rateText
-                        }}>
-                            {props.rating + (like && 1)}
-                        </Text>
-                    </TouchableOpacity>
+                {   
+                    props.title !== undefined &&
+                    <Text style={styles.headerText}>
+                        {props.title}
+                    </Text>
+                }
 
-                    <TouchableOpacity 
-                        onPress={() => setComment(!comment)}
-                        style={{paddingRight: wp("5%"), ...styles.bottomWrapper}}
-                    >
-                        <Icons 
-                            name="Comentaries" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 625 625" 
-                            fill="none" 
+                <Text style={{
+                    marginBottom: wp("2.5%"), 
+                    marginTop: wp("-0.625%"),
+                    ...styles.bodyText
+                }}>
+                    {props.bodyText}
+                </Text>
+                
+                {
+                    props.mode !== "FlagsFlag" &&
+                    <View style={styles.bottomWrapper}>
+                        <TouchableOpacity 
+                            onPress={() => setLike(!like)}
                             style={{
-                                stroke: comment ? lightTheme.red : 
-                                lightTheme.notSoDarkGrey,
-                                strokeWidth:"33.1px",
-                                strokeLinejoin: "round",
-                                strokeMiterlimit:"1.5"
+                                paddingRight: wp("2.5%"), 
+                                marginLeft: -wp("1.5%"), 
+                                ...styles.bottomWrapper
                             }}
-                        />
-                        <Text style={{
-                            color: lightTheme.notSoDarkGrey, 
-                            marginBottom: wp("0.625%"), 
-                            ...styles.rateText
-                        }}>
-                            {props.rating + (comment && 1)}
-                        </Text>
-                    </TouchableOpacity>
+                        >
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{
+                                    stroke: like ? lightTheme.green : 
+                                    lightTheme.notSoDarkGrey,
+                                    strokeLinejoin: "round",
+                                    strokeWidth:"15.9px",
+                                    transform: [{ rotate: "90deg" }]
+                                }}
+                            />
+                            <Text style={{
+                                color: like ? lightTheme.green : 
+                                lightTheme.notSoDarkGrey, 
+                                marginBottom: wp("0.625%"), 
+                                ...styles.rateText
+                            }}>
+                                {props.rating + (like && 1)}
+                            </Text>
+                        </TouchableOpacity>
+                        
+                        {   
+                            props.isItPost &&
+                            <TouchableOpacity 
+                                onPress={() => setComment(!comment)}
+                                style={styles.bottomWrapper}
+                            >
+                                <Icons 
+                                    name="Comentaries" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 625 625" 
+                                    fill="none" 
+                                    style={{
+                                        stroke: comment ? lightTheme.red : 
+                                        lightTheme.notSoDarkGrey,
+                                        strokeWidth:"33.1px",
+                                        strokeLinejoin: "round",
+                                        strokeMiterlimit:"1.5"
+                                    }}
+                                />
+                                {/* <Text style={{
+                                    color: lightTheme.notSoDarkGrey, 
+                                    marginBottom: wp("0.625%"), 
+                                    ...styles.rateText
+                                }}>
+                                    {props.rating + (comment && 1)}
+                                </Text> */}
+                            </TouchableOpacity>
+                        }
                     
-                    <TouchableOpacity 
-                        onPress={() => setShare(!share)}
-                        style={styles.bottomWrapper}
-                    >
-                        <Icons 
-                            name="Share" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 625 625" 
-                            fill="none" 
-                            style={{
-                                stroke: share ? lightTheme.yellow : 
-                                lightTheme.notSoDarkGrey,
-                                strokeWidth:"33.1px",
-                                strokeLinejoin: "round",
-                                strokeMiterlimit:"1.5"
-                            }}
-                        />
-                        <Text style={{
-                            color: lightTheme.notSoDarkGrey, 
-                            marginBottom: wp("0.625%"), 
-                            ...styles.rateText
-                        }}>
-                            {props.rating + (share && 1)}
-                        </Text>
-                    </TouchableOpacity>
-                </View> 
-            </Pressable>
+                        {/* <TouchableOpacity 
+                            onPress={() => setShare(!share)}
+                            style={styles.bottomWrapper}
+                        >
+                            <Icons 
+                                name="Share" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 625 625" 
+                                fill="none" 
+                                style={{
+                                    stroke: share ? lightTheme.yellow : 
+                                    lightTheme.notSoDarkGrey,
+                                    strokeWidth:"33.1px",
+                                    strokeLinejoin: "round",
+                                    strokeMiterlimit:"1.5"
+                                }}
+                            />
+                            <Text style={{
+                                color: lightTheme.notSoDarkGrey, 
+                                marginBottom: wp("0.625%"), 
+                                ...styles.rateText
+                            }}>
+                                {props.rating + (share && 1)}
+                            </Text>
+                        </TouchableOpacity> */}
+                    </View> 
+                }
+                </Pressable>
 
             <Options 
+                site={props.site}
                 token={props.token}
                 myInfos={props.myInfos}
                 bodyText={props.bodyText}
@@ -428,7 +454,7 @@ function PostCard(props) {
                 
                 setModalVisible={prop => setModalVisible(prop)}
             />
-        </View>
+        </Shadow>
     )
 }
 

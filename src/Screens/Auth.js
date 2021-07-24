@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {View, Text, TextInput, TouchableOpacity} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 import {createStackNavigator} from "@react-navigation/stack"
+import {Shadow} from "react-native-shadow-2"
 
 import Icons from "../components/Icons"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
@@ -25,7 +26,7 @@ function Login(props) {
         let getEnvelope
 
         //Gets token 
-        await fetch("http://192.168.0.111:3000/api/user/login", postEnvelope)
+        await fetch(`${props.site}/api/user/login`, postEnvelope)
         .then(res => JSON.parse(JSON.stringify(res)).headers.map["auth-token"])
         .then(data => {
             //Sets token required to go to tab
@@ -44,7 +45,7 @@ function Login(props) {
         .catch(err => console.log(err))
 
         //Gets myInfo 
-        await fetch("http://192.168.0.111:3000/api/user/infos", getEnvelope)
+        await fetch(`${props.site}/api/user/infos`, getEnvelope)
         .then(res => res.json())
         .then(data => props.setMyInfos(data))
         .catch(err => console.log(err))
@@ -53,41 +54,65 @@ function Login(props) {
         props.setScreen()
     }
     
+    const verify = () => {
+        if (email.length >= 8 && password.length >= 8) {
+            onLog()
+        } else {
+            setEmail("")
+            setPassword("")
+        }
+    }
+
     return(
         <View style={styles.authContainer}>
-            <View style={styles.authCard}>
-                <Text style={styles.authHeader}>Entre</Text>
-                
-                <Text style={styles.authTitle}>Email</Text>
-                <TextInput 
-                    onChangeText={email => setEmail(email)}
-                    style={styles.authInput}
-                />
-                
-                <Text style={styles.authTitle}>Senha</Text>
-                <TextInput 
-                    onChangeText={ pass => setPassword(pass)}
-                    secureTextEntry={ true }
-                    style={ styles.authInput }
-                />
+            <Shadow
+                distance={4}
+                startColor={'#00000004'}
+                radius={20}
+                offset={[0,4]}
+                viewStyle={{
+                    width:"95%"
+                }}
+                containerViewStyle={{
+                    width: "100%",
+                    marginHorizontal: wp("2.5%")
+                }}
+                paintInside
+            >
+                <View style={styles.authCard}>
+                    <Text style={styles.authHeader}>Entre</Text>
+                    
+                    <Text style={styles.authTitle}>Email</Text>
+                    <TextInput 
+                        onChangeText={email => setEmail(email)}
+                        style={styles.authInput}
+                    />
+                    
+                    <Text style={styles.authTitle}>Senha</Text>
+                    <TextInput 
+                        onChangeText={pass => setPassword(pass)}
+                        secureTextEntry={true}
+                        style={styles.authInput}
+                    />
 
-                <TouchableOpacity onPress={() => props.navigation.navigate("Register")}>
-                    <Text style={styles.authSubtitle}>Não tem uma conta? Crie!</Text>
-                </TouchableOpacity>
-
-                <View style={{marginTop: wp("5%"), ...styles.bottomWrapper}}>
-                    <TouchableOpacity onPress={() => onLog()} style={styles.authGreenButton}>
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill={lightTheme.white} 
-                            style={iconStyles.iconAuth}
-                        />
+                    <TouchableOpacity onPress={() => props.navigation.navigate("Register")}>
+                        <Text style={styles.authSubtitle}>Não tem uma conta? Crie!</Text>
                     </TouchableOpacity>
+
+                    <View style={{marginTop: wp("5%"), ...styles.bottomWrapper}}>
+                        <TouchableOpacity onPress={() => verify()} style={styles.authGreenButton}>
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill={lightTheme.white} 
+                                style={iconStyles.iconAuth}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </Shadow>
         </View>
     )
 }
@@ -110,51 +135,66 @@ function Register(props) {
 
     return(
         <View style={styles.authContainer}>
-            <View style={styles.authCard}>
-                <Text style={styles.authSubheader}>01/02</Text>
+            <Shadow
+                distance={4}
+                startColor={'#00000004'}
+                radius={20}
+                offset={[0,4]}
+                viewStyle={{
+                    width:"95%"
+                }}
+                containerViewStyle={{
+                    width: "100%",
+                    marginHorizontal: wp("2.5%")
+                }}
+                paintInside
+            >
+                <View style={styles.authCard}>
+                    <Text style={styles.authSubheader}>01/02</Text>
 
-                <Text style={styles.authHeader}>Registre</Text>
-                
-                <Text style={styles.authTitle}>Email</Text>
-                <TextInput 
-                    onChangeText={email => props.setEmail(email)}
-                    style={styles.authInput}
-                />
-                
-                <Text style={styles.authTitle}>Senha</Text>
-                <TextInput 
-                    onChangeText={pass => props.setPassword(pass)}
-                    secureTextEntry={true}
-                    style={styles.authInput}
-                />
+                    <Text style={styles.authHeader}>Registre</Text>
+                    
+                    <Text style={styles.authTitle}>Email</Text>
+                    <TextInput 
+                        onChangeText={email => props.setEmail(email)}
+                        style={styles.authInput}
+                    />
+                    
+                    <Text style={styles.authTitle}>Senha</Text>
+                    <TextInput 
+                        onChangeText={pass => props.setPassword(pass)}
+                        secureTextEntry={true}
+                        style={styles.authInput}
+                    />
 
-                <Text style={styles.authTitle}>Repita sua senha</Text>
-                <TextInput 
-                    onChangeText={pass => props.setPassword2(pass)}
-                    secureTextEntry={true}
-                    style={styles.authInput}
-                />
+                    <Text style={styles.authTitle}>Repita sua senha</Text>
+                    <TextInput 
+                        onChangeText={pass => props.setPassword2(pass)}
+                        secureTextEntry={true}
+                        style={styles.authInput}
+                    />
 
-                <Text style={styles.authSubtitle}>
-                    Ao registrar estais a concordar com nossos 
-                    <TouchableOpacity>
-                        <Text style={styles.authGreenSubtitle}>termos</Text>
-                    </TouchableOpacity>
-                </Text>
+                    <Text style={styles.authSubtitle}>
+                        Ao registrar estais a concordar com nossos 
+                        <TouchableOpacity>
+                            <Text style={styles.authGreenSubtitle}>termos</Text>
+                        </TouchableOpacity>
+                    </Text>
 
-                <View style={{marginTop: wp("5%"), ...styles.bottomWrapper}}>
-                    <TouchableOpacity onPress={verify} style={styles.authGreenButton}>
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill={lightTheme.white} 
-                            style={iconStyles.iconAuth}
-                        />
-                    </TouchableOpacity>
+                    <View style={{marginTop: wp("5%"), ...styles.bottomWrapper}}>
+                        <TouchableOpacity onPress={verify} style={styles.authGreenButton}>
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill={lightTheme.white} 
+                                style={iconStyles.iconAuth}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </Shadow>
         </View>
     )
 }
@@ -179,7 +219,7 @@ function User(props) {
         let getEnvelope
 
         //Register and gets token
-        await fetch("http://192.168.0.111:3000/api/user/register", postEnvelope)
+        await fetch(`${props.site}/api/user/register`, postEnvelope)
         .then(res => res.json())
         .then(data => {
             //Sets token required to go to tab
@@ -198,7 +238,7 @@ function User(props) {
         .catch(err => console.log(err))
 
         //Gets my info
-        await fetch("http://192.168.0.111:3000/api/user/infos", getEnvelope)
+        await fetch(`${props.site}/api/user/infos`, getEnvelope)
         .then(res => res.json())
         .then(data => props.setMyInfos(data))
         .catch(err => console.log(err))
@@ -211,112 +251,134 @@ function User(props) {
     const verify = () => {
         if (
             props.username.length <= 16 && props.bios.length <= 16 &&
-            props.username !== "<Username>" && props.bios !== "<Bios>"
+            props.username !== "Username" && props.bios !== "Bios"
         ) {
             onLog()
         } else {
-            props.setUsername("<Username>")
-            props.setBios("<Bios>")
+            props.setUsername("Username")
+            props.setBios("Bios")
         }
     }
 
     return(
         <View style={styles.authContainer}>
-            <View style={styles.authCard}>
+            <View style={{marginTop: wp("15%")}}>
                 <View style={{
                     position: 'absolute',
-                    right: -wp("7.5%"),
                     top: -wp("20%"),
                     width: wp("100%"),
                     height: wp("35%"),
-                    marginBottom: wp("5%"),
+                    marginBottom: 30,
                     borderRadius: 5,
-                    backgroundColor: lightTheme.notSoLightGrey
+                    backgroundColor: "#7475B9"
                 }}/>
 
-                <View style={{
-                    width: wp("95%"),
-                    padding: wp("5%"),
-                    marginLeft: -wp("5%"),
-                    marginTop: wp("5%"), 
-                    marginBottom: wp("5%"),
-                    borderRadius: wp("2.5%"),
-                    backgroundColor: lightTheme.ligthGrey,
-                    ...styles.bottomWrapper 
-                }}>
-                    <View style={{
-                        width: wp("20%"),
-                        height: wp("20%"),
-                        marginRight: wp("5%"),
-                        borderRadius: wp("2.5%"),
-                        backgroundColor: lightTheme.notSoLightGrey
-                    }}/>
+                <Shadow
+                    distance={4}
+                    startColor={'#00000004'}
+                    radius={20}
+                    offset={[0,4]}
+                    viewStyle={{
+                        width:"95%",
+                        marginBottom: wp("10%")
+                    }}
+                    containerViewStyle={{
+                        width: "100%",
+                        marginHorizontal: wp("2.5%")
+                    }}
+                    paintInside
+                >
+                    <View style={styles.authCard}>
+                        <View style={styles.bottomWrapper}>
+                            <View style={{
+                                width: wp("20%"),
+                                height: wp("20%"),
+                                marginRight: wp("5%"),
+                                borderRadius: 15,
+                                backgroundColor: "#E76E72"
+                            }}/>
 
-                    <View>
-                        <Text style={{ 
-                            fontFamily: 'Poppins_700Bold',
-                            color: lightTheme.darkGrey,
-                            fontSize: wp("7%"),
-                            marginBottom: -wp("2.5%")
+                            <View>
+                                <Text style={{ 
+                                    fontFamily: 'Poppins_700Bold',
+                                    color: lightTheme.darkGrey,
+                                    fontSize: wp("7%"),
+                                    marginBottom: -wp("2.5%")
+                                }}>
+                                    {props.username}
+                                </Text>
+                                
+                                <Text style={styles.authSubheader2}>{props.bios}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </Shadow>
+            </View>
+            <Shadow
+                distance={4}
+                startColor={'#00000004'}
+                radius={20}
+                offset={[0,4]}
+                viewStyle={{
+                    width:"95%"
+                }}
+                containerViewStyle={{
+                    width: "100%",
+                    marginHorizontal: wp("2.5%")
+                }}
+                paintInside
+            >
+                <View style={styles.authCard}>
+                    <Text style={styles.authSubheader}>02/02</Text>
+
+                    <Text style={{...styles.authHeader}}>Crie seu usuário</Text>
+                    
+                    <Text style={styles.authTitle}>Usuário</Text>
+                    <TextInput 
+                        onChangeText={text => 
+                            text !== "" ? props.setUsername(text) : 
+                            props.setUsername(`Username`)
+                        }
+                        style={styles.authInput}
+                    />
+                    
+                    <Text style={styles.authTitle}>Bios</Text>
+                    <TextInput 
+                        onChangeText={text => 
+                            text !== "" ? props.setBios(text) : 
+                            props.setBios(`Bios`)
+                        }
+                        style={styles.authInput}
+                    />
+
+                    <View style={{marginTop: wp("2.5%"), ...styles.bottomWrapper}}>
+                        <TouchableOpacity onPress={() => verify()} style={styles.authGreenButton}>
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill={lightTheme.white} 
+                                style={iconStyles.iconAuth}
+                            />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{ 
+                            marginRight: wp("5%"),
+                            ...styles.bottomWrapper 
                         }}>
-                            {props.username}
-                        </Text>
-                        
-                        <Text style={styles.authSubheader}>{props.bios}</Text>
+                            <Text style={styles.buttonText}>Add foto</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{ 
+                            marginRight: wp("5%"),
+                            ...styles.bottomWrapper 
+                        }}>
+                            <Text style={styles.buttonText}>Add capa</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-
-                <Text style={styles.authSubheader}>02/02</Text>
-
-                <Text style={{...styles.authHeader}}>Crie seu usuário</Text>
-                
-                <Text style={styles.authTitle}>Usuário</Text>
-                <TextInput 
-                    onChangeText={text => 
-                        text !== "" ? props.setUsername(text) : 
-                        props.setUsername(`<Username>`)
-                    }
-                    style={styles.authInput}
-                />
-                
-                <Text style={styles.authTitle}>Bios</Text>
-                <TextInput 
-                    onChangeText={text => 
-                        text !== "" ? props.setBios(text) : 
-                        props.setBios(`<Bios>`)
-                    }
-                    style={styles.authInput}
-                />
-
-                <View style={{marginTop: wp("5%"), ...styles.bottomWrapper}}>
-                    <TouchableOpacity onPress={() => verify()} style={styles.authGreenButton}>
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill={lightTheme.white} 
-                            style={iconStyles.iconAuth}
-                        />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={{ 
-                        marginRight: wp("2.5%"),
-                        padding: wp("3.5%"),
-                        ...styles.bottomWrapper 
-                    }}>
-                        <Text style={styles.headerText}>Add foto</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={{ 
-                        marginRight: wp("2.5%"),
-                        padding: wp("3.5%"),
-                        ...styles.bottomWrapper 
-                    }}>
-                        <Text style={styles.headerText}>Add capa</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            </Shadow>
         </View>
     )
 }
@@ -331,8 +393,8 @@ function Auth(props) {
     const[password2, setPassword2] = useState("")
     
     //Username and bios used in User
-    const[username, setUsername] = useState(`<Username>`)
-    const[bios, setBios] = useState(`<Bios>`)
+    const[username, setUsername] = useState(`Username`)
+    const[bios, setBios] = useState(`Bios`)
 
     return (
         <Stack.Navigator initialRouteName="Login">
@@ -341,6 +403,7 @@ function Auth(props) {
                     prop => 
                     <Login
                         {...prop} 
+                        site={props.site}
                         token={props.token}
                         myInfos={props.myInfos}
 
@@ -372,6 +435,7 @@ function Auth(props) {
                     prop => 
                     <User
                         {...prop} 
+                        site={props.site}
                         token={props.token}
                         myInfos={props.myInfos}
 

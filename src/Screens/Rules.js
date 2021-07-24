@@ -17,7 +17,7 @@ function Rules(props) {
     
     //Gets rules
     const onGet = async () => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/rules`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/rules`, 
         props.getEnvelope)
         .then(res => res.json())
         .then(data => {
@@ -58,6 +58,7 @@ function Rules(props) {
             </View>
 
             <InteligentButton 
+                site={props.site}
                 token={props.token}     
                 myInfos={props.myInfos} 
                 forum={props.forum}

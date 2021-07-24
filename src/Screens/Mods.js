@@ -18,7 +18,7 @@ function Mods(props) {
     
     //Gets mods
     const onGet = async () => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}`, 
         props.getEnvelope)
         .then(res => res.json())
         .then(data => {
@@ -26,6 +26,7 @@ function Mods(props) {
             setMods(
                 data.mods[0] != null ? data.mods.map((mods, index) => { return (
                     <ContactCard
+                        site={props.site}
                         key={index}
                         token={props.token}
                         myInfos={props.myInfos}
@@ -70,6 +71,7 @@ function Mods(props) {
                 }
             </View>
             <InteligentButton 
+                site={props.site}
                 token={props.token}     
                 myInfos={props.myInfos}  
                 forum={props.forum}

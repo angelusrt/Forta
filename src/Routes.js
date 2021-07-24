@@ -15,6 +15,9 @@ import Flags from "./Screens/Flags"
 import FlagsFlag from "./Screens/FlagsFlag"
 
 function Routes() {
+    //http site location
+    const site = 'http://192.168.0.102:3000'
+
     //The token of the user section
     const[token, setToken] = useState("")
 
@@ -84,6 +87,7 @@ function Routes() {
         case "Auth": 
             scrn = 
                 <Auth
+                    site={site}
                     token={token}
                     myInfos={myInfos}
 
@@ -95,6 +99,7 @@ function Routes() {
         case "Settings":
             scrn = 
                 <Settings
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     getEnvelope={getEnvelope}
@@ -108,6 +113,7 @@ function Routes() {
         case "Post":
             scrn = 
                 <Post 
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     forum={forum}
@@ -126,6 +132,7 @@ function Routes() {
         case "Forum": 
             scrn = 
                 <Forum
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     forum={forum}
@@ -143,6 +150,7 @@ function Routes() {
         case "Chat":
             scrn = 
                 <Chat
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     chat={chat}
@@ -154,6 +162,7 @@ function Routes() {
         case "Mods":
             scrn = 
                 <Mods
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     forum={forum}
@@ -166,6 +175,7 @@ function Routes() {
         case "Rules":
             scrn = 
                 <Rules
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     forum={forum}
@@ -177,6 +187,7 @@ function Routes() {
         case "Flags":
             scrn = 
                 <Flags
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     forum={forum}
@@ -192,6 +203,7 @@ function Routes() {
         case "FlagsFlag":
             scrn = 
                 <FlagsFlag
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     flagObj={flagObj}
@@ -205,6 +217,7 @@ function Routes() {
         default:
             scrn = 
                 <Tab
+                    site={site}
                     token={token}
                     myInfos={myInfos}
                     route={route}

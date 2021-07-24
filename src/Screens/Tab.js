@@ -141,7 +141,7 @@ function Home(props){
     
     //Gets the forums that you follow
     const onGetMyForums = async () => {
-        return await fetch("http://192.168.0.111:3000/api/user/myForums", props.getEnvelope)
+        return await fetch(`${props.site}/api/user/myForums`, props.getEnvelope)
         .then(res => res.json())
         .then(data => setForums(data))
         .catch(err => console.log(err))
@@ -149,7 +149,7 @@ function Home(props){
 
     //Gets posts 
     const onGet = async forum => { 
-        return await fetch(`http://192.168.0.111:3000/api/forums/${forum}`, props.getEnvelope)
+        return await fetch(`${props.site}/api/forums/${forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -168,6 +168,7 @@ function Home(props){
             //Returns all post cards
             return forumInfo.posts.map((post, idP) => 
                 <PostCard 
+                    site={props.site}
                     token={props.token}
                     myInfos={props.myInfos}
                     deleteEnvelope={props.deleteEnvelope}
@@ -221,7 +222,7 @@ function Forums(props) {
     
     //Function that gets all my forums ids
     const onGetMyForums = async () => {
-        return await fetch("http://192.168.0.111:3000/api/user/myForums", props.getEnvelope)
+        return await fetch(`${props.site}/api/user/myForums`, props.getEnvelope)
         .then(res => res.json())
         .then(data => setForums(data))
         .catch(err => console.log(err))
@@ -229,7 +230,7 @@ function Forums(props) {
     
     //Function that gets forum infos
     const onGet = async (forum) => { 
-        return await fetch(`http://192.168.0.111:3000/api/forums/${forum}`, props.getEnvelope)
+        return await fetch(`${props.site}/api/forums/${forum}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -245,6 +246,7 @@ function Forums(props) {
             
             return (
                 <ContactCard
+                    site={props.site}
                     myInfos={props.myInfos}
                     deleteEnvelope={props.deleteEnvelope}
 
@@ -288,7 +290,7 @@ function Chats(props) {
 
     //Function that gets all my chats ids
     const onGetMyChats = async () => {
-        return await fetch( "http://192.168.0.111:3000/api/user/myChat", props.getEnvelope)
+        return await fetch( `${props.site}/api/user/myChat`, props.getEnvelope)
         .then(res => res.json())
         .then(data => setChats(data))
         .catch(err => err)
@@ -296,7 +298,7 @@ function Chats(props) {
     
     //Function that gets chat infos
     const onGet = async (chat) => { 
-        return await fetch( `http://192.168.0.111:3000/api/chats/${chat}`, props.getEnvelope)
+        return await fetch( `${props.site}/api/chats/${chat}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -312,6 +314,7 @@ function Chats(props) {
     
             return (
                 <ContactCard
+                    site={props.site}
                     deleteEnvelope={props.deleteEnvelope}
                     
                     key={index}
@@ -362,7 +365,7 @@ function Invites(props) {
 
     //Function that gets all my invites ids
     const onGetMyInvites = async () => {
-        return await fetch("http://192.168.0.111:3000/api/user/myInvites", props.getEnvelope)
+        return await fetch(`${props.site}/api/user/myInvites`, props.getEnvelope)
         .then(res => res.json())
         .then(data => setInvites(data))
         .catch(err => err)
@@ -370,7 +373,7 @@ function Invites(props) {
     
     //Function that gets invite infos
     const onGet = async (invite) => { 
-        return await fetch(`http://192.168.0.111:3000/api/invites/${invite}`, props.getEnvelope)
+        return await fetch(`${props.site}/api/invites/${invite}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => data)
         .catch(err => console.log(err))
@@ -386,6 +389,7 @@ function Invites(props) {
             
             return (
                 <ContactCard
+                    site={props.site}
                     token={props.token}
                     patchEnvelope={props.patchEnvelope}
                     deleteEnvelope={props.deleteEnvelope}
@@ -482,7 +486,8 @@ function Tab(props) {
                     sceneContainerStyle={{backgroundColor: lightTheme.ligthGrey}}
                 >
                     <tab.Screen name="Home" children={() => 
-                        <Home  
+                        <Home 
+                            site={props.site} 
                             token={props.token} 
                             myInfos={props.myInfos}
                             getEnvelope={props.getEnvelope}
@@ -496,6 +501,7 @@ function Tab(props) {
                     }/>
                     <tab.Screen name="Forums" children={() => 
                         <Forums 
+                            site={props.site}
                             token={props.token}  
                             myInfos={props.myInfos}
                             getEnvelope={props.getEnvelope}
@@ -507,6 +513,7 @@ function Tab(props) {
                     }/>
                     <tab.Screen name="Chats" children={() => 
                         <Chats 
+                            site={props.site}
                             token={props.token}  
                             myInfos={props.myInfos}
                             getEnvelope={props.getEnvelope}
@@ -518,6 +525,7 @@ function Tab(props) {
                     }/>
                     <tab.Screen name="Invites" children={() => 
                         <Invites  
+                            site={props.site}
                             token={props.token}
                             myInfos={props.myInfos}
                             update={update}
@@ -529,6 +537,7 @@ function Tab(props) {
                 </tab.Navigator>
             </View>
             <InteligentButton 
+                site={props.site}
                 token={props.token}
                 myInfos={props.myInfos}
                 getEnvelope={props.getEnvelope}

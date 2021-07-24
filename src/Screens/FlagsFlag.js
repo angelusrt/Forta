@@ -16,10 +16,13 @@ function FlagsFlag(props) {
     //Edit message of flag
     const[message, setMessage] = useState("")
 
+    //Updates onGet 
+    const[update, setUpdate] = useState(false)
+
     //Gets flags of a post or comment
     const onGet = async () => { 
         props.flagObj.isItPost ?
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/flags/${props.flagObj.post}/`, 
         props.getEnvelope)
         .then(res => res.json())
         .then(data => {
@@ -27,6 +30,7 @@ function FlagsFlag(props) {
                 setCards(
                     data.flags.map((flag, index) =>(
                         <PostCard
+                            site={props.site}
                             token={props.token}
                             myInfos={props.myInfos}
                             post={props.flagObj.post}
@@ -40,8 +44,6 @@ function FlagsFlag(props) {
                             bodyText={flag.message}
                             name={flag.sender}
                             rating={0}
-                            
-                            
 
                             setPrevScreen={props.setPrevScreen}
                             deleteEnvelope={props.deleteEnvelope}
@@ -53,7 +55,7 @@ function FlagsFlag(props) {
                 )
         })
         .catch(err => err) : 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/flags/${props.flagObj.post}/${props.flagObj.comentaries}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/flags/${props.flagObj.post}/${props.flagObj.comentaries}`, 
         props.getEnvelope)
         .then(res => res.json())
         .then(data => {
@@ -61,6 +63,7 @@ function FlagsFlag(props) {
                 setCards(
                     data.flags.map((flag, index) =>(
                         <PostCard
+                            site={props.site}
                             token={props.token}
                             myInfos={props.myInfos}
                             post={props.flagObj.post}
@@ -77,6 +80,7 @@ function FlagsFlag(props) {
                             rating={0}
 
                             setPrevScreen={props.setPrevScreen}
+                            deleteEnvelope={props.deleteEnvelope}
 
                             setScreen={scrn => setScrn(scrn)}
                             setMessage={message => setMessage(message)}
@@ -88,7 +92,7 @@ function FlagsFlag(props) {
     }
 
     //Gets flags of a post or comment
-    useEffect(() => {onGet()},[])
+    useEffect(() => {onGet()},[update])
 
     return (
         <View style={{
@@ -111,6 +115,7 @@ function FlagsFlag(props) {
             </View>
 
             <InteligentButton 
+                site={props.site}
                 token={props.token}
                 myInfos={props.myInfos}
                 flagObj={props.flagObj}
@@ -122,6 +127,7 @@ function FlagsFlag(props) {
                 setPrevScreen={props.setPrevScreen}
 
                 setScrn={scrn => setScrn(scrn)}
+                setUpdate={() => setUpdate(!update)}
             />
         </View>
     )

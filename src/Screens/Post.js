@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable} from "react-native"
 import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
@@ -12,7 +12,7 @@ import {iconStyles, lightTheme, styles} from "./../Styles.js"
 function Options(props) {
     //Deletes post
     const deletePost = async() => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/posts/${props.post}`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => props.setPrevScreen())
@@ -82,6 +82,9 @@ function Options(props) {
 }
 
 function Post(props) {
+    //Cancells effect
+    const isCancelled = useRef(false)
+
     //Shows react element only resolved is true
     const[resolved, setResolved] = useState(false)
 
@@ -108,15 +111,16 @@ function Post(props) {
     
     //Gets comments
     const onGet = async () => { 
-        return await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/posts/${props.post}`, 
+        return await fetch(`${props.site}/api/forums/${props.forum}/posts/${props.post}`, 
         props.getEnvelope)
         .then(res => res.json())
-        .then(data =>{            
+        .then(data => {   
             setPost(data.post)
             setComments(
                 data.post.comentaries !== null ? 
                 data.post.comentaries.map((coments, index) => 
                     <PostCard 
+                        site={props.site}
                         token={props.token}
                         myInfos={props.myInfos}
                         post={props.post}
@@ -146,7 +150,12 @@ function Post(props) {
     }
 
     //Updates get comments 
-    useEffect(() => {onGet()},[update])
+    //useEffect(() => {onGet()},[update])
+
+    useEffect(() => {
+        onGet()
+        return () => isCancelled.current = true
+    },[update])
 
     return (
         <View style={{flex: 1, justifyContent: "center", backgroundColor: lightTheme.ligthGrey}}>
@@ -233,6 +242,7 @@ function Post(props) {
                         </View>
                         
                         <Options 
+                            site={props.site}
                             token={props.token}
                             myInfos={props.myInfos}
                             forum={props.forum}
@@ -259,6 +269,7 @@ function Post(props) {
                     </ScrollView>
 
                     <InteligentButton 
+                        site={props.site}
                         token={props.token}
                         screen={scrn}
                         

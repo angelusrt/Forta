@@ -7,7 +7,7 @@ export const lightTheme = {
   notSoDarkGrey: "rgba(80,80,80,.75)",
   notSoLightGrey: "#C4C4C4",
   kindOfLightGrey: "#EBEBEB",
-  ligthGrey: "#f4f4f4",//#F9F9F9
+  ligthGrey: "#F9F9F9",//#F9F9F9
   white: "#FFFFFF",
   red: "#BF2E2E",
   green: "#2DCC54",
@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'Poppins_700Bold',
     color: lightTheme.black,
     fontSize: wp("7%"),
+    letterSpacing: wp("0.125%"),
     marginBottom: wp("2.5%")
   },
   authSubheader: {
@@ -28,14 +29,22 @@ export const styles = StyleSheet.create({
     fontSize: wp("5%"),
     letterSpacing: wp("0.625%")
   },
-  authTitle: {
+  authSubheader2: {
     fontFamily: "Roboto_500Medium",
+    fontSize: wp("5%"),
+    letterSpacing: wp("0.25%"),
+    color: lightTheme.notSoLightGrey,
+  },
+  authTitle: {
+    fontFamily: "Roboto_700Bold",
     fontSize: wp("4.5%"),
-    color: lightTheme.darkGrey
+    letterSpacing: wp("0.125%"),
+    color: lightTheme.notSoDarkGrey
   },
   authSubtitle: {
     fontFamily: "Roboto_500Medium",
     fontSize: wp("4%"),
+    letterSpacing: wp("0.125%"),
     color: lightTheme.notSoLightGrey,
     marginBottom: wp("1%")
   },
@@ -51,15 +60,27 @@ export const styles = StyleSheet.create({
     fontSize: wp("4.5%"),
     color: lightTheme.darkGrey
   },
+  // bodyText: {
+  //   fontFamily: "Roboto_500Medium",
+  //   fontSize: wp("4%"),
+  //   color: lightTheme.notSoDarkGrey,
+  //   lineHeight: 20
+  // },
   bodyText: {
-    fontFamily: "Roboto_500Medium",
+    fontFamily: "Roboto_700Bold",
     fontSize: wp("4%"),
     color: lightTheme.notSoDarkGrey,
     lineHeight: 20
   },
+  buttonText: {
+    fontFamily: "Poppins_700Bold",
+    fontSize: wp("4.5%"),
+    letterSpacing: wp("0.125%"),
+    color: lightTheme.notSoDarkGrey
+  },
   headerText2: {
     fontFamily: "Poppins_600SemiBold",
-    fontSize: wp("3%"),
+    fontSize: wp("3.5%"),
     color: lightTheme.notSoLightGrey
   },
   bodyText2: {
@@ -110,10 +131,11 @@ export const styles = StyleSheet.create({
     marginBottom: wp("2.5%"),
     borderRadius: wp("2.5%"),
     borderWidth: wp("0.5%"),
-    fontFamily: "Roboto_400Regular",
+    fontFamily: "Roboto_500Medium",
     fontSize: wp("4.5%"),
-    backgroundColor: lightTheme.kindOfLightGrey,
-    borderColor: lightTheme.notSoLightGrey,
+    letterSpacing: wp("0.125%"),
+    backgroundColor: lightTheme.ligthGrey,
+    borderColor: lightTheme.kindOfLightGrey,
     color: lightTheme.darkGrey
   },
   addInput: {
@@ -156,8 +178,9 @@ export const styles = StyleSheet.create({
   //Cards and containers
   authContainer: {
     flex: 1,
-    paddingHorizontal: wp("7.5%"),
-    alignItems: 'center',
+    //paddingHorizontal: wp("2.5%"),
+    //alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: lightTheme.ligthGrey
   },
   authTopCard: {
@@ -166,9 +189,17 @@ export const styles = StyleSheet.create({
     top: 0
   },
   authCard: {
-    position: 'absolute',
-    width: "100%",
-    bottom: wp("20%")
+    // position: 'absolute',
+
+    // width: "100%",
+    // bottom: wp("30%"),
+
+    padding: wp("5%"),
+    borderRadius: 20, 
+    //borderWidth: wp("0.5%"),
+
+    //borderColor: lightTheme.kindOfLightGrey,
+    backgroundColor: lightTheme.white,
   },
   card: {
     borderColor: lightTheme.ligthGrey,
@@ -240,13 +271,13 @@ export const styles = StyleSheet.create({
     borderRadius: wp("2.5%")
   },
   authGreenButton : {
-    marginRight: wp("2.5%"),
-    backgroundColor: lightTheme.green, 
+    marginRight: wp("5%"),
     width: wp("15%"),
-    padding: wp("2.5%"),
-    borderRadius: wp("2.5%"),
+    paddingHorizontal: wp("2.5%"),
+    borderRadius: wp("3.5%"),
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: lightTheme.green
   },
   optionButtons: {
     paddingRight: wp("5%"),

@@ -24,7 +24,7 @@ function Chat(props) {
 
     //Gets messages
     const getChat = async () => {
-        await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}`, props.getEnvelope)
+        await fetch(`${props.site}/api/chats/${props.chat}`, props.getEnvelope)
         .then(res => res.json())
         .then(data => {
             setChat(data)
@@ -68,7 +68,7 @@ function Chat(props) {
             body: JSON.stringify({message})
         }
 
-        await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}/messages`, httpEnvelopePost)
+        await fetch(`${props.site}/api/chats/${props.chat}/messages`, httpEnvelopePost)
         .then(res => res.json())
         .then(() => getChat())
         .catch(err => err)
@@ -115,6 +115,7 @@ function Chat(props) {
                         </View>
                     </ScrollView>
                     <InteligentButton 
+                        site={props.site}
                         token={props.token}
                         
                         message={message}

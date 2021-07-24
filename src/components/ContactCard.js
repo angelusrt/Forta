@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {View, Text, TouchableOpacity, Pressable} from "react-native"
 import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
+import {Shadow} from "react-native-shadow-2"
 
 import Icons from "./../components/Icons"
 import {iconStyles, lightTheme, styles} from "./../Styles"
@@ -9,7 +10,7 @@ import {iconStyles, lightTheme, styles} from "./../Styles"
 function Options(props) {
     //Deletes forum
     const onDelete = async() => {
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}`, 
+        await fetch(`${props.site}/api/forums/${props.forum}`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => props.onFunction())
@@ -134,7 +135,7 @@ function Options(props) {
 function ChatOptions(props) {
     //Deletes chat
     const onDelete = async() => {
-        await fetch(`http://192.168.0.111:3000/api/chats/${props.chat}`, 
+        await fetch(`${props.site}/api/chats/${props.chat}`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
@@ -231,7 +232,7 @@ function ModButtons(props) {
     const onRemove = async () => {
         setDeny(true)
 
-        await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/mods`, 
+        await fetch(`${props.site}/api/forums/${props.forum}/mods`, 
         deleteEnvelope)
         .then(res => res.json())
         .then(data => console.log(data))
@@ -285,7 +286,7 @@ function InviteUserButtons(props) {
                 body: JSON.stringify({user: props.user})
             }
 
-            await fetch(`http://192.168.0.111:3000/api/chats/`, postEnvelope)
+            await fetch(`${props.site}/api/chats/`, postEnvelope)
             .then(res => res.json())
             .then(data => console.log(data))
             .catch(err => console.log(err))
@@ -304,7 +305,7 @@ function InviteUserButtons(props) {
                 body: JSON.stringify({mods: [{mod: props.user}]})
             }
             
-            await fetch(`http://192.168.0.111:3000/api/forums/${props.forum}/mods`, patchEnvelope)
+            await fetch(`${props.site}/api/forums/${props.forum}/mods`, patchEnvelope)
             .then(res => res.json())
             .then(data => console.log(data))
             .catch(err => console.log(err))
@@ -340,7 +341,7 @@ function InviteButtons(props) {
 
     //Deletes invite
     const onRemoveInvite = async () => {
-        await fetch(`http://192.168.0.111:3000/api/invites/${props.invite}`, 
+        await fetch(`${props.site}/api/invites/${props.invite}`, 
         props.deleteEnvelope)
         .then(res => res.json())
         .then(data => props.onFunction())
@@ -352,19 +353,19 @@ function InviteButtons(props) {
         setAccept(true)
         
         if (props.description === "chat") {
-            await fetch(`http://192.168.0.111:3000/api/chats/${props.path}`, 
+            await fetch(`${props.site}/api/chats/${props.path}`, 
             props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? onRemoveInvite() : null)
             .catch(err => console.log(err))
         } else if (props.description === "mod") {
-            await fetch(`http://192.168.0.111:3000/api/forums/${props.path}/mods`, 
+            await fetch(`${props.site}/api/forums/${props.path}/mods`, 
             props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? onRemoveInvite() : null)
             .catch(err => console.log(err))
         } else {
-            await fetch(`http://192.168.0.111:3000/api/groups/${props.path}/pendent`, 
+            await fetch(`${props.site}/api/groups/${props.path}/pendent`, 
             props.patchEnvelope)
             .then(res => res.json())
             .then(data => data === "Updated" ? onRemoveInvite() : null)
@@ -377,7 +378,7 @@ function InviteButtons(props) {
         setDeny(true)
 
         if(props.description === "chat"){
-            await fetch(`http://192.168.0.111:3000/api/chats/${props.path}`, 
+            await fetch(`${props.site}/api/chats/${props.path}`, 
             props.deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? onRemoveInvite() : null)
@@ -397,14 +398,14 @@ function InviteButtons(props) {
                 body: JSON.stringify({mods: [{mod: props.receiver}]})
             }
             
-            await fetch(`http://192.168.0.111:3000/api/forums/${props.path}/mods`, 
+            await fetch(`${props.site}/api/forums/${props.path}/mods`, 
             deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? onRemoveInvite() : null)
             .catch(err => console.log(err))
         
         } else {
-            await fetch(`http://192.168.0.111:3000/api/groups/${props.path}/pendent`, 
+            await fetch(`${props.site}/api/groups/${props.path}/pendent`, 
             props.deleteEnvelope)
             .then(res => res.json())
             .then(data => data === "Removed" ? onRemoveInvite() : null)
@@ -478,6 +479,7 @@ function ContactCard(props) {
         case "Invite":
             buttons = (
                 <InviteButtons 
+                    site={props.site}
                     token={props.token}
                     invite={props.invite}
                     path={props.path}
@@ -494,6 +496,7 @@ function ContactCard(props) {
         case "Mod":
             buttons = (
                 <ModButtons
+                    site={props.site}
                     token={props.token}
                     myInfos={props.myInfos}
                     user={props.user}
@@ -505,6 +508,7 @@ function ContactCard(props) {
         case "User":
             buttons = (
                 <InviteUserButtons
+                    site={props.site}
                     token={props.token}
                     user={props.user}
                     forum={props.forum}
@@ -521,7 +525,24 @@ function ContactCard(props) {
             break
     }
     return (
-        <View>
+        <Shadow
+            distance={4}
+            startColor={'#00000004'}
+            radius={20}
+            offset={[0,4]}
+            viewStyle={{
+                width:"95%",
+                borderRadius: 20, 
+                backgroundColor: lightTheme.white,
+                marginBottom: wp("2.5%")
+            }}
+            containerViewStyle={{
+                width: "100%",
+                //borderRadius: 20, 
+                marginHorizontal: wp("2.5%")
+            }}
+            paintInside
+        >
             <Pressable 
                 onLongPress={() => {
                     props.mode === "Forum" || props.mode === "Chat" ? 
@@ -538,14 +559,7 @@ function ContactCard(props) {
                     }
                 }}
                 style={{
-                    borderRadius: 20, 
-                    overflow: 'visible', 
-                    padding: wp("5%"), 
-                    marginHorizontal: wp("2.5%"),
-                    marginBottom: wp("1.25%"),
-                    zIndex: 0,
-                    elevation: 0,
-                    ...styles.card, 
+                    padding: wp("5%"),
                     ...styles.bottomWrapper
                 }}
             >
@@ -577,6 +591,7 @@ function ContactCard(props) {
             {
                 props.mode === "Forum" ?
                 <Options
+                    site={props.site}
                     myInfos={props.myInfos}
                     owner={props.owner}
                     mods={props.mods}
@@ -592,6 +607,7 @@ function ContactCard(props) {
                     setModalVisible={prop => setModalVisible(prop)}
                 /> :
                 <ChatOptions
+                    site={props.site}
                     chat={props.chat}
                     deleteEnvelope={props.deleteEnvelope}
 
@@ -600,7 +616,7 @@ function ContactCard(props) {
                     setModalVisible={prop => setModalVisible(prop)}
                 /> 
             }
-        </View>
+        </Shadow>
     )
 }
 
