@@ -220,7 +220,7 @@ function ModButtons(props) {
         headers: {
             'accept-encoding': 'gzip, deflate, br',
             connection: 'keep-alive',
-            host: 'localhost:3000',
+            host: "forta-forum.herokuapp.com",
             Accept: 'application/json',
             'Content-Type': 'application/json',
             'auth-token': props.token
@@ -278,7 +278,7 @@ function InviteUserButtons(props) {
                 headers: {
                     'accept-encoding': 'gzip, deflate, br',
                     connection: 'keep-alive',
-                    host: 'localhost:3000',
+                    host: "forta-forum.herokuapp.com",
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'auth-token': props.token
@@ -297,7 +297,7 @@ function InviteUserButtons(props) {
                 headers: {
                     'accept-encoding': 'gzip, deflate, br',
                     connection: 'keep-alive',
-                    host: 'localhost:3000',
+                    host: "forta-forum.herokuapp.com",
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'auth-token': props.token
@@ -390,7 +390,7 @@ function InviteButtons(props) {
                 headers: {
                     'accept-encoding': 'gzip, deflate, br',
                     connection: 'keep-alive',
-                    host: 'localhost:3000',
+                    host: "forta-forum.herokuapp.com",
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'auth-token': props.token

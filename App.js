@@ -1,7 +1,7 @@
 import React from 'react'
 import Routes from './src/Routes'
 import AppLoading from 'expo-app-loading'
-import { useFonts } from "expo-font"
+import {useFonts} from "expo-font"
 import {
     Poppins_700Bold, 
     Poppins_600SemiBold

@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import {StatusBar, View, Platform} from 'react-native'
 import {NavigationContainer} from "@react-navigation/native"
-import {lightTheme} from "./Styles";
+
+import {lightTheme} from "./Styles"
 
 import Auth from "./Screens/Auth"
 import Tab from './Screens/Tab'
@@ -16,7 +17,8 @@ import FlagsFlag from "./Screens/FlagsFlag"
 
 function Routes() {
     //http site location
-    const site = 'http://192.168.0.102:3000'
+    //const site = 'http://192.168.0.102:3000'
+    const site = 'https://forta-forum.herokuapp.com'
 
     //The token of the user section
     const[token, setToken] = useState("")
@@ -42,7 +44,7 @@ function Routes() {
             'accept-encoding': 'gzip, deflate, br',
             accept: '*/*',
             connection: 'keep-alive',
-            host: 'localhost:3000',
+            host: "forta-forum.herokuapp.com",
             'auth-token': token
         }
     }
@@ -52,7 +54,7 @@ function Routes() {
             'accept-encoding': 'gzip, deflate, br',
             accept: '*/*',
             connection: 'keep-alive',
-            host: 'localhost:3000',
+            host: "forta-forum.herokuapp.com",
             'auth-token': token
         }
     }
@@ -62,7 +64,7 @@ function Routes() {
             'accept-encoding': 'gzip, deflate, br',
             accept: '*/*',
             connection: 'keep-alive',
-            host: 'localhost:3000',
+            host: "forta-forum.herokuapp.com",
             'auth-token': token
         }
     }
@@ -240,7 +242,10 @@ function Routes() {
             <View style={{height: STATUSBAR_HEIGHT, backgroundColor: lightTheme.ligthGrey}}>
                 <StatusBar translucent backgroundColor={lightTheme.ligthGrey} barStyle="dark-content"/>
             </View>
-            <NavigationContainer>{scrn}</NavigationContainer>
+            {
+                screen[screen.length - 1] === "Auth" ? scrn : 
+                <NavigationContainer>{scrn}</NavigationContainer>
+            }
         </View>
     )
 }

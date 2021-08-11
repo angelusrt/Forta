@@ -1,11 +1,24 @@
 import React, {useState} from 'react'
 import {View, Text, TextInput, TouchableOpacity} from "react-native"
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
-import {createStackNavigator} from "@react-navigation/stack"
 import {Shadow} from "react-native-shadow-2"
+
+// import {createStackNavigator} from "@react-navigation/stack"
+// import {
+//     SharedElement, 
+//     SharedElementNode, 
+//     SharedElementTransition, 
+//     nodeFromRef
+// } from "react-native-shared-element"
+
+import {createAppContainer} from "react-navigation"
+import {enableScreens} from 'react-native-screens'
+import {createSharedElementStackNavigator4} from "react-navigation-shared-element"
 
 import Icons from "../components/Icons"
 import {iconStyles, lightTheme, styles} from "./../Styles.js"
+
+enableScreens()
 
 function Login(props) {
     //Email and password setted by input 
@@ -14,6 +27,7 @@ function Login(props) {
 
     //Method that logs and handle screen 
     const onLog = async () => {
+        
         //Envelopes used in fetch api
         const postEnvelope = {
             method: "POST",
@@ -31,7 +45,7 @@ function Login(props) {
         .then(data => {
             //Sets token required to go to tab
             props.setToken(data)
-    
+
             //Sets envelope needed to fetch myInfo
             getEnvelope = {
                 method: "GET",
@@ -382,11 +396,9 @@ function User(props) {
         </View>
     )
 }
+ 
 
 function Auth(props) {
-    //Creates a component that navigates beetween screens 
-    const Stack = createStackNavigator()
-
     //Email and password used in Register and User
     const[email, setEmail] = useState("")
     const[password, setPassword] = useState("")
@@ -396,67 +408,81 @@ function Auth(props) {
     const[username, setUsername] = useState(`Username`)
     const[bios, setBios] = useState(`Bios`)
 
-    return (
-        <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" options={{header: () => null}}>
-                { 
-                    prop => 
-                    <Login
-                        {...prop} 
-                        site={props.site}
-                        token={props.token}
-                        myInfos={props.myInfos}
+    //Creates a component that navigates beetween screens
+    const Stack = createSharedElementStackNavigator4(
+        {
+            Login: {
+                screen: prop => 
+                <Login
+                    {...prop}
+                    site={props.site}
+                    token={props.token}
+                    myInfos={props.myInfos}
 
-                        setToken={props.setToken}
-                        setMyInfos={props.setMyInfos}
-                        setScreen={props.setScreen}
-                    />
+                    setToken={props.setToken}
+                    setMyInfos={props.setMyInfos}
+                    setScreen={props.setScreen}
+                />,
+                navigationOptions: props => {
+                    props.navigationOptions.header = () => null
                 }
-            </Stack.Screen>
-            
-            <Stack.Screen name="Register" options={{header: () => null}}>
-                {
-                    prop => 
-                    <Register
-                        {...prop}
-                        email={email} 
-                        password={password} 
-                        password2={password2}
-                        
-                        setEmail={email => setEmail(email)}
-                        setPassword={password => setPassword(password)}
-                        setPassword2={password => setPassword2(password)}
-                    />
+            },
+            Register: {
+                screen: prop => 
+                <Register
+                    {...prop}
+                    email={email} 
+                    password={password} 
+                    password2={password2}
+                    
+                    setEmail={email => setEmail(email)}
+                    setPassword={password => setPassword(password)}
+                    setPassword2={password => setPassword2(password)}
+                />,
+                navigationOptions: props => {
+                    props.navigationOptions.header = () => null
                 }
-            </Stack.Screen>
-            
-            <Stack.Screen name="User" options={{header: () => null}}>
-                {
-                    prop => 
-                    <User
-                        {...prop} 
-                        site={props.site}
-                        token={props.token}
-                        myInfos={props.myInfos}
+            },
+            User: {
+                screen: prop => 
+                <User 
+                    {...prop}
+                    site={props.site}
+                    token={props.token}
+                    myInfos={props.myInfos}
 
-                        email={email} 
-                        password={password}
-                        username={username}
-                        bios={bios}
+                    email={email} 
+                    password={password}
+                    username={username}
+                    bios={bios}
 
-                        setToken={props.setToken}
-                        setMyInfos={props.setMyInfos}
-                        setScreen={props.setScreen}
+                    setToken={props.setToken}
+                    setMyInfos={props.setMyInfos}
+                    setScreen={props.setScreen}
 
-                        setEmail={email => setEmail(email)}
-                        setPassword={password => setPassword(password)}
-                        setUsername={username => setUsername(username)}
-                        setBios={bios => setBios(bios)}
-                    />
-                } 
-            </Stack.Screen>
-        </Stack.Navigator>
-    )
+                    setEmail={email => setEmail(email)}
+                    setPassword={password => setPassword(password)}
+                    setUsername={username => setUsername(username)}
+                    setBios={bios => setBios(bios)}
+                />,
+                navigationOptions: props => {
+                    props.navigationOptions.header = () => null
+                }
+            }
+        },
+        {
+            initialRouteName: "Login",
+            headerMode: "none",
+            // navigationOptions: (props) => {
+            //     props.screenProps 
+            // }
+        },
+    ) 
+
+    //Creates Container
+    const AppContainer = createAppContainer(Stack)
+
+    return <AppContainer/>
 }
 
 export default Auth

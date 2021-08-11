@@ -249,7 +249,7 @@ function PostCard(props) {
     //Set bottom icons active or not
     const[like, setLike] = useState(false)
     const[comment, setComment] = useState(false)
-    const[share, setShare] = useState(false)
+    //const[share, setShare] = useState(false)
 
     //Sets if popup is visible or not
     const[isModalVisible, setModalVisible] = useState(false)
