@@ -4,11 +4,11 @@
     "slug": "Forta",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/forta-icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/forta-splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#003573"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,12 +21,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "foregroundImage": "./assets/forta-adaptive-icon.png",
+        "backgroundColor": "#003573"
+      },
+      "package": "com.bullgado.Forta"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/forta-favicon.png"
     }
   }
 }

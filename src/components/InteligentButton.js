@@ -1445,6 +1445,7 @@ function InteligentButton(props) {
                     setUpdate={props.setUpdate}
                 />
             break
+        case "Auth":
         case "Settings":
         case "Flags":
         default:
@@ -1480,7 +1481,7 @@ function InteligentButton(props) {
                 }}>
                     {buttonIcons}
                 </Animated.View> : 
-                <Animated.View style={{bottom: wp("5%"), opacity: fadeAnim, ...styles.iButton}}>
+                <Animated.View style={[{zIndex: 2, bottom: hp(2.5), opacity: fadeAnim}, styles.iButton]}>
                     {buttonIcons}
                 </Animated.View>
             } 

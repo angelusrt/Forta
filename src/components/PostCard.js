@@ -232,10 +232,10 @@ function Options(props) {
                 onBackdropPress={() => props.setModalVisible(false)}
             >
                 <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                    <View style={{
-                        zIndex: 3,
-                        ...styles.options
-                    }}>
+                    <View style={[
+                        {zIndex: 3},
+                        styles.options
+                    ]}>
                         {flagPressable}
                         {excludePressable}
                     </View>
@@ -325,11 +325,13 @@ function PostCard(props) {
                     </Text>
                 }
 
-                <Text style={{
-                    marginBottom: wp("2.5%"), 
-                    marginTop: wp("-0.625%"),
-                    ...styles.bodyText
-                }}>
+                <Text style={[
+                    {
+                        marginBottom: wp("2.5%"), 
+                        marginTop: wp("-0.625%")
+                    },
+                    styles.bodyText
+                ]}>
                     {props.bodyText}
                 </Text>
                 
@@ -358,12 +360,14 @@ function PostCard(props) {
                                     transform: [{ rotate: "90deg" }]
                                 }}
                             />
-                            <Text style={{
-                                color: like ? lightTheme.green : 
-                                lightTheme.notSoDarkGrey, 
-                                marginBottom: wp("0.625%"), 
-                                ...styles.rateText
-                            }}>
+                            <Text style={[
+                                {
+                                    color: like ? lightTheme.green : 
+                                    lightTheme.notSoDarkGrey, 
+                                    marginBottom: wp("0.625%")
+                                },
+                                styles.rateText
+                            ]}>
                                 {props.rating + (like && 1)}
                             </Text>
                         </TouchableOpacity>

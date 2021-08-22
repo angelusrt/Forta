@@ -242,10 +242,9 @@ function Routes() {
             <View style={{height: STATUSBAR_HEIGHT, backgroundColor: lightTheme.ligthGrey}}>
                 <StatusBar translucent backgroundColor={lightTheme.ligthGrey} barStyle="dark-content"/>
             </View>
-            {
-                screen[screen.length - 1] === "Auth" ? scrn : 
-                <NavigationContainer>{scrn}</NavigationContainer>
-            }
+            <NavigationContainer>
+                {scrn}
+            </NavigationContainer>
         </View>
     )
 }
