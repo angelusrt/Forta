@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {View, Text, ScrollView} from "react-native"
+import {useBackHandler} from '@react-native-community/hooks'
+
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import InteligentButton from "../components/InteligentButton.js"
@@ -93,6 +95,11 @@ function FlagsFlag(props) {
 
     //Gets flags of a post or comment
     useEffect(() => {onGet()},[update])
+
+    useBackHandler(() => {
+        props.setPrevScreen()
+        return true    
+    })
 
     return (
         <View style={{

@@ -1,5 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react'
-import {View, ScrollView, TouchableOpacity, TextInput, Text, Animated} from "react-native"
+import {View, ScrollView, TouchableOpacity, TextInput, Text, Animated, Platform} from "react-native"
+import {useBackHandler} from '@react-native-community/hooks'
+
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen"
 
 import {lightTheme, styles, iconStyles} from "./../Styles.js"
@@ -46,6 +48,11 @@ function ForumSearch(props) {
 
     //If param matches, fulfills search
     const verify = () => groupName.length > 0 ? onGet() : setGroupName("")
+
+    useBackHandler(() => {
+        props.setScrn("Forums")
+        return true    
+    })
     
     return (
         <React.Fragment>
@@ -86,16 +93,21 @@ function ForumSearch(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScrn("Forums")}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={() => props.setScrn("Forums")}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                            />
+                        </TouchableOpacity> : 
+                        null
+
+                    }
                     <TouchableOpacity onPress={() => verify()}>    
                         <Icons 
                             name="Arrow" 
@@ -154,6 +166,11 @@ function ForumAddCard(props) {
             setTags([""])
         }
     }
+
+    useBackHandler(() => {
+        props.setScrn("Forums")
+        return true    
+    })
     
     return (
         <React.Fragment>
@@ -193,16 +210,20 @@ function ForumAddCard(props) {
                 />  
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScrn("Forums")}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={() => props.setScrn("Forums")}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    }
                     <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
@@ -255,6 +276,11 @@ function PostAddCard(props) {
         }
     }
 
+    useBackHandler(() => {
+        props.setScrn("Forum")
+        return true    
+    })
+
     return (
         <React.Fragment>
             <View style={{flex: 1}}>
@@ -287,16 +313,20 @@ function PostAddCard(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScrn("Forum")}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={() => props.setScrn("Forum")}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                            />
+                        </TouchableOpacity> : 
+                        null
+                    }
                     <TouchableOpacity onPress={() => verify()}>    
                         <Icons 
                             name="Arrow" 
@@ -342,6 +372,11 @@ function CommentaryAddCard(props) {
     //If params matches, fulfills search
     const verify = () => bodyText.length > 0 ? onPost() : setBodyText("")
 
+    useBackHandler(() => {
+        props.setScrn("Post")
+        return true    
+    })
+
     return (
         <React.Fragment>
             <View style={{flex: 1}}>
@@ -368,16 +403,20 @@ function CommentaryAddCard(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScrn("Post")}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={() => props.setScrn("Post")}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                            />
+                        </TouchableOpacity> : 
+                        null
+                    }
                     <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
@@ -521,6 +560,11 @@ function SettingsOptionsCard(props) {
     //Calls switchOperation evry time text changes
     useEffect(() => {switchOperation()},[text])
 
+    useBackHandler(() => {
+        props.setScrn("Settings")
+        return true    
+    })
+
     return (
         <React.Fragment>
             <View style={{flex: 1}}>
@@ -549,16 +593,20 @@ function SettingsOptionsCard(props) {
                     />
 
                     <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity onPress={() => props.setScrn("Settings")}>    
-                            <Icons 
-                                name="Arrow" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none" 
-                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                            />
-                        </TouchableOpacity>
+                        {
+                            Platform.OS !== 'android' ?
+                            <TouchableOpacity onPress={() => props.setScrn("Settings")}>    
+                                <Icons 
+                                    name="Arrow" 
+                                    width={wp("10%")} 
+                                    height={wp("10%")} 
+                                    viewBox="0 0 300 300" 
+                                    fill="none" 
+                                    style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                                />
+                            </TouchableOpacity> : 
+                            null
+                        }
                         <TouchableOpacity onPress={verify}>    
                             <Icons 
                                 name="Arrow" 
@@ -634,7 +682,17 @@ function UserSearch(props) {
 
     //If param matches, fulfills search
     const verify = () => username.length > 0 ? onGet() : setUsername("")
-    
+
+    useBackHandler(() => {
+        if (props.description === "chat") {
+            props.setScrn("Chats")
+            props.onFunction()
+        } else {
+            props.setScrn("Mods")
+        }
+        return true    
+    })
+
     return (
         <React.Fragment>
             <View style={{flex:1, width: wp("100%")}}>
@@ -671,23 +729,27 @@ function UserSearch(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => {
-                        if (props.description === "chat") {
-                            props.setScrn("Chats")
-                            props.onFunction()
-                        } else {
-                            props.setScrn("Mods")
-                        }
-                    }}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={() => {
+                            if (props.description === "chat") {
+                                props.setScrn("Chats")
+                                props.onFunction()
+                            } else {
+                                props.setScrn("Mods")
+                            }
+                        }}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                            />
+                        </TouchableOpacity> : 
+                        null
+                    }
                     <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
@@ -762,6 +824,11 @@ function RulesUpdate(props) {
 
         return result
     }
+
+    useBackHandler(() => {
+        props.setScrn("Rules")
+        return true    
+    })
 
     return (
         <React.Fragment>
@@ -858,6 +925,11 @@ function FlagsFlagAddCard(props) {
     //If param matches, fulfills post
     const verify = () => text.length > 10 ? onFlag() : setText("")
     
+    useBackHandler(() => {
+        props.setScrn("FlagsFlag")
+        return true    
+    })
+
     return (
         <React.Fragment>
             <View style={{flex: 1}}>
@@ -884,16 +956,20 @@ function FlagsFlagAddCard(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScrn("FlagsFlag")}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={() => props.setScrn("FlagsFlag")}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                            />
+                        </TouchableOpacity> : 
+                        null
+                    }
                     <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
@@ -976,6 +1052,11 @@ function FlagsFlagUpdateCard(props) {
     
         return result
     }
+
+    useBackHandler(() => {
+        props.setScrn("FlagsFlag")
+        return true    
+    })
     
     return (
         <React.Fragment>
@@ -1013,16 +1094,20 @@ function FlagsFlagUpdateCard(props) {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => props.setScrn("FlagsFlag")}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={() => props.setScrn("FlagsFlag")}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={{marginLeft: wp("-1.25%"), ...iconStyles.icon1}}
+                            />
+                        </TouchableOpacity> : 
+                        null
+                    }
                     <TouchableOpacity onPress={verify}>    
                         <Icons 
                             name="Arrow" 
@@ -1182,16 +1267,20 @@ function InteligentButton(props) {
         case "Forum":
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={props.setPrevScreen}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={iconStyles.icon1}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={props.setPrevScreen}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    }
                     <TouchableOpacity onPress={() => props.setScrn("PostAdd")}>
                         <Icons 
                             name="Add" 
@@ -1207,16 +1296,20 @@ function InteligentButton(props) {
         case "Mods":
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={props.setPrevScreen}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={iconStyles.icon9}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={props.setPrevScreen}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    }
                     {   
                         props.myInfos.id === props.owner ?
                         <TouchableOpacity onPress={() => props.setScrn("ModsSearch")}>
@@ -1226,7 +1319,7 @@ function InteligentButton(props) {
                                 height={wp("10%")} 
                                 viewBox="0 0 625 625" 
                                 fill="none" 
-                                style={iconStyles.icon11}
+                                style={iconStyles.icon2}
                             />
                         </TouchableOpacity> :
                         null
@@ -1249,16 +1342,20 @@ function InteligentButton(props) {
         case "Rules":
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={props.setPrevScreen}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={iconStyles.icon9}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={props.setPrevScreen}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    }
                     {   
                         props.myInfos.id === props.owner ?
                         <TouchableOpacity onPress={() => props.setScrn("RulesUpdate")}>
@@ -1268,7 +1365,7 @@ function InteligentButton(props) {
                                 height={wp("10%")} 
                                 viewBox="0 0 625 625" 
                                 fill="none" 
-                                style={iconStyles.icon11}
+                                style={iconStyles.icon2}
                             />
                         </TouchableOpacity> :
                         null
@@ -1301,16 +1398,20 @@ function InteligentButton(props) {
         case "Post":    
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={props.setPrevScreen}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={iconStyles.icon1}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={props.setPrevScreen}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    }
                     <TouchableOpacity onPress={() => props.setScrn("CommentaryAdd")}>
                         <Icons 
                             name="Add" 
@@ -1351,6 +1452,20 @@ function InteligentButton(props) {
         case "Chat":
             buttonIcons =
                 <React.Fragment>
+                    {/* {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={props.setPrevScreen}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    } */}
                     <TouchableOpacity onPress={props.setPrevScreen}>    
                         <Icons 
                             name="Arrow" 
@@ -1397,16 +1512,20 @@ function InteligentButton(props) {
         case "FlagsFlag":  
             buttonIcons =
                 <React.Fragment>
-                    <TouchableOpacity onPress={props.setPrevScreen}>    
-                        <Icons 
-                            name="Arrow" 
-                            width={wp("10%")} 
-                            height={wp("10%")} 
-                            viewBox="0 0 300 300" 
-                            fill="none" 
-                            style={iconStyles.icon1}
-                        />
-                    </TouchableOpacity>
+                    {
+                        Platform.OS !== 'android' ?
+                        <TouchableOpacity onPress={props.setPrevScreen}>    
+                            <Icons 
+                                name="Arrow" 
+                                width={wp("10%")} 
+                                height={wp("10%")} 
+                                viewBox="0 0 300 300" 
+                                fill="none" 
+                                style={iconStyles.icon1}
+                            />
+                        </TouchableOpacity> :
+                        null
+                    }
                     <TouchableOpacity onPress={() => props.setScrn("FlagsFlagAdd")}>
                         <Icons 
                             name="Add" 
@@ -1449,7 +1568,7 @@ function InteligentButton(props) {
         case "Settings":
         case "Flags":
         default:
-            buttonIcons =
+            buttonIcons = Platform.OS !== 'android' ?
                 <TouchableOpacity onPress={props.setPrevScreen}>    
                     <Icons 
                         name="Arrow" 
@@ -1457,15 +1576,16 @@ function InteligentButton(props) {
                         height={wp("10%")} 
                         viewBox="0 0 300 300" 
                         fill="none" 
-                        style={iconStyles.icon9}
+                        style={iconStyles.icon1}
                     />
-                </TouchableOpacity>
+                </TouchableOpacity> : null
             break
     }
 
     return (
         <React.Fragment>
             { 
+                buttonIcons !== null ?
                 props.screen === "PostAdd" || props.screen === "ForumAdd" || 
                 props.screen === "CommentaryAdd" || props.screen === "ForumSearch" ||
                 props.screen === "UserSearch" || props.screen === "ModsSearch" ||
@@ -1483,7 +1603,8 @@ function InteligentButton(props) {
                 </Animated.View> : 
                 <Animated.View style={[{zIndex: 2, bottom: hp(2.5), opacity: fadeAnim}, styles.iButton]}>
                     {buttonIcons}
-                </Animated.View>
+                </Animated.View> :
+                null
             } 
         </React.Fragment>
     )

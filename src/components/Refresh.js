@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react"
 import {Animated, Easing} from "react-native"
+
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import Icons from "./../components/Icons"

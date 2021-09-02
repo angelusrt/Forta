@@ -1,5 +1,5 @@
-import React from 'react';
-import Svg, { G, Path, Circle } from 'react-native-svg';
+import React from 'react'
+import Svg, { G, Path, Circle } from 'react-native-svg'
 
 function About(props) {
   return (
@@ -10,7 +10,7 @@ function About(props) {
         35 35h0c19 0 35-16 35-35 0 0 0 0 0 0z" 
         {...props}
       />
-  );
+  )
 }
 
 function Arrow(props) {
@@ -22,7 +22,7 @@ function Arrow(props) {
       transform="matrix(1 0 0 1 0 -1299.7)"
       {...props}
     />
-  );
+  )
 }
 
 function Accept(props) {
@@ -39,7 +39,7 @@ function Accept(props) {
       transform="matrix(1 0 0 1 -1205.7 -1311.3)"
       {...props}
     />
-  );
+  )
 }
 
 function Account(props) {
@@ -50,7 +50,7 @@ function Account(props) {
       <Path d="M415.3 209c0-57.6-46.6-104.2-104.2-104.2h0A104.2 104.2 0 00207 208.9h0c0 57.6 46.6 104.2 104.1
       104.2h0c57.6 0 104.2-46.6 104.2-104.2h0z" />
     </G>
-  );
+  )
 }
 
 function Add(props) {
@@ -60,7 +60,7 @@ function Add(props) {
       35H347v104a35 35 0 01-34 35h-1a35 35 0 01-34-35V348H174a35 35 0 01-35-35h0a35 35 0 0135-35h104z"
       {...props}
     />
-  );
+  )
 }
 
 function Adm(props) {
@@ -69,7 +69,7 @@ function Adm(props) {
       d="M137 416c0 34 28 62 63 62h224c34 0 62-28 62-62V270l-2-70-69 70-104-139-103 139-69-70-2 70v146z"
       {...props}
     />
-  );
+  )
 }
 
 function Audio(props) {
@@ -80,7 +80,7 @@ function Audio(props) {
       5-17h1v-1h1v-1h0v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1l1-1h1v-1h1v-1h2v-1h2v-1h2l1-1h3v-1h6v-1h2z"
       {...props}
     />
-  );
+  )
 }
 
 function Bell(props) {
@@ -92,7 +92,7 @@ function Bell(props) {
         strokeMiterlimit={4.6}
       />
     </G>
-  );
+  )
 }
 
 function Bios(props) {
@@ -101,7 +101,7 @@ function Bios(props) {
       <Path d="M347 174c0-19-15-35-34-35h-1c-19 0-34 16-34 35v139c0 19 15 35 34 35h1c19 0 
       34-16 34-35V174zM347 452c0-19-15-35-34-35h-1c-19 0-34 16-34 35h0c0 19 15 35 34 35h1c19 0 34-16 34-35h0z" />
     </G>
-  );
+  )
 }
 
 function Comentaries(props) {
@@ -110,7 +110,7 @@ function Comentaries(props) {
       d="M489 269c0-34-28-62-62-62H203c-35 0-63 28-63 62v84c0 34 28 62 63 62h215l69 70 2-70V269z"
       {...props}
     />
-  );
+  )
 }
 
 function Docs(props) {
@@ -121,7 +121,7 @@ function Docs(props) {
         d="M353 483c35 0 63-28 63-62V197c0-35-28-63-63-63h-83c-35 0-63 28-63 63v224c0 34 28 62 63 62h83z"
       />
     </G>
-  );
+  )
 }
 
 function Facebook(props) {
@@ -132,7 +132,7 @@ function Facebook(props) {
       0 0 0 0 0 0-19 15-35 34-35h35V172h0c0-9 4-17 9-24h1s0 0 0 0v-1h1c6-6 14-10 23-10z"
       {...props}
     />
-  );
+  )
 }
 
 function Forta(props) {
@@ -143,15 +143,53 @@ function Forta(props) {
         1v104H156a52 52 0 00-52 52v364H52c-29 0-52-23-52-52z"
         fillRule="nonzero"
       />
-      <Path d="M833 781c0 29-23 52-52 52H469c-29 0-52-23-52-52V365c0-29 23-52 52-52h312c29 
-      0 52 23 52 52v416zM729 469a52 52 0 00-52-52H573a52 52 0 00-52 52c0 80 0-80 0 0v208a52 
-      52 0 0052 52h104a52 52 0 0052-52V469zm313-52v416h-52a52 52 0 01-52-52V52a52 52 0 
-      0152-52h312a52 52 0 0152 52v156h-104v-52a52 52 0 00-52-52h-104a52 52 0 00-52 52v156l260 
-      1c29 0 52 23 52 52v416c0 29-23 52-52 52h-52V469a52 52 0 00-52-52h-156zm468-104h203c28 
-      0 58 23 58 52v52h-104v416h-104V417h-105v-52c0-29 24-53 52-53zm678 0V156a52 52 0 
-      00-53-52h-104a52 52 0 00-52 52v52h-104V52a52 52 0 0152-52h313a52 52 0 0152 52v729a52 
-      52 0 01-52 52h-52V417h-157c-29 0-52 23-52 52v364h-52c-29 0-52-23-52-52V365c0-29 
-      23-52 52-52h260z" />
+      <Path 
+        d="M833 781c0 29-23 52-52 52H469c-29 0-52-23-52-52V365c0-29 23-52 52-52h312c29 
+        0 52 23 52 52v416zM729 469a52 52 0 00-52-52H573a52 52 0 00-52 52c0 80 0-80 0 0v208a52 
+        52 0 0052 52h104a52 52 0 0052-52V469zm313-52v416h-52a52 52 0 01-52-52V52a52 52 0 
+        0152-52h312a52 52 0 0152 52v156h-104v-52a52 52 0 00-52-52h-104a52 52 0 00-52 52v156l260 
+        1c29 0 52 23 52 52v416c0 29-23 52-52 52h-52V469a52 52 0 00-52-52h-156zm468-104h203c28 
+        0 58 23 58 52v52h-104v416h-104V417h-105v-52c0-29 24-53 52-53zm678 0V156a52 52 0 
+        00-53-52h-104a52 52 0 00-52 52v52h-104V52a52 52 0 0152-52h313a52 52 0 0152 52v729a52 
+        52 0 01-52 52h-52V417h-157c-29 0-52 23-52 52v364h-52c-29 0-52-23-52-52V365c0-29 
+        23-52 52-52h260z" 
+      />
+    </G>
+  )
+}
+
+function FortaFont(props) {
+  return (
+    <G {...props}>
+      <Path
+        d="M250 1025V675c0-13.807 11.193-25 25-25h150c13.807 0 25 11.193 25 25v25H325c-13.807 
+        0-25 11.193-25 25v75h100v50h-75a25.004 25.004 0 0 0-17.678 7.322A25.004 25.004 0 0 0 
+        300 875v175h-25c-13.807 0-25-11.19-25-25z"
+        style={{
+          fillRule: "nonzero",
+        }}
+        transform="translate(-250 -650)"
+      />
+      <Path 
+        d="M400 375c0 13.81-11.193 25-25 25H225c-13.807 0-25-11.19-25-25V175c0-13.807 11.193-25 
+        25-25h150c13.807 0 25 11.193 25 25v200zm-50-150c0-6.63-2.634-12.99-7.322-17.678A25.004 
+        25.004 0 0 0 325 200h-50a25.004 25.004 0 0 0-17.678 7.322A25.004 25.004 0 0 0 250 225c0 
+        38.425 0-38.425 0 0v100c0 6.63 2.634 12.989 7.322 17.678A25.004 25.004 0 0 0 275 350h50c6.63 
+        0 12.989-2.634 17.678-7.322A25.004 25.004 0 0 0 350 325V225zm150-25v200h-25a24.994 24.994 0 
+        0 1-25-25V25c0-6.63 2.634-12.99 7.322-17.678A25.004 25.004 0 0 1 475 0h150c6.63 0 12.989 
+        2.634 17.678 7.322A25.004 25.004 0 0 1 650 25v75h-50V75c0-6.63-2.634-12.99-7.322-17.678A25.004 
+        25.004 0 0 0 575 50h-50a25.004 25.004 0 0 0-17.678 7.322A25.004 25.004 0 0 0 500 
+        75v75h125c13.807 0 25 11.193 25 25v200c0 13.81-11.193 25-25 
+        25h-25V225c0-6.63-2.634-12.99-7.322-17.678A25.004 25.004 0 0 0 575 200h-75zm225-50h97.1c13.81 
+        0 27.9 11.193 27.9 25v25h-50v200h-50V200h-50v-25c0-13.807 11.19-25 25-25zm325 0V75a24.994 
+        24.994 0 0 0-25-25h-50a24.994 24.994 0 0 0-25 25v25h-50V25a24.994 24.994 0 0 1 25-25h150a24.994 
+        24.994 0 0 1 25 25v350a25 25 0 0 1-7.32 17.68A25 25 0 0 1 1075 400h-25V200h-75c-13.81 0-25 
+        11.193-25 25v175h-25c-13.81 0-25-11.19-25-25V175c0-13.807 11.19-25 25-25h125z" 
+      />
+      <Path 
+        d="M449.999 350h50v50h-50zm150 0h50v50h-50zm300 0h50v50h-50zm150 0h50v50h-50zm-1050 
+        0h50v50h-50z" 
+      />
     </G>
   )
 }
@@ -165,7 +203,7 @@ function Google(props) {
       transform="matrix(1 0 0 1 -200 -118)"
       {...props}
     />
-  );
+  )
 }
 
 function Invite(props) {
@@ -174,7 +212,7 @@ function Invite(props) {
       <Path d="M489 274c0-35-28-63-62-63H203c-35 0-63 28-63 63v83c0 34 28 62 63 62h224c34 0 62-28 62-62v-83z" />
       <Path d="M315 350l151-120M315 350L163 230" strokeMiterlimit={4.6} />
     </G>
-  );
+  )
 }
 
 function Light(props) {
@@ -185,7 +223,7 @@ function Light(props) {
       01-8-13l25-76v-6l-25-75a10 10 0 018-14l77-16c3 0 5-2 6-3l53-59z" />
       <Circle cx={316.7} cy={313.1} r={57.5} />
     </G>
-  );
+  )
 }
 
 function Lupe(props) {
@@ -203,7 +241,7 @@ function Lupe(props) {
         transform="matrix(1 0 0 1 -189 -492)"
       />
     </G>
-  );
+  )
 }
 
 function Media(props) {
@@ -213,7 +251,7 @@ function Media(props) {
       <Path d="M254 280l-93 125M254 280l101 136" strokeMiterlimit={4.6} />
       <Path d="M417 315c0-19-16-35-35-35h0c-19 0-35 16-35 35h0c0 19 16 35 35 35h0c19 0 35-16 35-35h0z" />
     </G>
-  );
+  )
 }
 
 function Options(props) {
@@ -223,7 +261,7 @@ function Options(props) {
       315c0-19-15-35-34-35h0c-20 0-35 16-35 35h0c0 19 15 35 35 35h0c19 0 34-16 34-35h0zM349 
       454c0-19-15-35-34-35h0c-20 0-35 16-35 35h0c0 19 15 35 35 35h0c19 0 34-16 34-35h0z" />
     </G>
-  );
+  )
 }
 
 function Password(props) {
@@ -235,7 +273,7 @@ function Password(props) {
       -1h0v-1h0v-1h0v-1h1v-1h0v-1h0v-1h0l1-1h0v-1h0v-1h1v-1h0v-1h1v-1h0v-1h1v-1h1v-1h0v-1h1v-1h1v
       -1h1v-1h1v-1h1v-1h1v-1h1l1-1h1v-1h1v-1h2v-1h2v-1h3v-1h4v-1h7z" />
     </G>
-  );
+  )
 }
 
 function Refresh(props) {
@@ -246,7 +284,7 @@ function Refresh(props) {
       -104-104-104v-70z"
       {...props}
     />
-  );
+  )
 }
 
 function Remove(props) {
@@ -257,7 +295,7 @@ function Remove(props) {
       transform="rotate(45 2520 -1132)"
       {...props}
     />
-  );
+  )
 }
 
 function Share(props) {
@@ -275,7 +313,7 @@ function Share(props) {
       34.7 0 0149.1 0s0 0 0 0a34.7 34.7 0 010 49l-73.6 73.7z"
       {...props}
     />
-  );
+  )
 }
 
 function Star(props) {
@@ -286,7 +324,7 @@ function Star(props) {
       0-13-5-16l-77-57a15 15 0 018-26h96c6 0 12-4 14-10l30-91z"
       {...props}
     />
-  );
+  )
 }
 
 export default {
@@ -303,6 +341,7 @@ export default {
   Docs: <Docs/>,
   Facebook: <Facebook/>,
   Forta: <Forta/>,
+  FortaFont: <FortaFont/>,
   Google: <Google/>,
   Invite: <Invite/>,
   Light: <Light/>,

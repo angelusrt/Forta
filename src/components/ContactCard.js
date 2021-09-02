@@ -1,197 +1,14 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 import {View, Text, TouchableOpacity, Pressable} from "react-native"
-import Modal from 'react-native-modal'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
-import {Shadow} from "react-native-shadow-2"
 
 import Icons from "./../components/Icons"
-import {iconStyles, lightTheme, styles} from "./../Styles"
-
-function Options(props) {
-    //Deletes forum
-    const onDelete = async() => {
-        await fetch(`${props.site}/api/forums/${props.forum}`, 
-        props.deleteEnvelope)
-        .then(res => res.json())
-        .then(data => props.onFunction())
-        .catch(err => console.log(err))
-    }
-
-    return (
-        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <Modal 
-                animationType="fade"
-                backdropOpacity={0.25}
-                isVisible={props.isModalVisible}
-                testID={'modal'}
-                animationIn="zoomInDown"
-                animationOut="zoomOut"
-                animationInTiming={300}
-                animationOutTiming={300}
-                backdropTransitionInTiming={300}
-                backdropTransitionOutTiming={300}
-                statusBarTranslucent={true}
-                onBackdropPress={() => props.setModalVisible(false)}
-            >
-                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                    <View style={{
-                        zIndex: 3,
-                        ...styles.options
-                    }}>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                            onPress={() => {
-                                props.setScreen("Rules")
-                                props.setForum(props.forum) 
-                            }}
-                        >
-                            <Icons 
-                                name="Bios" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 625 625" 
-                                fill="none" 
-                                style={iconStyles.icon2}
-                            />
-                            <Text style={{
-                                marginLeft: wp("1.25%"),
-                                ...styles.headerText
-                            }}>
-                                Regras
-                            </Text>
-                        </Pressable>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                            onPress={() => {
-                                props.setScreen("Mods")
-                                props.setForum(props.forum) 
-                            }}
-                        >
-                            <Icons 
-                                name="Comentaries" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 625 625" 
-                                fill="none" 
-                                style={iconStyles.icon2}
-                            />
-                            <Text style={{
-                                marginLeft: wp("1.25%"),
-                                ...styles.headerText
-                            }}>
-                                Mods
-                            </Text>
-                        </Pressable>
-                        {
-                            props.owner === props.myInfos.id || 
-                            props.mods.map(mod => mod) === props.myInfos.id ? 
-                            <Pressable 
-                                android_ripple={{color: lightTheme.ligthGrey}}
-                                style={styles.optionButtons}
-                                onPress={() => {
-                                    props.setScreen("Flags")
-                                    props.setForum(props.forum) 
-                                }}
-                            >
-                                <Icons 
-                                    name="Remove" 
-                                    width={wp("10%")} 
-                                    height={wp("10%")} 
-                                    viewBox="0 0 300 300"
-                                    fill="none" 
-                                    style={iconStyles.icon1}
-                                />
-                                <Text style={styles.headerText}>Denuncias</Text>
-                            </Pressable> : 
-                            null
-                        }
-                        {
-                            props.owner === props.myInfos.id ? 
-                            <Pressable 
-                                android_ripple={{color: lightTheme.ligthGrey}}
-                                onPress={onDelete}
-                                style={styles.optionButtons}
-                            >
-                                <Icons 
-                                    name="Remove" 
-                                    width={wp("10%")} 
-                                    height={wp("10%")} 
-                                    viewBox="0 0 300 300" 
-                                    fill="none" 
-                                    style={iconStyles.icon1}
-                                />
-                                <Text style={styles.headerText}>Excluir</Text>
-                            </Pressable> : null
-                        }
-                    </View>
-                </View>
-            </Modal>
-        </View>
-    )
-}
-
-function ChatOptions(props) {
-    //Deletes chat
-    const onDelete = async() => {
-        await fetch(`${props.site}/api/chats/${props.chat}`, 
-        props.deleteEnvelope)
-        .then(res => res.json())
-        .then(data => console.log(data))
-        .catch(err => console.log(err))
-    }
-
-    return (
-        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <Modal 
-                animationType="fade"
-                backdropOpacity={0.25}
-                isVisible={props.isModalVisible}
-                testID={'modal'}
-                animationIn="zoomInDown"
-                animationOut="zoomOut"
-                animationInTiming={300}
-                animationOutTiming={300}
-                backdropTransitionInTiming={300}
-                backdropTransitionOutTiming={300}
-                statusBarTranslucent={true}
-                onBackdropPress={() => props.setModalVisible(false)}
-            >
-                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                    <View style={{
-                        zIndex: 3,
-                        ...styles.options
-                    }}>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            onPress={() => onDelete()}
-                            style={styles.optionButtons}
-                        >
-                            <Icons 
-                                name="Remove" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 300 300" 
-                                fill="none" 
-                                style={iconStyles.icon1}
-                            />
-                            <Text style={styles.headerText}>Excluir</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-        </View>
-    )
-}
+import {lightTheme, styles} from "./../Styles"
 
 function ForumAndChatButtons(props) {
-    //favorite setter
-    const[favorite, setFavorite] = useState(props.favorite)
-
     return(
         <React.Fragment>
-            <TouchableOpacity onPress={() => setFavorite(!favorite)}>
+            <TouchableOpacity onPress={props.setFavorite}>
                 <Icons 
                     name="Star" 
                     width={wp("10%")} 
@@ -199,7 +16,9 @@ function ForumAndChatButtons(props) {
                     viewBox="0 0 625 625" 
                     fill="none" 
                     style={{
-                        stroke: favorite?lightTheme.yellow:lightTheme.darkGrey,
+                        stroke: props.favorite ? 
+                        lightTheme.yellow : 
+                        lightTheme.darkGrey,
                         strokeWidth:"33.1px",
                         strokeLinejoin: "round",
                         strokeMiterlimit:"1.5"
@@ -470,9 +289,63 @@ function InviteButtons(props) {
 }
 
 function ContactCard(props) {
-    //Sets popup on or off
-    const[isModalVisible, setModalVisible] = useState(false)
+    const pressableRef = useRef(null)
     
+    const[favorite, setFavorite] = useState(props.favorite || false)
+
+    const pressCondition = () => {
+        if (props.mode === "Chat") {
+            props.setScreen(props.mode)    
+            props.setChat(props.chat)
+        } else if (props.mode === "Forum") {
+            props.setScreen(props.mode)    
+            props.setForum(props.forum)
+        }
+    }
+
+    const longPressBehaviour = () => {
+        !props.isOnModal ?
+        props.mode === "Forum" ? 
+        pressableRef.current.measure((x, y, w, h, pX, pY) => {
+            props.setModalInfos({
+                subtitle: props.subtitle,
+                mode: props.mode,
+                owner: props.owner,
+                mods: props.mods,
+                forum: props.forum,
+                title: props.title,
+                
+                favorite,
+                pressInfos: {x, y, w, h, pX, pY},
+                pressCondition,
+
+                onFunction: props.onFunction,
+
+                setFavorite: () => setFavorite(prev => !prev),
+            })
+            props.setIsModalActive(true)
+        }) :
+        props.mode === "Chat" ?
+        pressableRef.current.measure((x, y, w, h, pX, pY) => {
+            props.setModalInfos({
+                title: props.title,
+                subtitle: props.subtitle,
+                mode: props.mode,
+                chat: props.chat,
+                
+                favorite,
+                pressInfos: {x, y, w, h, pX, pY},
+                pressCondition,
+
+                onFunction: props.onFunction,
+
+                setFavorite: () => setFavorite(prev => !prev),
+            })
+            props.setIsModalActive(true)
+        }) :
+        null :
+        null
+    }
     //Jumps to the aproppriate InviteButtons if matches case
     let buttons
     switch (props.mode) {
@@ -519,49 +392,34 @@ function ContactCard(props) {
         default: 
             buttons = (
                 <ForumAndChatButtons 
-                    favorite={props.favorite}
+                    favorite={favorite}
+
+                    setFavorite={() => {
+                        if(props.isOnModal) {
+                            props.setFavorite()
+                            setFavorite(prev => !prev)
+                        } else {
+                            setFavorite(prev => !prev)
+                        }
+                        
+                    }}
                 />
             )
             break
     }
+
     return (
-        <Shadow
-            distance={4}
-            startColor={'#00000004'}
-            radius={20}
-            offset={[0,4]}
-            viewStyle={{
-                width:"95%",
-                borderRadius: 20, 
-                backgroundColor: lightTheme.white,
-                marginBottom: wp("2.5%")
-            }}
-            containerViewStyle={{
-                width: "100%",
-                //borderRadius: 20, 
-                marginHorizontal: wp("2.5%")
-            }}
-            paintInside
-        >
+        <React.Fragment>
             <Pressable 
-                onLongPress={() => {
-                    props.mode === "Forum" || props.mode === "Chat" ? 
-                    setModalVisible(true) : null
-                }} 
+                ref={pressableRef}
+                onLongPress={longPressBehaviour} 
                 android_ripple={{color: lightTheme.ligthGrey}}
-                onPress={() => {
-                    if (props.mode === "Chat") {
-                        props.setScreen(props.mode)    
-                        props.setChat(props.chat)
-                    } else if (props.mode === "Forum") {
-                        props.setScreen(props.mode)    
-                        props.setForum(props.forum)
-                    }
-                }}
-                style={{
-                    padding: wp("5%"),
-                    ...styles.bottomWrapper
-                }}
+                onPress={pressCondition}
+                style={[
+                    {marginBottom: wp(2.5)},
+                    styles.authCard,
+                    styles.bottomWrapper
+                ]}
             >
                 <View style={{
                     width: wp("10%"),
@@ -588,35 +446,7 @@ function ContactCard(props) {
                     {buttons}
                 </View>
             </Pressable>
-            {
-                props.mode === "Forum" ?
-                <Options
-                    site={props.site}
-                    myInfos={props.myInfos}
-                    owner={props.owner}
-                    mods={props.mods}
-                    forum={props.forum}
-                    deleteEnvelope={props.deleteEnvelope}
-                    
-                    isModalVisible={isModalVisible}
-                    
-                    setScreen={props.setScreen}
-                    setForum={props.setForum}
-                    onFunction={props.onFunction}
-
-                    setModalVisible={prop => setModalVisible(prop)}
-                /> :
-                <ChatOptions
-                    site={props.site}
-                    chat={props.chat}
-                    deleteEnvelope={props.deleteEnvelope}
-
-                    isModalVisible={isModalVisible}
-                    
-                    setModalVisible={prop => setModalVisible(prop)}
-                /> 
-            }
-        </Shadow>
+        </React.Fragment>
     )
 }
 

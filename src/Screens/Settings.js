@@ -1,9 +1,11 @@
 import React, {useState} from 'react'
 import _reactNative, {View, ScrollView, Text, Pressable} from "react-native"
+import {useBackHandler} from '@react-native-community/hooks'
+
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import InteligentButton from "../components/InteligentButton.js"
-import {lightTheme, styles} from "./../Styles.js"
+import {lightTheme, styles} from "../Styles.js"
 
 function Settings(props) {
     //Controls witch screen will be desplayed
@@ -12,6 +14,11 @@ function Settings(props) {
 
     //Global width metric
     const metric = wp("5%")
+
+    useBackHandler(() => {
+        props.setPrevScreen()
+        return true    
+    })
 
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>

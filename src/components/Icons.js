@@ -90,6 +90,19 @@ export default Icon;
     strokeMiterlimit:"2"
 }}/>
 
+<Icons 
+    name="FortaFont" 
+    viewBox="0 0 1100 400" 
+    fill="none"
+    style={{
+        stroke:"#000",
+        fillRule: "evenodd",
+        clipRule: "evenodd",
+        strokeLinejoin: "round",
+        strokeMiterlimit: 2,
+    }}
+/>
+
 <Icons name="Google" viewBox="0 0 300 300" fill="none" style={{
     stroke:"#000",
     strokeWidth:"15.9px",

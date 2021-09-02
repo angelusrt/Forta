@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {View, Text, ScrollView} from "react-native"
+import {useBackHandler} from '@react-native-community/hooks'
+
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import InteligentButton from "../components/InteligentButton.js"
@@ -29,6 +31,11 @@ function Rules(props) {
 
     //Updates rules
     useEffect(() => {onGet()},[])
+
+    useBackHandler(() => {
+        props.setPrevScreen()
+        return true    
+    })
 
     return (
         <View style={{

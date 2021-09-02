@@ -1,15 +1,50 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import _reactNative, {View, ScrollView, Text, TouchableOpacity, Pressable} from "react-native"
-import Modal from 'react-native-modal'
+import Animated, { 
+    useAnimatedStyle, 
+    useSharedValue, 
+    withTiming, 
+    Easing
+} from 'react-native-reanimated'
+import {useBackHandler} from '@react-native-community/hooks'
+
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import Refresh from "../components/Refresh"
 import Icons from "./../components/Icons"
 import PostCard from "./../components/PostCard"
 import InteligentButton from "../components/InteligentButton.js"
-import {iconStyles, lightTheme, styles} from "./../Styles.js"
+import PostCardModal from "../components/modals/PostCardModal";
+import {lightTheme, styles} from "./../Styles.js"
 
-function Options(props) {
+//Global width metric
+const metric = wp("5%")
+
+function ForumModal(props) {
+    //Animation variables
+    const posAnim = useSharedValue(props.pressInfos.pY)
+    const opacAnim = useSharedValue(0)
+
+    //Animation Styles
+    const posStyle = useAnimatedStyle(() => {
+        // console.log(posAnim.value)
+        return {top: posAnim.value}
+    })
+    const opacStyle = useAnimatedStyle(() => {
+        // console.log(posAnim.value)
+        return {opacity: opacAnim.value}
+    })
+
+    //Transits to register page
+    const transIn = () => {
+        posAnim.value = withTiming(50, {
+            easing: Easing.elastic(1)
+        })
+        opacAnim.value = withTiming(1, {
+            easing: Easing.elastic(1)
+        })
+    }
+
     //Deletes forum
     const deleteForum = async() => {
         await fetch(`${props.site}/api/forums/${props.forum}`, 
@@ -19,109 +54,197 @@ function Options(props) {
         .catch(err => console.log(err))
     }
 
+    useEffect(() => {transIn()},[])
+
     return (
-        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <Modal 
-                animationType="fade"
-                backdropOpacity={0.25}
-                isVisible={props.isModalVisible}
-                testID={'modal'}
-                animationIn="zoomInDown"
-                animationOut="zoomOut"
-                animationInTiming={300}
-                animationOutTiming={300}
-                backdropTransitionInTiming={300}
-                backdropTransitionOutTiming={300}
-                statusBarTranslucent={true}
-                onBackdropPress={() => props.setModalVisible(false)}
-            >
-                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+        <View style={{
+            position: 'absolute',
+            height: "100%",
+            backgroundColor: "transparent",
+            width: "100%",
+            margin: 0,
+            zIndex: 2
+        }}>
+            <View
+                style={{
+                    position: 'absolute',
+                    height: "100%",
+                    backgroundColor: lightTheme.darkGrey,
+                    opacity: 0.2,
+                    width: "100%"
+                }}
+                onTouchStart={props.setIsForumModalActive}
+            />
+
+            <Animated.View style={[
+                //styles.authCard,
+                posStyle
+            ]}>
+                <View
+                    style={{
+                        width: "100%",
+                        height: wp("35%"),
+                        backgroundColor: lightTheme.notSoLightGrey,
+                        borderRadius: 5
+                    }}
+                />
+                
+                <Pressable 
+                    android_ripple={{
+                        color: lightTheme.kindOfLightGrey, 
+                        borderless: false
+                    }}
+                    style={{
+                        padding: metric,
+                        borderRadius: metric, 
+                        overflow: 'hidden',
+                        top: wp("-10%"),
+                        zIndex: 10,
+                        //flex: 1, 
+                        marginHorizontal: metric/2,
+                        backgroundColor: lightTheme.ligthGrey,
+                    }}
+                >
                     <View style={{
-                        zIndex: 3,
-                        ...styles.options
+                        marginBottom: metric,
+                        overflow: 'hidden',
+                        ...styles.bottomWrapper
                     }}>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                            onPress={() => props.setScreen("Rules")}
-                        >
-                            <Icons 
-                                name="Bios" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 625 625" 
-                                fill="none" 
-                                style={iconStyles.icon2}
-                            />
-                            <Text style={{
-                                marginLeft: wp("1.25%"),
-                                ...styles.headerText
+                        <View style={{
+                            width: metric * 4,
+                            height: metric * 4,
+                            backgroundColor: lightTheme.yellow,
+                            borderRadius: 10,
+                        }}/>
+                        <View Style={styles.bottomWrapper}>
+                            <View style={{
+                                paddingLeft: metric,
+                                width: metric * 13
                             }}>
-                                Regras
+                                <Text 
+                                    numberOfLines={1}
+                                    ellipsizeMode="tail"
+                                    style={{
+                                        marginTop: metric/4,
+                                        marginBottom: -metric/4,
+                                        fontFamily: "Poppins_700Bold",
+                                        fontSize: wp("7%"),
+                                        color: lightTheme.darkGrey
+                                    }}
+                                >
+                                    {props.forum.groupName}
+                                </Text>
+                                <View style={{
+                                    marginBottom: metric,
+                                    ...styles.bottomWrapper
+                                }}>
+                                    {props.forum.tags.map((tag, index) => 
+                                        <Text 
+                                            key={index} 
+                                            numberOfLines={1} 
+                                            style={{
+                                                paddingRight: metric/2,
+                                                ...styles.bodyText2
+                                            }}
+                                        >
+                                            {tag}
+                                        </Text>                                
+                                    )}
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                    
+                    <Text style={{marginBottom: metric/2, ...styles.bodyText}}>
+                        {props.forum.bios}
+                    </Text>
+                    
+                    <View style={styles.bottomWrapper}>
+                        <View style={{flex: 1.5, marginRight: wp("5%")}}>
+                            <Text style={{color: lightTheme.darkGrey, ...styles.rateText}}>
+                                {`${props.forum.followers.length} membros`}
                             </Text>
-                        </Pressable>
-                        <Pressable 
-                            android_ripple={{color: lightTheme.ligthGrey}}
-                            style={styles.optionButtons}
-                            onPress={() => props.setScreen("Mods")}
-                        >
-                            <Icons 
-                                name="Comentaries" 
-                                width={wp("10%")} 
-                                height={wp("10%")} 
-                                viewBox="0 0 625 625" 
-                                fill="none" 
-                                style={iconStyles.icon2}
-                            />
-                            <Text style={{
-                                marginLeft: wp("1.25%"),
-                                ...styles.headerText
-                            }}>
-                                Mods
-                            </Text>
-                        </Pressable>
-                        {
-                            props.owner === props.myInfos.id || 
-                            props.mods.map(mod => mod) === props.myInfos.id ? 
-                            <Pressable 
-                                android_ripple={{color: lightTheme.ligthGrey}}
-                                style={styles.optionButtons}
-                                onPress={() => props.setScreen("Flags")}
+                        </View>
+                
+                        <View style={{alignItems: 'flex-end', ...styles.rightButtonsWrapper}}>
+                            <TouchableOpacity 
+                                onPress={props.verify}
+                                style={{flexDirection: 'row', alignItems: "center"}}
                             >
+                                <Text style={{
+                                    color: props.follow ? lightTheme.green : 
+                                    lightTheme.darkGrey, 
+                                    marginRight: wp("1.25%"),
+                                    ...styles.rateText
+                                }}>
+                                    Seguindo
+                                </Text>
                                 <Icons 
-                                    name="Remove" 
-                                    width={wp("10%")} 
-                                    height={wp("10%")} 
-                                    viewBox="0 0 300 300"
-                                    fill="none" 
-                                    style={iconStyles.icon1}
-                                />
-                                <Text style={styles.headerText}>Denuncias</Text>
-                            </Pressable> : 
-                            null
-                        }
-                        {
-                            props.owner === props.myInfos.id ? 
-                            <Pressable 
-                                android_ripple={{color: lightTheme.ligthGrey}}
-                                onPress={deleteForum}
-                                style={styles.optionButtons}
-                            >
-                                <Icons 
-                                    name="Remove" 
+                                    name="Arrow" 
                                     width={wp("10%")} 
                                     height={wp("10%")} 
                                     viewBox="0 0 300 300" 
                                     fill="none" 
-                                    style={iconStyles.icon1}
+                                    style={{
+                                        stroke: props.follow ? lightTheme.green : 
+                                        lightTheme.darkGrey,
+                                        strokeLinejoin: "round",
+                                        strokeWidth: "15.9px",
+                                        transform: [{ rotate: "180deg" }]
+                                    }}
                                 />
-                                <Text style={styles.headerText}>Excluir</Text>
-                            </Pressable> : 
-                            null
-                        }
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Pressable>
+
+                <Animated.View style={[
+                    styles.authCard,
+                    opacStyle
+                ]}>
+                    <Pressable 
+                        android_ripple={{color: lightTheme.ligthGrey}}
+                        style={styles.optionButtons}
+                        onPress={() => props.setScreen("Rules")}
+                    >
+                        <Text style={styles.headerText}>
+                            Regras
+                        </Text>
+                    </Pressable>
+                    <Pressable 
+                        android_ripple={{color: lightTheme.ligthGrey}}
+                        style={styles.optionButtons}
+                        onPress={() => props.setScreen("Mods")}
+                    >
+                        <Text style={styles.headerText}>
+                            Mods
+                        </Text>
+                    </Pressable>
+                    {
+                        props.owner === props.myInfos.id || 
+                        props.mods.map(mod => mod) === props.myInfos.id ? 
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            style={styles.optionButtons}
+                            onPress={() => props.setScreen("Flags")}
+                        >
+                            <Text style={styles.deleteText}>Denuncias</Text>
+                        </Pressable> : 
+                        null
+                    }
+                    {
+                        props.owner === props.myInfos.id ? 
+                        <Pressable 
+                            android_ripple={{color: lightTheme.ligthGrey}}
+                            onPress={deleteForum}
+                            style={styles.optionButtons}
+                        >
+                            <Text style={styles.deleteText}>Excluir</Text>
+                        </Pressable> : 
+                        null
+                    }
+                </Animated.View>
+            </Animated.View>            
         </View>
     )
 }
@@ -130,8 +253,14 @@ function Forum(props) {
     //Shows react element only resolved is true
     const[resolved, setResolved] = useState(false)
 
-    //Sets popup on or off
-    const[isModalVisible, setModalVisible] = useState(false)
+    //Needed to calculate measurements
+    const pressableRef = useRef(null)
+
+    //Modal vars
+    const[isForumModalActive, setIsForumModalActive] = useState(false)
+    const[pressInfos, setPressInfos] = useState({})
+    const[modalInfos, setModalInfos] = useState(null)
+    const[isModalActive, setIsModalActive] = useState(false)
 
     //Sets further screens
     const[scrn, setScrn] = useState("Forum")
@@ -147,9 +276,6 @@ function Forum(props) {
     
     //Follow state
     const[follow, setFollow] = useState(true)
-
-    //Global width metric
-    const metric = wp("5%")
 
     //Gets Forum
     const onGet = async () => { 
@@ -176,12 +302,16 @@ function Forum(props) {
                     forumName={data.groupName}
                     rating={posts.upvotes}
                     post={posts._id}
+                    isOnModal={false}
 
                     setScreen={props.setScreen}
                     setForum={props.setForum}
                     setPost={props.setPost}
                     setFlagObj={props.setFlagObj}
                     onFunction={() => setUpdate(!update)}
+
+                    setModalInfos={infos => setModalInfos(infos)}
+                    setIsModalActive={bool => setIsModalActive(bool)}
                 />
             ))
             onGetMyForum()
@@ -213,6 +343,13 @@ function Forum(props) {
         .then(data => data === "Removed" ? onGet() : null)
         .catch(err => console.log(err))
     }
+
+    const longPressBehaviour = () => {
+        pressableRef.current.measure((x, y, w, h, pX, pY) => {
+            setPressInfos({x, y, w, h, pX, pY})
+            setIsForumModalActive(true)
+        })
+    }
     
     //Follow or unfollow
     const verify = () => follow ? onUnfollow() : onFollow()
@@ -220,19 +357,32 @@ function Forum(props) {
     //Updates forum
     useEffect(() => {onGet()},[update])
 
+    useBackHandler(() => {
+        isModalActive ? 
+        setIsModalActive(false) : 
+        isForumModalActive ?
+        setIsForumModalActive(false) :
+        props.setPrevScreen()
+
+        return true    
+    })
+
     return (
         <View style={{flex: 1, justifyContent: "center", backgroundColor: lightTheme.ligthGrey}}>
             { resolved ? 
                 <React.Fragment>
                     <ScrollView contentContainerStyle={{paddingBottom: 200}}>
-                        <View style={{
-                            width: "100%",
-                            height: wp("35%"),
-                            backgroundColor: lightTheme.notSoLightGrey,
-                            borderRadius: 5, 
-                            borderTopLeftRadius: 0,
-                            borderTopRightRadius: 0
-                        }}/>
+                        <View
+                            ref={pressableRef} 
+                            style={{
+                                width: "100%",
+                                height: wp("35%"),
+                                backgroundColor: lightTheme.notSoLightGrey,
+                                borderRadius: 5, 
+                                borderTopLeftRadius: 0,
+                                borderTopRightRadius: 0
+                            }}
+                        />
                         
                         <View style={{
                             borderRadius: metric, 
@@ -244,7 +394,7 @@ function Forum(props) {
                             backgroundColor: lightTheme.ligthGrey,
                         }}>
                             <Pressable 
-                                onLongPress={() => setModalVisible(true)}
+                                onLongPress={longPressBehaviour}
                                 android_ripple={{
                                     color: lightTheme.kindOfLightGrey, 
                                     borderless: true
@@ -344,20 +494,6 @@ function Forum(props) {
                                 </View>
                             </Pressable>
                         </View>
-
-                        <Options 
-                            myInfos={props.myInfos}
-                            owner={forum.owner}
-                            mods={forum.mods}
-                            forum={props.forum}
-                            isModalVisible={isModalVisible}
-                            deleteEnvelope={props.deleteEnvelope}
-
-                            setScreen={props.setScreen}
-                            setForum={props.setForum}
-                            
-                            setModalVisible={prop => setModalVisible(prop)}                    
-                        />
             
                         <View style={{
                             backgroundColor: lightTheme.ligthGrey, 
@@ -369,6 +505,7 @@ function Forum(props) {
                             {posts}
                         </View>
                     </ScrollView>
+                    
                     <InteligentButton 
                         site={props.site}
                         token={props.token}
@@ -383,8 +520,69 @@ function Forum(props) {
                         setScrn={scrn => setScrn(scrn)}
                         onFunction={onGet}
                     />
+
+                    {
+                        isForumModalActive &&
+                        <ForumModal 
+                            myInfos={props.myInfos}
+                            owner={forum.owner}
+                            mods={forum.mods}
+                            forum={props.forum}
+                            isForumModalActive={isForumModalActive}
+                            deleteEnvelope={props.deleteEnvelope}
+
+                            forum={forum}
+                            follow={follow}
+                            pressInfos={pressInfos}
+                            verify={verify}
+
+                            setScreen={props.setScreen}
+                            setForum={props.setForum}
+                            
+                            setIsForumModalActive={() => setIsForumModalActive(false)}       
+                            setFollow={() => setFollow(prev => !prev)}             
+                        />
+                    }
+
+                    {
+                        isModalActive &&
+                        <PostCardModal
+                            site={props.site} 
+                            token={props.token} 
+                            myInfos={props.myInfos}
+                            getEnvelope={props.getEnvelope}
+                            deleteEnvelope={props.deleteEnvelope}
+                            
+                            setScreen={props.setScreen}
+                            setForum={props.setForum}
+                            setPost={props.setPost} 
+                            setFlagObj={props.setFlagObj}
+                            
+                            bodyText={modalInfos.bodyText}
+                            mode={modalInfos.mode}
+                            name={modalInfos.name}
+                            owner={modalInfos.owner}
+                            mods={modalInfos.mods}
+                            forum={modalInfos.forum}
+                            forumName={modalInfos.forumName}
+                            title={modalInfos.title}
+                            rating={modalInfos.rating}
+                            post={modalInfos.post}
+                            comments={modalInfos.comments}
+                            isItPost={modalInfos.isItPost}
+                            like={modalInfos.like}
+                            pressInfos={modalInfos.pressInfos}
+                            pressCondition={modalInfos.pressCondition}
+
+                            setLike={modalInfos.setLike}
+                            onFunction={modalInfos.onFunction}
+                            setIsModalActive={bool => setIsModalActive(bool)}
+                        />
+                    }
                 </React.Fragment> : 
-                <Refresh/>
+                <Refresh
+                    setPrevScreen={props.setPrevScreen}
+                />
             }
         </View>
     )

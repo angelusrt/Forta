@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import _reactNative, {View, ScrollView, Text} from "react-native"
+import {useBackHandler} from '@react-native-community/hooks'
+
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import Refresh from "../components/Refresh"
@@ -81,6 +83,11 @@ function Chat(props) {
 
     //Updates get chat
     useEffect(() => {getChat()},[])
+
+    useBackHandler(() => {
+        props.setPrevScreen()
+        return true    
+    })
 
     return (
         <View style={{flex: 1, backgroundColor: lightTheme.ligthGrey}}>

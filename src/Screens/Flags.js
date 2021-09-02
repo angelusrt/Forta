@@ -1,14 +1,21 @@
 import React, {useState, useEffect} from 'react'
 import {View, Text, ScrollView} from "react-native"
+import {useBackHandler} from '@react-native-community/hooks'
+
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 
 import InteligentButton from "../components/InteligentButton.js"
-import PostCard from "../components/PostCard";
+import PostCard from "../components/PostCard"
+import PostCardModal from '../components/modals/PostCardModal'
 import {lightTheme, styles} from "./../Styles"
 
 function Flags(props) {
     //Stores all cards components
     const[cards, setCards] = useState([])
+
+    //Modal vars
+    const[modalInfos, setModalInfos] = useState(null)
+    const[isModalActive, setIsModalActive] = useState(false)
 
     const onGetPostsAndComments = async (isItPost, post, comments = "", index) => {
         isItPost ?
@@ -36,11 +43,15 @@ function Flags(props) {
                         post={post}
                         comments={comments}
                         rating={data.post.upvotes}
+                        isOnModal={false}
                         
                         setScreen={props.setScreen}
                         setPrevScreen={props.setPrevScreen}
                         setForum={props.setForum}
                         setFlagObj={props.setFlagObj} 
+
+                        setModalInfos={infos => setModalInfos(infos)}
+                        setIsModalActive={bool => setIsModalActive(bool)}
                     />
                 ])
         })
@@ -69,10 +80,14 @@ function Flags(props) {
                         post={post}
                         comments={comments}
                         rating={data.comentary.upvotes}
+                        isOnModal={false}
                         
                         setScreen={props.setScreen}
                         setForum={props.setForum}
                         setFlagObj={props.setFlagObj}
+
+                        setModalInfos={infos => setModalInfos(infos)}
+                        setIsModalActive={bool => setIsModalActive(bool)}
                     /> 
                 ])
         })
@@ -101,6 +116,11 @@ function Flags(props) {
     //Updates cards
     useEffect(() => {onGet()},[])
 
+    useBackHandler(() => {
+        isModalActive ? setIsModalActive(false) : props.setPrevScreen()
+        return true    
+    })
+
     return (
         <View style={{
             flex: 1,
@@ -127,6 +147,42 @@ function Flags(props) {
                 screen={"Flags"}
                 setPrevScreen={props.setPrevScreen}
             />
+
+            {
+                isModalActive &&
+                <PostCardModal
+                    site={props.site} 
+                    token={props.token} 
+                    myInfos={props.myInfos}
+                    getEnvelope={props.getEnvelope}
+                    deleteEnvelope={props.deleteEnvelope}
+                    
+                    setScreen={props.setScreen}
+                    setForum={props.setForum}
+                    setPost={props.setPost} 
+                    setFlagObj={props.setFlagObj}
+                    
+                    bodyText={modalInfos.bodyText}
+                    mode={modalInfos.mode}
+                    name={modalInfos.name}
+                    owner={modalInfos.owner}
+                    mods={modalInfos.mods}
+                    forum={modalInfos.forum}
+                    forumName={modalInfos.forumName}
+                    title={modalInfos.title}
+                    rating={modalInfos.rating}
+                    post={modalInfos.post}
+                    comments={modalInfos.comments}
+                    isItPost={modalInfos.isItPost}
+                    like={modalInfos.like}
+                    pressInfos={modalInfos.pressInfos}
+                    pressCondition={modalInfos.pressCondition}
+
+                    setLike={modalInfos.setLike}
+                    onFunction={modalInfos.onFunction}
+                    setIsModalActive={bool => setIsModalActive(bool)}
+                />
+            }
         </View>
     )
 }

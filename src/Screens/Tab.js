@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import * as _reactNative from "react-native"
 import {View, ScrollView} from "react-native"
+import {useBackHandler} from '@react-native-community/hooks'
 import {widthPercentageToDP as wp} from "react-native-responsive-screen"
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs"
 
@@ -8,10 +9,13 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 var _reactNativeTabView = require("react-native-tab-view")
 
 import Refresh from "../components/Refresh"
-import PostCard from "./../components/PostCard.js"
-import ContactCard from "./../components/ContactCard.js"
+import PostCard from "../components/PostCard.js"
+import ContactCard from "../components/ContactCard.js"
+import PostCardModal from '../components/modals/PostCardModal'
+import ChatCardModal from "../components/modals/ChatCardModal"
+import ForumCardModal from "../components/modals/ForumCardModal"
 import InteligentButton from "../components/InteligentButton.js"
-import {lightTheme, styles} from "./../Styles.js"
+import {lightTheme, styles} from "../Styles.js"
 
 function TabBarTop(props) {
     const {
@@ -156,7 +160,7 @@ function Home(props){
     }
     
     //Gets Forums ids
-    useEffect(() => {onGetMyForums()}, [update])
+    useEffect(() => {onGetMyForums()},[update])
 
     //Creates post ui
     useEffect(() => {
@@ -185,25 +189,31 @@ function Home(props){
                     mode="Normal"
                     owner={forumInfo.owner}
                     mods={forumInfo.mods}
-                    
+                    isOnModal={false}
+
                     setScreen={props.setScreen}
                     setForum={props.setForum}
                     setPost={props.setPost}
                     setFlagObj={props.setFlagObj}
-                    onFunction={() => setUpdate(!update)}
+                    setModalInfos={props.setModalInfos}
+                    setIsModalActive={props.setIsModalActive}
+                    
+                    onFunction={() => setUpdate(prev => !prev)}
                 />
             )
         })).then(data => {
             setResolved(true)
             setPosts(data)
         })}
+
         loadData()
     },[forums])
     
+    //console.log(isModalActive + " " + resolved)
     return (
         <ScrollView contentContainerStyle={{paddingBottom: 200, justifyContent: "center"}}>
             {resolved ? posts : <Refresh/>}
-        </ScrollView> 
+        </ScrollView>
     )
 }
 
@@ -258,9 +268,13 @@ function Forums(props) {
                     favorite={false}
                     forum={forumInfo._id}
                     mode="Forum"
+                    isOnModal={false}
 
                     setScreen={props.setScreen}
                     setForum={props.setForum}
+                    setModalInfos={props.setModalInfos}
+                    setIsModalActive={props.setIsModalActive}
+
                     onFunction={() => setUpdate(!update)}
                 />
             )
@@ -331,9 +345,12 @@ function Chats(props) {
                     }
                     favorite={false}
                     chat={chatInfo._id}
-                    
+                    isOnModal={false}
+
                     setChat={props.setChat}
                     setScreen={props.setScreen}
+                    setModalInfos={props.setModalInfos}
+                    setIsModalActive={props.setIsModalActive}
                 />
             )
         })).then(data => {
@@ -449,8 +466,21 @@ function Tab(props) {
     //Updates 
     const[update, setUpdate] = useState(false)
 
+    //Modal vars
+    const[modalInfos, setModalInfos] = useState(null)
+    const[isModalActive, setIsModalActive] = useState(false)
+
     //Function that sets what tab is in
     const setRoute = prop => props.setRoute(prop)
+
+    useBackHandler(() => {
+        if(isModalActive) {
+            setIsModalActive(false)
+            return true
+        } else {
+            return false
+        }
+    })
     
     return (
         <React.Fragment>
@@ -497,6 +527,9 @@ function Tab(props) {
                             setForum={props.setForum}
                             setPost={props.setPost} 
                             setFlagObj={props.setFlagObj}
+
+                            setIsModalActive={bool => setIsModalActive(bool)}
+                            setModalInfos={infos => setModalInfos(infos)}
                         />
                     }/>
                     <tab.Screen name="Forums" children={() => 
@@ -509,6 +542,9 @@ function Tab(props) {
 
                             setScreen={props.setScreen}
                             setForum={props.setForum} 
+                            
+                            setIsModalActive={bool => setIsModalActive(bool)}
+                            setModalInfos={infos => setModalInfos(infos)}
                         />
                     }/>
                     <tab.Screen name="Chats" children={() => 
@@ -521,6 +557,9 @@ function Tab(props) {
 
                             setScreen={props.setScreen}
                             setChat={props.setChat} 
+
+                            setIsModalActive={bool => setIsModalActive(bool)}
+                            setModalInfos={infos => setModalInfos(infos)}
                         />
                     }/>
                     <tab.Screen name="Invites" children={() => 
@@ -536,6 +575,7 @@ function Tab(props) {
                     }/>
                 </tab.Navigator>
             </View>
+            
             <InteligentButton 
                 site={props.site}
                 token={props.token}
@@ -554,6 +594,87 @@ function Tab(props) {
                 setScrn={screen => setScrn(screen)}
                 onFunction={() => setUpdate(!update)}
             />
+            
+            {
+                isModalActive ? 
+                modalInfos.mode === "Normal" ? 
+                <PostCardModal
+                    site={props.site} 
+                    token={props.token} 
+                    myInfos={props.myInfos}
+                    getEnvelope={props.getEnvelope}
+                    deleteEnvelope={props.deleteEnvelope}
+                    
+                    bodyText={modalInfos.bodyText}
+                    mode={modalInfos.mode}
+                    name={modalInfos.name}
+                    owner={modalInfos.owner}
+                    mods={modalInfos.mods}
+                    forum={modalInfos.forum}
+                    forumName={modalInfos.forumName}
+                    title={modalInfos.title}
+                    rating={modalInfos.rating}
+                    post={modalInfos.post}
+                    comments={modalInfos.comments}
+                    isItPost={modalInfos.isItPost}
+                    like={modalInfos.like}
+                    pressInfos={modalInfos.pressInfos}
+                    pressCondition={modalInfos.pressCondition}
+
+                    setScreen={props.setScreen}
+                    setForum={props.setForum}
+                    setPost={props.setPost} 
+                    setFlagObj={props.setFlagObj}
+                    
+                    setLike={modalInfos.setLike}
+                    onFunction={modalInfos.onFunction}
+                    setIsModalActive={bool => setIsModalActive(bool)}
+                /> :
+                modalInfos.mode === "Forum" ?
+                <ForumCardModal
+                    site={props.site}
+                    myInfos={props.myInfos}
+                    deleteEnvelope={props.deleteEnvelope}
+
+                    owner={modalInfos.owner}
+                    mods={modalInfos.mods}
+                    forum={modalInfos.forum}
+                    title={modalInfos.title}
+                    subtitle={modalInfos.subtitle}
+                    favorite={modalInfos.favorite}
+                    mode={modalInfos.mode}
+                    pressInfos={modalInfos.pressInfos}
+                    pressCondition={modalInfos.pressCondition}
+
+                    setFavorite={modalInfos.setFavorite}
+                    setScreen={props.setScreen}
+                    setForum={props.setForum}
+                    onFunction={props.onFunction}
+
+                    setIsModalActive={prop => setIsModalActive(prop)}
+                /> :
+                <ChatCardModal
+                    site={props.site}
+                    chat={props.chat}
+                    deleteEnvelope={props.deleteEnvelope}
+
+                    chat={modalInfos.chat}
+                    title={modalInfos.title}
+                    subtitle={modalInfos.subtitle}
+                    favorite={modalInfos.favorite}
+                    mode={modalInfos.mode}
+                    pressInfos={modalInfos.pressInfos}
+                    pressCondition={modalInfos.pressCondition}
+
+                    setFavorite={modalInfos.setFavorite}
+                    setScreen={props.setScreen}
+                    setChat={props.setChat}
+                    onFunction={props.onFunction}
+                    
+                    setIsModalActive={prop => setIsModalActive(prop)}
+                /> : 
+                null
+            }
         </React.Fragment>
     )
 }

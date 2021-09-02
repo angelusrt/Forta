@@ -112,6 +112,11 @@ export const styles = StyleSheet.create({
     fontSize: wp("4%"),
     lineHeight: 20
   },
+  deleteText: {
+    fontFamily: "Poppins_700Bold",
+    fontSize: wp("4.5%"),
+    color: lightTheme.red
+  },
   rateText: {
     fontFamily: "Roboto_700Bold",
     fontSize: wp("4.5%")
@@ -189,17 +194,18 @@ export const styles = StyleSheet.create({
     top: 0
   },
   authCard: {
-    // position: 'absolute',
-
-    // width: "100%",
-    // bottom: wp("30%"),
-
-    padding: wp("5%"),
+    padding: wp(5),
     borderRadius: 20, 
-    //borderWidth: wp("0.5%"),
-
-    //borderColor: lightTheme.kindOfLightGrey,
     backgroundColor: lightTheme.white,
+
+    shadowColor: "#bfbfbf",
+    shadowOffset: {
+        width: 0,
+        height: 6,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    marginHorizontal: wp(2.5), 
   },
   card: {
     borderColor: lightTheme.ligthGrey,
@@ -280,8 +286,8 @@ export const styles = StyleSheet.create({
     backgroundColor: lightTheme.green
   },
   optionButtons: {
-    paddingRight: wp("5%"),
-    paddingLeft: wp("2.5%"),
+    //paddingRight: wp("5%"),
+    //paddingLeft: wp("2.5%"),
     paddingVertical: wp("1.25%"),
     flexDirection: 'row',
     alignItems: 'center'
@@ -339,13 +345,6 @@ export const iconStyles = {
     strokeLinejoin: "round",
     strokeMiterlimit:"1.5"
   },
-  icon6: {
-    stroke: lightTheme.red,
-    strokeWidth:"33.1px",
-    strokeLinejoin: "round",
-    strokeMiterlimit:"1.5",
-    marginLeft: wp("2.5%")
-  },
   icon7: {
     stroke: lightTheme.darkGrey,
     strokeWidth:"15.9px",
@@ -369,12 +368,5 @@ export const iconStyles = {
     strokeLinejoin: "round",
     strokeMiterlimit:"1.5",
     opacity: 0.75
-  },
-  icon11: {
-    stroke: lightTheme.darkGrey,
-    strokeWidth:"33.1px",
-    strokeLinejoin: "round",
-    strokeMiterlimit:"1.5",
-    marginLeft: wp("1.25%")
   }
 }

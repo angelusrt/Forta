@@ -4,16 +4,16 @@ import {NavigationContainer} from "@react-navigation/native"
 
 import {lightTheme} from "./Styles"
 
-import Auth from "./Screens/Auth"
-import Tab from './Screens/Tab'
-import Settings from "./Screens/Settings"
-import Post from "./Screens/Post"
-import Forum from "./Screens/Forum"
-import Chat from "./Screens/Chat"
-import Mods from "./Screens/Mods"
-import Rules from './Screens/Rules'
-import Flags from "./Screens/Flags"
-import FlagsFlag from "./Screens/FlagsFlag"
+import Auth from "./screens/Auth"
+import Tab from './screens/Tab'
+import Settings from "./screens/Settings"
+import Post from "./screens/Post"
+import Forum from "./screens/Forum"
+import Chat from "./screens/Chat"
+import Mods from "./screens/Mods"
+import Rules from './screens/Rules'
+import Flags from "./screens/Flags"
+import FlagsFlag from "./screens/FlagsFlag"
 
 function Routes() {
     //http site location
@@ -143,7 +143,7 @@ function Routes() {
                     deleteEnvelope={deleteEnvelope}
                      
                     setScreen={props => setScreen(result => [...result, props])}
-                    setPrevScreen={() => setPrevScreen()}
+                    setPrevScreen={setPrevScreen}
                     setForum={forum => setForum(forum)}
                     setPost={props => setPost(result => [...result, props])} 
                     setFlagObj={flagObj => setFlagObj(flagObj)}
